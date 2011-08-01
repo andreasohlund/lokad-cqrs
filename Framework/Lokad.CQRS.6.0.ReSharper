@@ -305,8 +305,10 @@ II.2.12 <HandlesEvent />
         <UserRule Name="XAML_RESOURCE" Inspect="True" Prefix="" Suffix="" Style="AaBb" />
       </Naming2>
     </Xaml>
-    <FileHeader Region="(c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License "><![CDATA[Copyright (c) Lokad 2010-2011, http://www.lokad.com
-This code is released as Open Source under the terms of the New BSD Licence]]></FileHeader>
+    <FileHeader Region="(c) 2010-2011 Lokad CQRS - New BSD License "><![CDATA[Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
+This code is released as Open Source under the terms of the New BSD Licence
+Homepage: http://lokad.github.com/lokad-cqrs/
+]]></FileHeader>
     <GenerateMemberBody />
     <Naming2>
       <EventHandlerPatternLong>$object$_On$event$</EventHandlerPatternLong>
