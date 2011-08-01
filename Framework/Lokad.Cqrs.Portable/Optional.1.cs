@@ -1,7 +1,8 @@
-#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
@@ -10,11 +11,12 @@ using System;
 namespace Lokad.Cqrs
 {
     /// <summary>
-    /// Helper class that indicates nullable value in a good-citizenship code
+    /// Helper class that indicates nullable value in a good-citizenship code and 
+    /// provides some additional piping syntax
     /// </summary>
     /// <typeparam name="T">underlying type</typeparam>
     [Serializable]
-    public sealed class Optional<T> : IEquatable<Optional<T>> 
+    public sealed class Optional<T> : IEquatable<Optional<T>>
     {
         readonly T _value;
         readonly bool _hasValue;
@@ -99,7 +101,6 @@ namespace Lokad.Cqrs
         {
             return _hasValue ? this : defaultValue();
         }
-     
 
 
         /// <summary>
@@ -145,7 +146,6 @@ namespace Lokad.Cqrs
         /// </summary>
         /// <typeparam name="TTarget">type of the conversion target</typeparam>
         /// <param name="converter">The converter.</param>
-        
         /// <returns>value</returns>
         public Optional<TTarget> Combine<TTarget>(Func<T, Optional<TTarget>> converter)
         {
@@ -198,7 +198,7 @@ namespace Lokad.Cqrs
             unchecked
             {
                 // ReSharper disable CompareNonConstrainedGenericWithNull
-                return ((_value != null ? _value.GetHashCode() : 0)*397) ^ _hasValue.GetHashCode();
+                return ((_value != null ? _value.GetHashCode() : 0) * 397) ^ _hasValue.GetHashCode();
                 // ReSharper restore CompareNonConstrainedGenericWithNull
             }
         }
@@ -254,6 +254,35 @@ namespace Lokad.Cqrs
             }
 
             return "<Empty>";
+        }
+
+        /// <summary>
+        /// Eagerly applies the <paramref name="applicator"/> function, if the optional has a value.
+        /// </summary>
+        /// <param name="applicator">The applicator function.</param>
+        /// <returns>same instance for further chaining</returns>
+        public Optional<T> IfValue(Action<T> applicator)
+        {
+            if (_hasValue)
+            {
+                applicator(_value);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Eagerly executes the <paramref name="applicator"/> functional,
+        /// if this optional does not have a value.
+        /// </summary>
+        /// <param name="applicator">The applicator.</param>
+        /// <returns>same instance for further chaining</returns>
+        public Optional<T> IfEmpty(Action applicator)
+        {
+            if (!_hasValue)
+            {
+                applicator();
+            }
+            return this;
         }
     }
 }
