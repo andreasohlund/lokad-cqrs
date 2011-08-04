@@ -1,10 +1,18 @@
-﻿using System.Collections.Concurrent;
-using Autofac;
-using Autofac.Core;
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
+
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
+// This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
+
+#endregion
+
+using System.Collections.Concurrent;
+using Funq;
+using Lokad.Cqrs.Build.Engine;
 
 namespace Lokad.Cqrs.Feature.AtomicStorage
 {
-    public sealed class MemoryAtomicStorageModule : IModule
+    public sealed class MemoryAtomicStorageModule
     {
         readonly IAtomicStorageStrategy _strategy;
 
@@ -14,34 +22,12 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
         }
 
 
-        public void Configure(IComponentRegistry componentRegistry)
+        public void Configure(Container container)
         {
-            var builder = new ContainerBuilder();
-
-            builder.RegisterInstance(_strategy);
+            container.Register(_strategy);
             var store = new ConcurrentDictionary<string, byte[]>();
-            builder.RegisterInstance(store);
-            builder
-                .RegisterInstance(new MemoryAtomicStorageFactory(store, _strategy))
-                .As<IAtomicStorageFactory>();
-            
-
-            builder
-                .RegisterGeneric(typeof (MemoryAtomicEntityContainer<,>))
-                .As(typeof (IAtomicEntityReader<,>))
-                .As(typeof (IAtomicEntityWriter<,>))
-                .SingleInstance();
-
-            builder
-                .RegisterGeneric(typeof (MemoryAtomicSingletonContainer<>))
-                .As(typeof (IAtomicSingletonReader<>))
-                .As(typeof (IAtomicSingletonWriter<>))
-                .SingleInstance();
-            
-
-            builder.Update(componentRegistry);
+            container.Register(store);
+            container.Register<IAtomicStorageFactory>(new MemoryAtomicStorageFactory(store, _strategy));
         }
     }
-
-    
 }

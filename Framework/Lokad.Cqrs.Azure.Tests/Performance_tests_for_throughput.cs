@@ -8,14 +8,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
-using Autofac;
+using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
-using Lokad.Cqrs.Core.Outbox;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
@@ -94,7 +92,7 @@ namespace Lokad.Cqrs
         }
 
 
-        static Action<ImmutableEnvelope> Factory(IComponentContext ctx)
+        static Action<ImmutableEnvelope> Factory(Container ctx)
         {
             // pass through the envelope
             return envelope =>

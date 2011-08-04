@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using Autofac;
+using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Scenarios.SimpleES.Contracts;
 using Lokad.Cqrs.Scenarios.SimpleES.Definitions;
@@ -30,11 +31,9 @@ namespace Lokad.Cqrs.Scenarios.SimpleES
 
             builder.Advanced.ConfigureContainer(cb =>
                 {
-                    cb.Register(c => new InMemoryEventStreamer<IAccountEvent>(c.Resolve<IMessageSender>())).
-                        SingleInstance();
+                    cb.Register(c => new InMemoryEventStreamer<IAccountEvent>(c.Resolve<IMessageSender>())).ReusedWithin(ReuseScope.Hierarchy);
 
-                    cb.RegisterType<InMemoryEventStreamer<IAccountEvent>>().SingleInstance();
-                    cb.RegisterType<AccountAggregateRepository>().SingleInstance();
+                    cb.Register(c => new AccountAggregateRepository(c.Resolve<InMemoryEventStreamer<IAccountEvent>>())).ReusedWithin(ReuseScope.Hierarchy);
 
                 });
 

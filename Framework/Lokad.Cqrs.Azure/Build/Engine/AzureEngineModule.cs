@@ -8,8 +8,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.AzurePartition;
 using Lokad.Cqrs.Feature.AzurePartition.Sender;
@@ -23,11 +22,11 @@ namespace Lokad.Cqrs.Build.Engine
     /// <summary>
     /// Autofac syntax for configuring Azure storage
     /// </summary>
-    public sealed class AzureEngineModule : HideObjectMembersFromIntelliSense, IModule
+    public sealed class AzureEngineModule : HideObjectMembersFromIntelliSense, IFunqlet
     {
         static readonly Regex QueueName = new Regex("^[A-Za-z][A-Za-z0-9]{2,62}", RegexOptions.Compiled);
 
-        Action<IComponentRegistry> _funqlets = registry => { };
+        Action<Container> _funqlets = registry => { };
 
         
         public void AddAzureSender(IAzureStorageConfig config, string queueName, Action<SendMessageModule> configure)
@@ -83,7 +82,7 @@ namespace Lokad.Cqrs.Build.Engine
         }
 
 
-        public void Configure(IComponentRegistry container)
+        public void Configure(Container container)
         {
             _funqlets(container);
             

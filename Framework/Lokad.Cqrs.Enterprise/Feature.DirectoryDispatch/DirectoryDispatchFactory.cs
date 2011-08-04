@@ -1,5 +1,6 @@
 using System;
 using Autofac;
+using Funq;
 using Lokad.Cqrs.Core.Dispatch;
 
 namespace Lokad.Cqrs.Feature.DirectoryDispatch
@@ -17,7 +18,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             var strategy = ctx.Resolve<IMessageDispatchStrategy>();
             return new DispatchCommandBatch(map, strategy);
         }
-        public static ISingleThreadMessageDispatcher OneEvent(IComponentContext ctx, Action<MessageDirectoryFilter> optionalFilter)
+        public static ISingleThreadMessageDispatcher OneEvent(Container ctx, Action<MessageDirectoryFilter> optionalFilter)
         {
             var builder = ctx.Resolve<MessageDirectoryBuilder>();
             var filter = new MessageDirectoryFilter();

@@ -9,8 +9,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;
@@ -26,8 +25,8 @@ namespace Lokad.Cqrs.Feature.FilePartition
         Func<uint, TimeSpan> _decayPolicy;
         
 
-        Func<IComponentContext, ISingleThreadMessageDispatcher> _dispatcher;
-        Func<IComponentContext, IEnvelopeQuarantine> _quarantineFactory;
+        Func<Container, ISingleThreadMessageDispatcher> _dispatcher;
+        Func<Container, IEnvelopeQuarantine> _quarantineFactory;
 
         /// <summary>
         /// Sets the custom decay policy used to throttle File checks, when there are no messages for some time.
@@ -66,7 +65,7 @@ namespace Lokad.Cqrs.Feature.FilePartition
         /// Defines dispatcher as lambda method that is resolved against the container
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public void DispatcherIsLambda(Func<IComponentContext, Action<ImmutableEnvelope>> factory)
+        public void DispatcherIsLambda(Func<Container, Action<ImmutableEnvelope>> factory)
         {
             _dispatcher = context =>
             {
@@ -76,13 +75,13 @@ namespace Lokad.Cqrs.Feature.FilePartition
         }
         
 
-        public void DispatcherIs(Func<IComponentContext, ISingleThreadMessageDispatcher> factory)
+        public void DispatcherIs(Func<Container, ISingleThreadMessageDispatcher> factory)
         {
             _dispatcher = factory;
         }
 
 
-        public void Quarantine(Func<IComponentContext, IEnvelopeQuarantine> factory)
+        public void Quarantine(Func<Container, IEnvelopeQuarantine> factory)
         {
             _quarantineFactory = factory;
         }
@@ -114,7 +113,7 @@ namespace Lokad.Cqrs.Feature.FilePartition
             DispatcherIs(ctx => new DispatchMessagesToRoute(ctx.Resolve<QueueWriterRegistry>(), route));
         }
 
-        IEngineProcess BuildConsumingProcess(IComponentContext context)
+        IEngineProcess BuildConsumingProcess(Container context)
         {
             var log = context.Resolve<ISystemObserver>();
             var streamer = context.Resolve<IEnvelopeStreamer>();
@@ -143,7 +142,7 @@ namespace Lokad.Cqrs.Feature.FilePartition
             return transport;
         }
 
-        public void Configure(IComponentRegistry container)
+        public void Configure(Container container)
         {
             container.Register(BuildConsumingProcess);
         }

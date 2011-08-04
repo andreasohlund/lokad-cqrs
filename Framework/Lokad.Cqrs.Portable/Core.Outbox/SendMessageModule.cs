@@ -8,15 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using System.Linq;
 
 namespace Lokad.Cqrs.Core.Outbox
 {
     public sealed class SendMessageModule : HideObjectMembersFromIntelliSense
     {
-        readonly Func<IComponentContext, string,IQueueWriterFactory> _construct;
+        readonly Func<Container, string,IQueueWriterFactory> _construct;
         readonly string _endpoint;
         
 
@@ -25,7 +24,7 @@ namespace Lokad.Cqrs.Core.Outbox
         Func<string> _keyGenerator = () => Guid.NewGuid().ToString().ToLowerInvariant();
 
 
-        public SendMessageModule(Func<IComponentContext, string, IQueueWriterFactory> construct, string endpoint, string queueName)
+        public SendMessageModule(Func<Container, string, IQueueWriterFactory> construct, string endpoint, string queueName)
         {
             _construct = construct;
             _endpoint = endpoint;
@@ -55,7 +54,7 @@ namespace Lokad.Cqrs.Core.Outbox
                 });
         }
 
-        IMessageSender BuildDefaultMessageSender(IComponentContext c)
+        IMessageSender BuildDefaultMessageSender(Container c)
         {
             var observer = c.Resolve<ISystemObserver>();
             var registry = c.Resolve<QueueWriterRegistry>();
@@ -66,7 +65,7 @@ namespace Lokad.Cqrs.Core.Outbox
 
         }
 
-        public void Configure(IComponentRegistry componentRegistry)
+        public void Configure(Container componentRegistry)
         {
             componentRegistry.Register(BuildDefaultMessageSender);
         }

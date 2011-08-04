@@ -12,7 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
+using Funq;
 using Lokad.Cqrs.Build.Engine.Events;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Evil;
@@ -21,12 +21,12 @@ namespace Lokad.Cqrs.Build.Engine
 {
     public sealed class CqrsEngineHost : IDisposable
     {
-        public ILifetimeScope Container { get; private set; }
+        public Container Container { get; private set; }
         readonly SystemObserver _observer;
         readonly IEnumerable<IEngineProcess> _serverProcesses;
 
         public CqrsEngineHost(
-            ILifetimeScope container,
+            Container container,
             SystemObserver observer,
             IEnumerable<IEngineProcess> serverProcesses)
         {

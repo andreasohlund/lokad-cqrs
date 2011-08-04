@@ -1,16 +1,15 @@
 using System;
 using System.IO;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.FilePartition;
 
 namespace Lokad.Cqrs.Build.Engine
 {
-    public sealed class FileModule : HideObjectMembersFromIntelliSense, IModule
+    public sealed class FileModule : HideObjectMembersFromIntelliSense
     {
-        Action<IComponentRegistry> _funqlets = registry => { };
-        public void Configure(IComponentRegistry componentRegistry)
+        Action<Container> _funqlets = registry => { };
+        public void Configure(Container componentRegistry)
         {
             _funqlets(componentRegistry);
         }

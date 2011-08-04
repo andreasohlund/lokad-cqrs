@@ -7,7 +7,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using Autofac;
 using Lokad.Cqrs.Build.Engine;
 
 // ReSharper disable InconsistentNaming
@@ -88,7 +87,11 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         protected override void Configure(CqrsEngineBuilder config)
         {
-            config.Advanced.ConfigureContainer(cb => cb.RegisterGeneric(typeof (ViewUpdater<,>)));
+            config.Advanced.ConfigureContainer(cb =>
+                {
+                    
+                    cb.Register(typeof(ViewUpdater<,>));
+                });
             EnlistMessage(new Message());
         }
     }

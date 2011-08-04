@@ -7,8 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using Autofac;
-using Autofac.Core;
+using Funq;
 
 namespace Lokad.Cqrs.Build.Client
 {
@@ -18,7 +17,7 @@ namespace Lokad.Cqrs.Build.Client
         /// Registers custom container module
         /// </summary>
         /// <param name="module">The module to register.</param>
-        void RegisterModule(IModule module);
+        void RegisterModule(IFunqlet module);
         /// <summary>
         /// Registers custom Reactive observer.
         /// </summary>
@@ -39,7 +38,7 @@ namespace Lokad.Cqrs.Build.Client
         /// Applies custom configuration to the container
         /// </summary>
         /// <param name="build">The build.</param>
-        void ConfigureContainer(Action<ContainerBuilder> build);
+        void ConfigureContainer(Action<Container> build);
         /// <summary>
         /// Lists currect reactive observers
         /// </summary>
@@ -50,6 +49,6 @@ namespace Lokad.Cqrs.Build.Client
         /// If you have an instance of <see cref="IContainer"/>, pass it's <see cref="IComponentContext.ComponentRegistry"/> property.
         /// </summary>
         /// <param name="registry">The container.</param>
-        void UpdateContainer(IComponentRegistry registry);
+        void UpdateContainer(Container registry);
     }
 }

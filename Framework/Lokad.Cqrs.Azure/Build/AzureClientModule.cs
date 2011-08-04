@@ -4,20 +4,22 @@
 // This code is released as Open Source under the terms of the New BSD Licence
 
 #endregion
-
+using Funq;
 using System;
 using System.ComponentModel;
-using Autofac;
-using Autofac.Core;
+
+
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.AzurePartition.Sender;
 
 namespace Lokad.Cqrs.Build
 {
-    public sealed class AzureClientModule : HideObjectMembersFromIntelliSense, IModule
+    using Container = Funq.Container;
+
+    public sealed class AzureClientModule : HideObjectMembersFromIntelliSense, IFunqlet
     {
-        Action<IComponentRegistry> _modules = context => { };
+        Action<Container> _modules = context => { };
 
 
 
@@ -37,7 +39,7 @@ namespace Lokad.Cqrs.Build
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public void Configure(IComponentRegistry container)
+        public void Configure(Container container)
         {
             _modules(container);
         }

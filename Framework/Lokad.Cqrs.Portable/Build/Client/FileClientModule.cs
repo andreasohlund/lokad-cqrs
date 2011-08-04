@@ -1,16 +1,16 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.FilePartition;
+using Container = Funq.Container;
 
 namespace Lokad.Cqrs.Build.Engine
 {
-    public sealed class FileClientModule : HideObjectMembersFromIntelliSense, IModule
+    public sealed class FileClientModule : HideObjectMembersFromIntelliSense, IFunqlet
     {
-        Action<IComponentRegistry> _modules = context => { };
+        Action<Container> _modules = context => { };
 
 
 
@@ -30,7 +30,7 @@ namespace Lokad.Cqrs.Build.Engine
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public void Configure(IComponentRegistry container)
+        public void Configure(Container container)
         {
             _modules(container);
         }

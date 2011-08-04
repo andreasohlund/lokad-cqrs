@@ -1,13 +1,13 @@
 ﻿using System;
-using Autofac;
+using Funq;
 
 namespace Lokad.Cqrs.Build.Client
 {
     public sealed class CqrsClient : IDisposable
     {
-        public ILifetimeScope Scope { get; private set; }
+        public Container Scope { get; private set; }
 
-        public CqrsClient(ILifetimeScope scope)
+        public CqrsClient(Container scope)
         {
             Scope = scope;
         }
@@ -16,8 +16,8 @@ namespace Lokad.Cqrs.Build.Client
         {
             get
             {
-                IMessageSender sender;
-                if(Scope.TryResolve(out sender))
+                var sender = Scope.TryResolve<IMessageSender>();
+                if(null != sender)
                 {
                     return sender;
                 }

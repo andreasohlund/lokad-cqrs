@@ -6,21 +6,19 @@
 #endregion
 
 using System;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.MemoryPartition;
-using Autofac;
-using Lokad.Cqrs.Core;
 
 namespace Lokad.Cqrs.Build.Engine
 {
     /// <summary>
     /// Autofac syntax for configuring Azure storage
     /// </summary>
-    public sealed class MemoryModule : HideObjectMembersFromIntelliSense, IModule
+    public sealed class MemoryModule : HideObjectMembersFromIntelliSense, IFunqlet
     {
         
-        Action<IComponentRegistry> _funqlets = registry => { };
+        Action<Container> _funqlets = registry => { };
         
 
         public void AddMemoryProcess(string[] queues, Action<MemoryPartitionModule> config)
@@ -39,7 +37,7 @@ namespace Lokad.Cqrs.Build.Engine
             _funqlets += module.Configure;
         }
 
-        public void Configure(IComponentRegistry componentRegistry)
+        public void Configure(Container componentRegistry)
         {
             _funqlets(componentRegistry);
         }

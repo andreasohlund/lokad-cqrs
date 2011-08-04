@@ -32,9 +32,6 @@
     <DocumentationFile>bin\Release\Lokad.Cqrs.Portable.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\Library\Autofac\Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -43,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build\Client\IAdvancedClientBuilder.cs" />
+    <Compile Include="Build\Client\MessageLookupModule.cs" />
     <Compile Include="Build\Engine\AtomicRegistrationSource.cs" />
     <Compile Include="Build\Client\FileClientModule.cs" />
     <Compile Include="Build\Engine\FileModule.cs" />
@@ -66,7 +64,19 @@
     <Compile Include="Core.Reactive\ImmediateConsoleObserver.cs" />
     <Compile Include="Core.Reactive\ImmediateEventsObserver.cs" />
     <Compile Include="Core.Serialization\SerializationContractRegistry.cs" />
+    <Compile Include="Core\Container.Adapter.cs" />
+    <Compile Include="Core\Container.cs" />
+    <Compile Include="Core\Container.Overloads.cs" />
     <Compile Include="Core\FunqContainer.cs" />
+    <Compile Include="Core\IFluentInterface.cs" />
+    <Compile Include="Core\IFunqlet.cs" />
+    <Compile Include="Core\Owner.cs" />
+    <Compile Include="Core\ResolutionException.cs" />
+    <Compile Include="Core\ReuseScope.cs" />
+    <Compile Include="Core\ServiceEntry.cs" />
+    <Compile Include="Core\ServiceEntry.Generic.cs" />
+    <Compile Include="Core\ServiceKey.cs" />
+    <Compile Include="Core\Syntax.cs" />
     <Compile Include="Define.cs" />
     <Compile Include="Evil\DecayEvil.cs" />
     <Compile Include="Feature.AtomicStorage\AddOrUpdateHint.cs" />
@@ -202,6 +212,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Feature.DirectoryDispatch\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Core\Container.xdoc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Core\License.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

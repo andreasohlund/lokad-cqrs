@@ -32,9 +32,6 @@
     <DocumentationFile>bin\Release\Lokad.Cqrs.Azure.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\Library\Autofac\Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Library\Azure\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>

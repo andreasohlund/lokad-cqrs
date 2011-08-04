@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
-using Autofac;
+using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
 using NUnit.Framework;
@@ -92,7 +92,7 @@ namespace Lokad.Cqrs
         }
 
 
-        static Action<ImmutableEnvelope> Factory(IComponentContext componentContext)
+        static Action<ImmutableEnvelope> Factory(Container componentContext)
         {
             var sender = componentContext.Resolve<IMessageSender>();
             return envelope => sender.SendOne(envelope.Items[0].Content);

@@ -7,74 +7,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using Autofac;
-using Autofac.Core;
+
+using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Envelope;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Core.Serialization;
-using Lokad.Cqrs.Evil;
 using Lokad.Cqrs.Feature.MemoryPartition;
-using System.Linq;
 
 namespace Lokad.Cqrs.Build.Client
 {
-    public sealed class MessageLookupModule
-    {
-        readonly List<Assembly> _assemblies;
-        readonly IList<Predicate<Type>> _constraints;
-
-        public MessageLookupModule()
-        {
-            _constraints = new List<Predicate<Type>>
-                {
-                    type => false == type.IsAbstract
-                };
-            _assemblies = new List<Assembly>();
-        }
-
-
-        /// <summary>
-        /// Includes assemblies of the specified types into the discovery process
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>same module instance for chaining fluent configurations</returns>
-        public void InAssemblyOf<T>()
-        {
-            _assemblies.Add(typeof(T).Assembly);
-        }
-
-        public void InAssemblyOf(object instance)
-        {
-            _assemblies.Add(instance.GetType().Assembly);
-        }
-
-        public void WhereMessages(Predicate<Type> constraint)
-        {
-            _constraints.Add(constraint);
-        }
-
-        public IEnumerable<Type> LookupMessages()
-        {
-            if (_assemblies.Count == 0)
-            {
-                _assemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies().Where(AssemblyScanEvil.IsProbablyUserAssembly)); 
-            }
-            return _assemblies
-                .SelectMany(a => a.GetExportedTypes())
-                .Where(t => _constraints.All(predicate => predicate(t)));
-        }
-    }
-
     public class CqrsClientBuilder : HideObjectMembersFromIntelliSense, IAdvancedClientBuilder
     {
         readonly MessageLookupModule _domain = new MessageLookupModule();
         readonly StorageModule _storageModule = new StorageModule();
 
-        readonly List<IModule> _enlistments = new List<IModule>();
+        Action<Container> _enlistments = container => { };
 
         readonly QueueWriterRegistry _registry = new QueueWriterRegistry();
 
@@ -89,9 +39,9 @@ namespace Lokad.Cqrs.Build.Client
             get { return _observers; }
         }
 
-        void IAdvancedClientBuilder.RegisterModule(IModule module)
+        void IAdvancedClientBuilder.RegisterModule(IFunqlet module)
         {
-            _enlistments.Add(module);
+            _enlistments += module.Configure;
         }
 
         void IAdvancedClientBuilder.RegisterObserver(IObserver<ISystemEvent> observer)
@@ -114,11 +64,10 @@ namespace Lokad.Cqrs.Build.Client
             _envelopeSerializer = serializer;
         }
 
-        readonly ContainerBuilder _builder = new ContainerBuilder();
-
-        void IAdvancedClientBuilder.ConfigureContainer(Action<ContainerBuilder> build)
+        void IAdvancedClientBuilder.ConfigureContainer(Action<Container> build)
         {
-            build(_builder);
+            _enlistments += build;
+            
         }
 
         public void Storage(Action<StorageModule> configure)
@@ -141,29 +90,22 @@ namespace Lokad.Cqrs.Build.Client
 
         public CqrsClient Build()
         {
-            foreach (var module in _enlistments)
-            {
-                _builder.RegisterModule(module);
-            }
-
-            var container = _builder.Build();
-            Configure(container.ComponentRegistry);
+            var container = new Container();
+            _enlistments(container);
+            Configure(container);
             return new CqrsClient(container);
         }
 
-        void IAdvancedClientBuilder.UpdateContainer(IComponentRegistry registry)
+        void IAdvancedClientBuilder.UpdateContainer(Container registry)
         {
-            foreach (var module in _enlistments)
-            {
-                _builder.RegisterModule(module);
-            }
-            _builder.Update(registry);
+            _enlistments(registry);
             Configure(registry);
+            
         }
 
         
 
-        void Configure(IComponentRegistry reg)
+        void Configure(Container reg)
         {
             var system = new SystemObserver(_observers.ToArray());
             reg.Register<ISystemObserver>(system);
@@ -190,7 +132,7 @@ namespace Lokad.Cqrs.Build.Client
         {
             var module = new FileClientModule();
             config(module);
-            _builder.RegisterModule(module);
+            _enlistments += module.Configure;
         }
     }
 }

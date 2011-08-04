@@ -16,7 +16,6 @@ using Lokad.Cqrs.Core.Dispatch.Events;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.MemoryPartition;
 using NUnit.Framework;
-using Autofac;
 
 namespace Lokad.Cqrs
 {

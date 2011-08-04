@@ -6,8 +6,7 @@
 #endregion
 
 using System;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;
@@ -19,8 +18,8 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
     {
         readonly string[] _memoryQueues;
 
-        Func<IComponentContext, ISingleThreadMessageDispatcher> _dispatcher;
-        Func<IComponentContext, IEnvelopeQuarantine> _quarantineFactory;
+        Func<Container, ISingleThreadMessageDispatcher> _dispatcher;
+        Func<Container, IEnvelopeQuarantine> _quarantineFactory;
 
         public MemoryPartitionModule(string[] memoryQueues)
         {
@@ -31,7 +30,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
             Quarantine(c => new MemoryQuarantine());
         }
 
-        public void DispatcherIs(Func<IComponentContext, ISingleThreadMessageDispatcher> factory)
+        public void DispatcherIs(Func<Container, ISingleThreadMessageDispatcher> factory)
         {
             _dispatcher = factory;
         }
@@ -40,7 +39,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
         /// Defines dispatcher as lambda method that is resolved against the container
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public void DispatcherIsLambda(Func<IComponentContext, Action<ImmutableEnvelope>> factory)
+        public void DispatcherIsLambda(Func<Container, Action<ImmutableEnvelope>> factory)
         {
             _dispatcher = context =>
                 {
@@ -49,7 +48,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
                 };
         }
 
-        public void Quarantine(Func<IComponentContext, IEnvelopeQuarantine> factory)
+        public void Quarantine(Func<Container, IEnvelopeQuarantine> factory)
         {
             _quarantineFactory = factory;
         }
@@ -61,7 +60,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
             DispatcherIs(ctx => new DispatchMessagesToRoute(ctx.Resolve<QueueWriterRegistry>(), route));
         }
 
-        IEngineProcess BuildConsumingProcess(IComponentContext context)
+        IEngineProcess BuildConsumingProcess(Container context)
         {
             var log = context.Resolve<ISystemObserver>();
             var dispatcher = _dispatcher(context);
@@ -78,7 +77,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
             return transport;
         }
 
-        public void Configure(IComponentRegistry container)
+        public void Configure(Container container)
         {
             container.Register(BuildConsumingProcess);
         }

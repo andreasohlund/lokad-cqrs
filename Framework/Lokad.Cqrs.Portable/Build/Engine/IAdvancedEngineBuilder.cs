@@ -7,17 +7,16 @@
 
 using System;
 using System.Collections.Generic;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Core.Outbox;
 
 namespace Lokad.Cqrs.Build.Engine
 {
     public interface IAdvancedEngineBuilder : IHideObjectMembersFromIntelliSense
     {
-        void RegisterQueueWriterFactory(Func<IComponentContext, IQueueWriterFactory> activator);
-        void RegisterModule(IModule module);
-        void ConfigureContainer(Action<ContainerBuilder> build);
+        void RegisterQueueWriterFactory(Func<Container, IQueueWriterFactory> activator);
+        void RegisterModule(IFunqlet module);
+        void ConfigureContainer(Action<Container> build);
         void RegisterObserver(IObserver<ISystemEvent> observer);
         IList<IObserver<ISystemEvent>> Observers { get; }
         void CustomEnvelopeSerializer(IEnvelopeSerializer serializer);

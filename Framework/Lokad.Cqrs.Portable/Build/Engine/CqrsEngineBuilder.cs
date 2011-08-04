@@ -7,10 +7,10 @@
 
 using System;
 using System.Collections.Generic;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Envelope;
+using Lokad.Cqrs.Core.Inbox;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Core.Serialization;
@@ -31,7 +31,7 @@ namespace Lokad.Cqrs.Build.Engine
         Func<Type[], IDataSerializer> _dataSerializer = types => new DataSerializerWithDataContracts(types);
         readonly StorageModule _storage = new StorageModule();
 
-        Action<IComponentRegistry, SerializationContractRegistry> _directory;
+        Action<Container, SerializationContractRegistry> _directory;
 
         public CqrsEngineBuilder()
         {
@@ -43,7 +43,7 @@ namespace Lokad.Cqrs.Build.Engine
             
         }
 
-        readonly IList<Func<IComponentContext, IQueueWriterFactory>> _activators = new List<Func<IComponentContext, IQueueWriterFactory>>();
+        readonly IList<Func<Container, IQueueWriterFactory>> _activators = new List<Func<Container, IQueueWriterFactory>>();
 
         readonly List<IObserver<ISystemEvent>> _observers = new List<IObserver<ISystemEvent>>
             {
@@ -61,27 +61,26 @@ namespace Lokad.Cqrs.Build.Engine
             _envelopeSerializer = serializer;
         }
 
-        void IAdvancedEngineBuilder.RegisterQueueWriterFactory(Func<IComponentContext,IQueueWriterFactory> activator)
+        void IAdvancedEngineBuilder.RegisterQueueWriterFactory(Func<Container,IQueueWriterFactory> activator)
         {
             _activators.Add(activator);
         }
 
-        readonly List<IModule> _moduleEnlistments = new List<IModule>();
+        Action<Container> _moduleEnlistments = container => { };
 
 
-        void IAdvancedEngineBuilder.RegisterModule(IModule module)
+        void IAdvancedEngineBuilder.RegisterModule(IFunqlet module)
         {
-            _moduleEnlistments.Add(module);
+            _moduleEnlistments += module.Configure;
         }
 
         
         
 
-        readonly ContainerBuilder _builder = new ContainerBuilder();
 
-        void IAdvancedEngineBuilder.ConfigureContainer(Action<ContainerBuilder> build)
+        void IAdvancedEngineBuilder.ConfigureContainer(Action<Container> build)
         {
-            build(_builder);
+            _moduleEnlistments += build;
         }
 
         void IAdvancedEngineBuilder.RegisterObserver(IObserver<ISystemEvent> observer)
@@ -99,14 +98,14 @@ namespace Lokad.Cqrs.Build.Engine
         {
             var m = new MemoryModule();
             configure(m);
-            Advanced.RegisterModule(m);
+            _moduleEnlistments += m.Configure;
         }
 
         public void File(Action<FileModule> configure)
         {
             var m = new FileModule();
             configure(m);
-            Advanced.RegisterModule(m);
+            _moduleEnlistments += m.Configure;
         }
 
         /// <summary>
@@ -127,28 +126,35 @@ namespace Lokad.Cqrs.Build.Engine
         {
             // nonconditional registrations
             // System presets
-            _builder.RegisterType<DispatcherProcess>();
-            _builder.RegisterInstance(new MemoryAccount());
+            var container = new Container();
+            container.Register(c =>
+                {
+                    return new DispatcherProcess(
+                        c.Resolve<ISystemObserver>(),
+                        c.Resolve<ISingleThreadMessageDispatcher>(),
+                        c.Resolve<IPartitionInbox>(),
+                        c.Resolve<IEnvelopeQuarantine>(),
+                        c.Resolve<MessageDuplicationManager>());
+                }).ReusedWithin(ReuseScope.None);
             
-            foreach (var module in _moduleEnlistments)
-            {
-                _builder.RegisterModule(module);
-            }
-            var container = _builder.Build();
+            
+            container.Register(new MemoryAccount());
+
+            _moduleEnlistments(container);
             var system = new SystemObserver(_observers.ToArray());
 
-            var reg = container.ComponentRegistry;
             
-            Configure(reg, system);
+            
+            Configure(container, system);
 
             var processes = container.Resolve<IEnumerable<IEngineProcess>>();
-            var scope = container.Resolve<ILifetimeScope>();
-            var host = new CqrsEngineHost(scope, system, processes);
+            
+            var host = new CqrsEngineHost(container, system, processes);
             host.Initialize();
             return host;
         }
 
-        void Configure(IComponentRegistry reg, ISystemObserver system) 
+        void Configure(Container reg, ISystemObserver system) 
         {
             reg.Register(system);
             
@@ -164,10 +170,10 @@ namespace Lokad.Cqrs.Build.Engine
             reg.Register(dataSerializer);
             reg.Register<IEnvelopeStreamer>(c => streamer);
             reg.Register(new MessageDuplicationManager());
-            
+            reg.Register(new List<IEngineProcess>());
         }
 
-        QueueWriterRegistry BuildRegistry(IComponentContext c) {
+        QueueWriterRegistry BuildRegistry(Container c) {
             var r = new QueueWriterRegistry();
                     
             foreach (var activator in _activators)

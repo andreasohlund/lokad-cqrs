@@ -2,8 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using Autofac;
-using Autofac.Core;
+using Funq;
 using Lokad.Cqrs.Feature.AtomicStorage;
 using Lokad.Cqrs.Feature.StreamingStorage;
 using Lokad.Cqrs.Feature.TapeStorage;
@@ -67,7 +66,7 @@ namespace Lokad.Cqrs.Build.Engine
         }
 
 
-        readonly List<IModule> _modules = new List<IModule>();
+        Action<Container> _modules = container => { };
 
 
         public void StreamingIsInFiles(string filePath)
@@ -80,16 +79,14 @@ namespace Lokad.Cqrs.Build.Engine
             _streamingRoot = streamingRoot;
         }
 
-        public void EnlistModule(IModule module)
+        public void EnlistModule(Action<Container> module)
         {
-            _modules.Add(module);
+            _modules += module;
         }
 
 
-        public void Configure(IComponentRegistry componentRegistry)
+        public void Configure(Container container)
         {
-            var builder = new ContainerBuilder();
-
             if (_atomicStorageFactory == null)
             {
                 AtomicIsInMemory(strategyBuilder => { });
@@ -103,21 +100,19 @@ namespace Lokad.Cqrs.Build.Engine
                 TapeIsInMemory();
             }
 
-            var core = new AtomicRegistrationCore(_atomicStorageFactory);
-            var source = new AtomicRegistrationSource(core);
-            builder.RegisterSource(source);
-            builder.RegisterInstance(new NuclearStorage(_atomicStorageFactory));
-            builder
-                .Register(
-                    c => new AtomicStorageInitialization(new[] {_atomicStorageFactory}, c.Resolve<ISystemObserver>()))
-                .As<IEngineProcess>().SingleInstance();
+            container.Sources.Push(new AtomicRegistrationCore());
+            container.Register(new NuclearStorage(_atomicStorageFactory));
 
-            builder.RegisterInstance(_streamingRoot);
+            container.Resolve<List<IEngineProcess>>()
+                .Add(new AtomicStorageInitialization(new[] { _atomicStorageFactory }, container.Resolve<ISystemObserver>()));
+            
 
-            builder.RegisterInstance(_tapeStorage);
-            builder.RegisterInstance(new TapeStorageInitilization(new[] {_tapeStorage})).As<IEngineProcess>();
+            container.Register(_streamingRoot);
 
-            builder.Update(componentRegistry);
+            container.Register(_tapeStorage);
+            container.Register< IEngineProcess>(new TapeStorageInitilization(new[] { _tapeStorage }));
+
+            
         }
     }
 }
