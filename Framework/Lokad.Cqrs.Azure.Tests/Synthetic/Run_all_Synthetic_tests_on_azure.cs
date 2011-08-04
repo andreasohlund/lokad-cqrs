@@ -28,7 +28,7 @@ namespace Lokad.Cqrs
                     m.AddAzureProcess(dev, new[] {"test-incoming"}, c =>
                         {
                             c.QueueVisibility(1);
-                            c.DispatchAsCommandBatch();
+                            //c.DispatchAsCommandBatch();
                         });
                     m.AddAzureSender(dev, "test-incoming", x => x.IdGeneratorForTests());
                 });

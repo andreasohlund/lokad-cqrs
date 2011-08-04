@@ -26,7 +26,6 @@ namespace Lokad.Cqrs.Core.Serialization
                     throw new InvalidOperationException("registry has already been read from. Make sure all regs are done before reading.");
             }
             _types.AddRange(types);
-            
         }
     }
 }

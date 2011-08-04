@@ -55,18 +55,10 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core.Directory\Method_Invoker_tests.cs" />
     <Compile Include="Documentation_sample.cs" />
     <Compile Include="Feature.AtomicStorage\Atomic_storage_scenarios.cs" />
     <Compile Include="Feature.AtomicStorage\Given_File_Configuration.cs" />
     <Compile Include="Feature.AtomicStorage\Syntax_verification.cs" />
-    <Compile Include="Core.Directory\MessageDirectoryFixture.cs" />
-    <Compile Include="Core.Directory\When_activations_constrained_to_handler_type_with_type.cs" />
-    <Compile Include="Core.Directory\When_activations_constrained_to_message_interface.cs" />
-    <Compile Include="Core.Directory\When_activation_map_constrained_to_catch_all_consumer.cs" />
-    <Compile Include="Core.Directory\When_activations_constrained_to_handler_type_with_interface.cs" />
-    <Compile Include="Core.Directory\When_builder_is_available.cs" />
-    <Compile Include="Core.Directory\When_there_are_no_catch_all_handlers.cs" />
     <Compile Include="Core.Envelope\Play_all_for_DataContracts.cs" />
     <Compile Include="Core.Envelope\Play_all_for_Memory.cs" />
     <Compile Include="Core.Envelope\Scenarios\DataSerializerWithBinaryFormatter.cs" />
@@ -92,33 +84,13 @@
     <Compile Include="Feature.StreamingStorage\Scenarios\When_deleting_item_in.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\When_reading_item_in.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\When_writing_item_in.cs" />
-    <Compile Include="Given_MessageContext_Specified.cs" />
     <Compile Include="BasicEngineConfigurationTests.cs" />
-    <Compile Include="Given_MessageContext_Omitted.cs" />
-    <Compile Include="Scenarios\001-SimpleES\AccountAggregateReader.cs" />
-    <Compile Include="Scenarios\001-SimpleES\AccountAggregateRepository.cs" />
-    <Compile Include="Scenarios\001-SimpleES\AccountAggregateWriter.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\AccountCreated.cs" />
-    <Compile Include="Scenarios\001-SimpleES\AccountHandler.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\AddLogin.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\CreateAccount.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Definitions\Define.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Definitions\IAccountCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Definitions\IAccountEvent.cs" />
-    <Compile Include="Scenarios\001-SimpleES\InMemoryEventStreamer.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\LoginAdded.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\LoginIndex.cs" />
-    <Compile Include="Scenarios\002-Multiverse\MultiverseTests.cs" />
-    <Compile Include="Scenarios\001-SimpleES\RedirectToWhen.cs" />
-    <Compile Include="Scenarios\001-SimpleES\SimpleESTests.cs" />
     <Compile Include="Synthetic\All_synthetic_scenarios.cs" />
     <Compile Include="Synthetic\Engine_scenario_for_permanent_failure.cs" />
     <Compile Include="Synthetic\Engine_scenario_for_transactional_commands.cs" />
     <Compile Include="Synthetic\Engine_scenario_for_transient_failure.cs" />
     <Compile Include="Synthetic\Given_duplicate_configuration.cs" />
-    <Compile Include="Synthetic\Run_all_synthetic_scenarios_for_files.cs" />
-    <Compile Include="Synthetic\Run_all_Synthetic_scenarios_in_memory.cs" />
     <Compile Include="Synthetic\TransactionTester.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +98,9 @@
       <Project>{4E2E749C-4D6F-4EF8-8E9D-96D467306997}</Project>
       <Name>Lokad.Cqrs.Portable</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scenarios\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

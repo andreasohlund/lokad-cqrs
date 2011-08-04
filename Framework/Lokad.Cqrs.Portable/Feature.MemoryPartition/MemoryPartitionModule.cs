@@ -8,14 +8,14 @@
 using System;
 using Autofac;
 using Autofac.Core;
+using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core;
-using Lokad.Cqrs.Feature.DirectoryDispatch;
 
 namespace Lokad.Cqrs.Feature.MemoryPartition
 {
-    public sealed class MemoryPartitionModule : HideObjectMembersFromIntelliSense
+    public sealed class MemoryPartitionModule : HideObjectMembersFromIntelliSense, IAdvancedDispatchBuilder
     {
         readonly string[] _memoryQueues;
 
@@ -26,7 +26,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
         {
             _memoryQueues = memoryQueues;
 
-            DispatchAsEvents();
+            DispatcherIsLambda(c => (envelope => { throw new InvalidOperationException("There was no dispatcher configured");}) );
 
             Quarantine(c => new MemoryQuarantine());
         }
@@ -54,27 +54,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
             _quarantineFactory = factory;
         }
 
-        /// <summary>
-        /// <para>Wires <see cref="DispatchOneEvent"/> implementation of <see cref="ISingleThreadMessageDispatcher"/> 
-        /// into this partition. It allows dispatching a single event to zero or more consumers.</para>
-        /// <para> Additional information is available in project docs.</para>
-        /// </summary>
-        public void DispatchAsEvents(Action<MessageDirectoryFilter> optionalFilter = null)
-        {
-            var action = optionalFilter ?? (x => { });
-            _dispatcher = ctx => DirectoryDispatchFactory.OneEvent(ctx, action);
-        }
-
-        /// <summary>
-        /// <para>Wires <see cref="DispatchCommandBatch"/> implementation of <see cref="ISingleThreadMessageDispatcher"/> 
-        /// into this partition. It allows dispatching multiple commands (in a single envelope) to one consumer each.</para>
-        /// <para> Additional information is available in project docs.</para>
-        /// </summary>
-        public void DispatchAsCommandBatch(Action<MessageDirectoryFilter> optionalFilter = null)
-        {
-            var action = optionalFilter ?? (x => { });
-            _dispatcher = ctx => DirectoryDispatchFactory.CommandBatch(ctx, action);
-        }
+        
 
         public void DispatchToRoute(Func<ImmutableEnvelope, string> route)
         {

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using Lokad.Cqrs.Build.Engine;
@@ -15,14 +16,62 @@ using Lokad.Cqrs.Core.Envelope;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Core.Serialization;
-using Lokad.Cqrs.Feature.DirectoryDispatch;
+using Lokad.Cqrs.Evil;
 using Lokad.Cqrs.Feature.MemoryPartition;
+using System.Linq;
 
 namespace Lokad.Cqrs.Build.Client
 {
+    public sealed class MessageLookupModule
+    {
+        readonly List<Assembly> _assemblies;
+        readonly IList<Predicate<Type>> _constraints;
+
+        public MessageLookupModule()
+        {
+            _constraints = new List<Predicate<Type>>
+                {
+                    type => false == type.IsAbstract
+                };
+            _assemblies = new List<Assembly>();
+        }
+
+
+        /// <summary>
+        /// Includes assemblies of the specified types into the discovery process
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>same module instance for chaining fluent configurations</returns>
+        public void InAssemblyOf<T>()
+        {
+            _assemblies.Add(typeof(T).Assembly);
+        }
+
+        public void InAssemblyOf(object instance)
+        {
+            _assemblies.Add(instance.GetType().Assembly);
+        }
+
+        public void WhereMessages(Predicate<Type> constraint)
+        {
+            _constraints.Add(constraint);
+        }
+
+        public IEnumerable<Type> LookupMessages()
+        {
+            if (_assemblies.Count == 0)
+            {
+                _assemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies().Where(AssemblyScanEvil.IsProbablyUserAssembly)); 
+            }
+            return _assemblies
+                .SelectMany(a => a.GetExportedTypes())
+                .Where(t => _constraints.All(predicate => predicate(t)));
+        }
+    }
+
     public class CqrsClientBuilder : HideObjectMembersFromIntelliSense, IAdvancedClientBuilder
     {
-        readonly DispatchDirectoryModule _domain = new DispatchDirectoryModule();
+        readonly MessageLookupModule _domain = new MessageLookupModule();
         readonly StorageModule _storageModule = new StorageModule();
 
         readonly List<IModule> _enlistments = new List<IModule>();
@@ -83,7 +132,7 @@ namespace Lokad.Cqrs.Build.Client
         /// </summary>
         /// <param name="config">configuration syntax.</param>
         /// <returns>same builder for inline multiple configuration statements</returns>
-        public void Domain(Action<DispatchDirectoryModule> config)
+        public void Domain(Action<MessageLookupModule> config)
         {
             config(_domain);
         }
@@ -119,7 +168,8 @@ namespace Lokad.Cqrs.Build.Client
             var system = new SystemObserver(_observers.ToArray());
             reg.Register<ISystemObserver>(system);
             // domain should go before serialization
-            _domain.Configure(reg, _serializationList);
+
+            _serializationList.AddRange(_domain.LookupMessages());
             _storageModule.Configure(reg);
 
             var serializer = _dataSerializer(_serializationList.GetAndMakeReadOnly());

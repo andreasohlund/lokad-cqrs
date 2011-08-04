@@ -22,7 +22,7 @@ using Lokad.Cqrs.Feature.DirectoryDispatch;
 
 namespace Lokad.Cqrs.Feature.AzurePartition
 {
-    public sealed class AzurePartitionModule : HideObjectMembersFromIntelliSense
+    public sealed class AzurePartitionModule : HideObjectMembersFromIntelliSense, IAdvancedDispatchBuilder
     {
         readonly HashSet<string> _queueNames = new HashSet<string>();
         TimeSpan _queueVisibilityTimeout;
@@ -37,7 +37,7 @@ namespace Lokad.Cqrs.Feature.AzurePartition
 
         public AzurePartitionModule(IAzureStorageConfig config, string[] queueNames)
         {
-            DispatchAsEvents();
+            DispatcherIsLambda(context => (envelope => { throw new InvalidOperationException("Dispatcher was not configured");}) );
             
             QueueVisibility(30000);
 
@@ -98,27 +98,8 @@ namespace Lokad.Cqrs.Feature.AzurePartition
         }
 
 
-        /// <summary>
-        /// <para>Wires <see cref="DispatchOneEvent"/> implementation of <see cref="ISingleThreadMessageDispatcher"/> 
-        /// into this partition. It allows dispatching a single event to zero or more consumers.</para>
-        /// <para> Additional information is available in project docs.</para>
-        /// </summary>
-        public void DispatchAsEvents(Action<MessageDirectoryFilter> optionalFilter = null)
-        {
-            var action = optionalFilter ?? (x => { });
-            _dispatcher = ctx => DirectoryDispatchFactory.OneEvent(ctx, action);
-        }
 
-        /// <summary>
-        /// <para>Wires <see cref="DispatchCommandBatch"/> implementation of <see cref="ISingleThreadMessageDispatcher"/> 
-        /// into this partition. It allows dispatching multiple commands (in a single envelope) to one consumer each.</para>
-        /// <para> Additional information is available in project docs.</para>
-        /// </summary>
-        public void DispatchAsCommandBatch(Action<MessageDirectoryFilter> optionalFilter = null)
-        {
-            var action = optionalFilter ?? (x => { });
-            _dispatcher = ctx => DirectoryDispatchFactory.CommandBatch(ctx, action);
-        }
+
         
         public void DispatchToRoute(Func<ImmutableEnvelope,string> route)
         {

@@ -15,7 +15,6 @@ using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Core.Serialization;
 using Lokad.Cqrs.Core;
-using Lokad.Cqrs.Feature.DirectoryDispatch;
 using Lokad.Cqrs.Feature.MemoryPartition;
 
 // ReSharper disable UnusedMethodReturnValue.Global
@@ -37,8 +36,8 @@ namespace Lokad.Cqrs.Build.Engine
         public CqrsEngineBuilder()
         {
             // default
-            _directory =
-                (registry, contractRegistry) => new DispatchDirectoryModule().Configure(registry, contractRegistry);
+            _directory = 
+                (registry, contractRegistry) => { };
 
             _activators.Add(context => new MemoryQueueWriterFactory(context.Resolve<MemoryAccount>()));
             
@@ -76,21 +75,7 @@ namespace Lokad.Cqrs.Build.Engine
         }
 
         
-        /// <summary>
-        /// Configures the message domain for the instance of <see cref="CqrsEngineHost"/>.
-        /// </summary>
-        /// <param name="config">configuration syntax.</param>
-        /// <returns>same builder for inline multiple configuration statements</returns>
-        public void Domain(Action<DispatchDirectoryModule> config)
-        {
-            _directory = (registry, contractRegistry) =>
-                {
-                    var m = new DispatchDirectoryModule();
-                    config(m);
-                    m.Configure(registry, contractRegistry);
-                };
-
-        }
+        
 
         readonly ContainerBuilder _builder = new ContainerBuilder();
 
