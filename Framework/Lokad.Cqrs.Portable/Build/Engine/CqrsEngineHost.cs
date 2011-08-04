@@ -19,7 +19,26 @@ using Lokad.Cqrs.Evil;
 
 namespace Lokad.Cqrs.Build.Engine
 {
-    
+    public sealed class EngineSetup
+    {
+        readonly List<IEngineProcess> _processes;
+
+        public void AddProcess(IEngineProcess process)
+        {
+            _processes.Add(process);
+        }
+
+        public ICollection<IEngineProcess> GetProcesses()
+        {
+            return _processes.AsReadOnly();
+            ;
+        }
+
+        public EngineSetup()
+        {
+            _processes = new List<IEngineProcess>();
+        }
+    }
 
     public sealed class CqrsEngineHost : IDisposable
     {
@@ -30,7 +49,7 @@ namespace Lokad.Cqrs.Build.Engine
         public CqrsEngineHost(
             Container container,
             SystemObserver observer,
-            List<IEngineProcess> serverProcesses)
+            IEnumerable<IEngineProcess> serverProcesses)
         {
             Container = container;
             _serverProcesses = serverProcesses;

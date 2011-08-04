@@ -79,7 +79,10 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
 
         public void Configure(Container container)
         {
-            container.Register(BuildConsumingProcess);
+            var process = BuildConsumingProcess(container);
+            var setup = container.Resolve<EngineSetup>();
+            setup.AddProcess(process);
+            
         }
     }
 }

@@ -129,31 +129,22 @@ namespace Lokad.Cqrs.Build.Engine
             // nonconditional registrations
             // System presets
             var container = new Container();
-            var processes = new List<IEngineProcess>();
-            container.Register(processes);
+            var core = new EngineSetup();
+            container.Register(core);
             container.Register(new MemoryAccount());
-
-            _moduleEnlistments(container);
             var system = new SystemObserver(_observers.ToArray());
-
+            container.Register<ISystemObserver>(system);
+            Configure(container);
+            _moduleEnlistments(container);
             
-            
-            Configure(container, system);
-
-            
-            var host = new CqrsEngineHost(container, system, processes);
+            var host = new CqrsEngineHost(container, system, core.GetProcesses());
             host.Initialize();
             return host;
         }
 
-        void Configure(Container reg, ISystemObserver system) 
+        void Configure(Container reg) 
         {
-            reg.Register(system);
-            
             // domain should go before serialization
-
-            
-            
             _storage.Configure(reg);
 
             var types = _module.LookupMessages().ToArray();

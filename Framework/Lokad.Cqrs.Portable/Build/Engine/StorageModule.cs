@@ -103,9 +103,13 @@ namespace Lokad.Cqrs.Build.Engine
             container.Sources.Push(new AtomicRegistrationCore());
             container.Register(new NuclearStorage(_atomicStorageFactory));
 
-            container.Resolve<List<IEngineProcess>>()
-                .Add(new AtomicStorageInitialization(new[] { _atomicStorageFactory }, container.Resolve<ISystemObserver>()));
-            
+            var setup = container.TryResolve<EngineSetup>();
+            if (null!=setup)
+            {
+                var process = new AtomicStorageInitialization(new[] { _atomicStorageFactory }, container.Resolve<ISystemObserver>());
+                setup.AddProcess(process);
+            }
+
 
             container.Register(_streamingRoot);
 
