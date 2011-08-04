@@ -12,7 +12,7 @@ using Lokad.Cqrs.Core.Inbox;
 namespace Lokad.Cqrs.Feature.AzurePartition.Inbox
 {
     /// <summary>
-    /// Handles deserialization, joins multiple queues and notifications
+    /// Polling implementation of message reciever for Azure queues
     /// </summary>
     public sealed class AzurePartitionInbox : IPartitionInbox
     {

@@ -1,18 +1,31 @@
+#region (c) 2010-2011 Lokad CQRS - New BSD License 
+
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
+// This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
+
+#endregion
+
 using System;
-using System.Collections.Concurrent;
-using System.IO;
 using System.Threading;
 using Lokad.Cqrs.Core.Inbox;
-using System.Linq;
 
 namespace Lokad.Cqrs.Feature.FilePartition
 {
+    /// <summary>
+    /// Polling file-based implementation of <see cref="IPartitionInbox"/>
+    /// </summary>
     public sealed class FilePartitionInbox : IPartitionInbox
     {
         readonly StatelessFileQueueReader[] _readers;
         readonly Func<uint, TimeSpan> _waiter;
         uint _emptyCycles;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FilePartitionInbox"/> class.
+        /// </summary>
+        /// <param name="readers">Multiple file queue readers.</param>
+        /// <param name="waiter">The waiter function (to slow down polling if there are no messages).</param>
         public FilePartitionInbox(StatelessFileQueueReader[] readers, Func<uint, TimeSpan> waiter)
         {
             _readers = readers;
@@ -56,7 +69,8 @@ namespace Lokad.Cqrs.Feature.FilePartition
                             // future message
                             if (message.Envelope.Unpacked.DeliverOnUtc > DateTime.UtcNow)
                             {
-                                throw new InvalidOperationException("Future message delivery has been disabled in the code");
+                                throw new InvalidOperationException(
+                                    "Future message delivery has been disabled in the code");
                             }
                             context = message.Envelope;
                             return true;
@@ -80,9 +94,6 @@ namespace Lokad.Cqrs.Feature.FilePartition
             return false;
         }
 
-        public void TryNotifyNack(EnvelopeTransportContext context)
-        {
-            
-        }
+        public void TryNotifyNack(EnvelopeTransportContext context) {}
     }
 }
