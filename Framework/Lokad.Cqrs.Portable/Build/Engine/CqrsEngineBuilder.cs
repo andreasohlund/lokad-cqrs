@@ -16,6 +16,7 @@ using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Core.Serialization;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.MemoryPartition;
+using System.Linq;
 
 // ReSharper disable UnusedMethodReturnValue.Global
 
@@ -26,21 +27,22 @@ namespace Lokad.Cqrs.Build.Engine
     /// </summary>
     public class CqrsEngineBuilder : HideObjectMembersFromIntelliSense, IAdvancedEngineBuilder
     {
-        readonly SerializationContractRegistry _dataSerialization = new SerializationContractRegistry();
         IEnvelopeSerializer _envelopeSerializer = new EnvelopeSerializerWithDataContracts();
         Func<Type[], IDataSerializer> _dataSerializer = types => new DataSerializerWithDataContracts(types);
         readonly StorageModule _storage = new StorageModule();
 
-        Action<Container, SerializationContractRegistry> _directory;
+        MessageLookupModule _module = new MessageLookupModule();
+        
+
 
         public CqrsEngineBuilder()
         {
-            // default
-            _directory = 
-                (registry, contractRegistry) => { };
-
             _activators.Add(context => new MemoryQueueWriterFactory(context.Resolve<MemoryAccount>()));
-            
+        }
+
+        public void Domain(Action<MessageLookupModule> config)
+        {
+            config(_module);
         }
 
         readonly IList<Func<Container, IQueueWriterFactory>> _activators = new List<Func<Container, IQueueWriterFactory>>();
@@ -127,17 +129,8 @@ namespace Lokad.Cqrs.Build.Engine
             // nonconditional registrations
             // System presets
             var container = new Container();
-            container.Register(c =>
-                {
-                    return new DispatcherProcess(
-                        c.Resolve<ISystemObserver>(),
-                        c.Resolve<ISingleThreadMessageDispatcher>(),
-                        c.Resolve<IPartitionInbox>(),
-                        c.Resolve<IEnvelopeQuarantine>(),
-                        c.Resolve<MessageDuplicationManager>());
-                }).ReusedWithin(ReuseScope.None);
-            
-            
+            var processes = new List<IEngineProcess>();
+            container.Register(processes);
             container.Register(new MemoryAccount());
 
             _moduleEnlistments(container);
@@ -147,7 +140,6 @@ namespace Lokad.Cqrs.Build.Engine
             
             Configure(container, system);
 
-            var processes = container.Resolve<IEnumerable<IEngineProcess>>();
             
             var host = new CqrsEngineHost(container, system, processes);
             host.Initialize();
@@ -159,10 +151,12 @@ namespace Lokad.Cqrs.Build.Engine
             reg.Register(system);
             
             // domain should go before serialization
-            _directory(reg, _dataSerialization);
+
+            
+            
             _storage.Configure(reg);
 
-            var types = _dataSerialization.GetAndMakeReadOnly();
+            var types = _module.LookupMessages().ToArray();
             var dataSerializer = _dataSerializer(types);
             var streamer = new EnvelopeStreamer(_envelopeSerializer, dataSerializer);
             
@@ -170,7 +164,7 @@ namespace Lokad.Cqrs.Build.Engine
             reg.Register(dataSerializer);
             reg.Register<IEnvelopeStreamer>(c => streamer);
             reg.Register(new MessageDuplicationManager());
-            reg.Register(new List<IEngineProcess>());
+            
         }
 
         QueueWriterRegistry BuildRegistry(Container c) {

@@ -19,6 +19,8 @@ using Lokad.Cqrs.Evil;
 
 namespace Lokad.Cqrs.Build.Engine
 {
+    
+
     public sealed class CqrsEngineHost : IDisposable
     {
         public Container Container { get; private set; }
@@ -28,7 +30,7 @@ namespace Lokad.Cqrs.Build.Engine
         public CqrsEngineHost(
             Container container,
             SystemObserver observer,
-            IEnumerable<IEngineProcess> serverProcesses)
+            List<IEngineProcess> serverProcesses)
         {
             Container = container;
             _serverProcesses = serverProcesses;

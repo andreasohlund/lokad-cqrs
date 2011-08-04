@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Lokad.Cqrs.Evil;
+using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
 
-namespace Lokad.Cqrs.Build.Client
+namespace Lokad.Cqrs.Build
 {
     public sealed class MessageLookupModule
     {
         readonly List<Assembly> _assemblies;
         readonly IList<Predicate<Type>> _constraints;
 
+
+        bool _constraintsDirty;
         public MessageLookupModule()
         {
             _constraints = new List<Predicate<Type>>
@@ -39,6 +42,7 @@ namespace Lokad.Cqrs.Build.Client
         public void WhereMessages(Predicate<Type> constraint)
         {
             _constraints.Add(constraint);
+            _constraintsDirty = true;
         }
 
         public IEnumerable<Type> LookupMessages()
@@ -46,6 +50,10 @@ namespace Lokad.Cqrs.Build.Client
             if (_assemblies.Count == 0)
             {
                 _assemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies().Where(AssemblyScanEvil.IsProbablyUserAssembly)); 
+            }
+            if (!_constraintsDirty)
+            {
+                _constraints.Add(t => typeof(IMessage).IsAssignableFrom(t));
             }
             return _assemblies
                 .SelectMany(a => a.GetExportedTypes())

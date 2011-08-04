@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Funq
 {
@@ -287,7 +288,7 @@ namespace Funq
 
 			return (ServiceEntry<TService, TFunc>)entry;
 		}
-
+        [DebuggerNonUserCode]
 		private static TService ThrowMissing<TService>(string serviceName)
 		{
 			if (serviceName == null)
