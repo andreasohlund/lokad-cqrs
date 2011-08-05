@@ -17,6 +17,7 @@ namespace Lokad.Cqrs.Scenarios.SimpleES
         public void Test()
         {
             var builder = new CqrsEngineBuilder();
+            
             builder.Domain(m =>
                 {
                     m.HandlerSample<Definitions.Define.Consumer<Definitions.Define.ICommand>>(c => c.Consume(null));
@@ -26,15 +27,13 @@ namespace Lokad.Cqrs.Scenarios.SimpleES
             builder.Memory(m =>
                 {
                     m.AddMemorySender("in", c => c.IdGeneratorForTests());
-                    m.AddMemoryProcess("in");
+                    m.AddMemoryProcess("in", mqm => mqm.DispatchAsEvents());
                 });
 
             builder.Advanced.ConfigureContainer(cb =>
                 {
                     cb.Register(c => new InMemoryEventStreamer<IAccountEvent>(c.Resolve<IMessageSender>())).ReusedWithin(ReuseScope.Hierarchy);
-
                     cb.Register(c => new AccountAggregateRepository(c.Resolve<InMemoryEventStreamer<IAccountEvent>>())).ReusedWithin(ReuseScope.Hierarchy);
-
                 });
 
             using (var source = new CancellationTokenSource())
@@ -49,8 +48,6 @@ namespace Lokad.Cqrs.Scenarios.SimpleES
                 source.Token.WaitHandle.WaitOne(5000);
                 source.Cancel();
             }
-            
         }
-        
     }
 }

@@ -31,7 +31,7 @@ namespace Lokad.Cqrs.Build.Engine
         Func<Type[], IDataSerializer> _dataSerializer = types => new DataSerializerWithDataContracts(types);
         readonly StorageModule _storage = new StorageModule();
 
-        MessageLookupModule _module = new MessageLookupModule();
+        //readonly MessageLookupModule _messages = new MessageLookupModule();
         
 
 
@@ -40,9 +40,16 @@ namespace Lokad.Cqrs.Build.Engine
             _activators.Add(context => new MemoryQueueWriterFactory(context.Resolve<MemoryAccount>()));
         }
 
-        public void Domain(Action<MessageLookupModule> config)
+        public void Messages(Action<MessageLookupModule> config)
         {
-            config(_module);
+            var mlm = new MessageLookupModule();
+            config(mlm);
+            _serializationTypes.AddRange(mlm.LookupMessages());
+        }
+
+        public void Messages(IEnumerable<Type> messageTypes)
+        {
+            _serializationTypes.AddRange(messageTypes);
         }
 
         readonly IList<Func<Container, IQueueWriterFactory>> _activators = new List<Func<Container, IQueueWriterFactory>>();
@@ -142,23 +149,31 @@ namespace Lokad.Cqrs.Build.Engine
             return host;
         }
 
+        List<Type> _serializationTypes = new List<Type>(); 
+
         void Configure(Container reg) 
         {
             // domain should go before serialization
             _storage.Configure(reg);
 
-            var types = _module.LookupMessages().ToArray();
-            var dataSerializer = _dataSerializer(types);
+            if (_serializationTypes.Count == 0)
+            {
+                // default scan if nothing specified
+                Messages(m => { });
+            }
+
+            
+            var dataSerializer = _dataSerializer(_serializationTypes.ToArray());
             var streamer = new EnvelopeStreamer(_envelopeSerializer, dataSerializer);
             
             reg.Register(BuildRegistry);
             reg.Register(dataSerializer);
             reg.Register<IEnvelopeStreamer>(c => streamer);
             reg.Register(new MessageDuplicationManager());
-            
         }
 
-        QueueWriterRegistry BuildRegistry(Container c) {
+        QueueWriterRegistry BuildRegistry(Container c) 
+        {
             var r = new QueueWriterRegistry();
                     
             foreach (var activator in _activators)

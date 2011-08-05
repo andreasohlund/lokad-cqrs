@@ -55,7 +55,7 @@ namespace Lokad.Cqrs.Scenarios.Multiverse
 
             builder.Memory(m =>
                 {
-                    m.AddMemoryProcess("in");
+                    m.AddMemoryProcess("in", mqm => mqm.DispatchAsCommandBatch());
                     m.AddMemorySender("in");
                 });
 

@@ -1,13 +1,13 @@
 using System;
-using Autofac;
 using Funq;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 
 namespace Lokad.Cqrs.Feature.DirectoryDispatch
 {
     public static class DirectoryDispatchFactory
     {
-        public static ISingleThreadMessageDispatcher CommandBatch(IComponentContext ctx, Action<MessageDirectoryFilter> optionalFilter)
+        public static ISingleThreadMessageDispatcher CommandBatch(Container ctx, Action<MessageDirectoryFilter> optionalFilter)
         {
             var builder = ctx.Resolve<MessageDirectoryBuilder>();
             var filter = new MessageDirectoryFilter();

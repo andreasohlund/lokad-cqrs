@@ -61,7 +61,7 @@
     <Compile Include="Core.Envelope\Scenarios\When_envelope_is_serialized.cs" />
     <Compile Include="Core.Envelope\Scenarios\EnvelopeSerializerWithBinaryFormatter.cs" />
     <Compile Include="Core.Envelope\Play_all_for_BinaryFormatter.cs" />
-    <Compile Include="ExtendMaybe.cs" />
+    <Compile Include="ExtendOptional.cs" />
     <Compile Include="Feature.AtomicStorage\Engine_scenario_for_custom_view_domain.cs" />
     <Compile Include="Feature.AtomicStorage\Given_atomic_storage_When_memory_is_used.cs" />
     <Compile Include="Feature.StreamingStorage\Engine_scenario_for_streaming_storage.cs" />
@@ -94,9 +94,7 @@
       <Name>Lokad.Cqrs.Portable</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scenarios\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

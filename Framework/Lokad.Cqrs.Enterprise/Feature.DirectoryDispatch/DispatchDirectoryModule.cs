@@ -6,16 +6,16 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Transactions;
 using Autofac;
-using Autofac.Core;
-using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Serialization;
 using Lokad.Cqrs.Evil;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
+using Container = Lokad.Cqrs.Core.Container;
 
 // ReSharper disable UnusedMember.Global
 
@@ -90,7 +90,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
         }
 
 
-        public void Configure(IComponentRegistry container, SerializationContractRegistry types)
+        public void Configure(Container container, Action<IEnumerable<Type>> serializationVisitor)
         {
             _scanner.Constrain(_hint);
             var mappings = _scanner.Build(_hint.ConsumerTypeDefinition);
@@ -101,7 +101,9 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
                 .Where(m => !m.IsAbstract)
                 .Distinct();
 
-            types.AddRange(messageTypes);
+            serializationVisitor(messageTypes);
+
+            //types.AddRange(messageTypes);
 
             var builder = new MessageDirectoryBuilder(mappings);
 
@@ -113,19 +115,21 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
                 .Distinct()
                 .ToArray();
 
-            var cb = new ContainerBuilder();
+            var autofacBuilder = new ContainerBuilder();
             foreach (var consumer in consumers)
             {
-                cb.RegisterType(consumer);
+                autofacBuilder.RegisterType(consumer);
             }
-            cb.RegisterInstance(provider).AsSelf();
-            cb.Update(container);
-            container.Register<IMessageDispatchStrategy>(c =>
-                {
-                    var scope = c.Resolve<ILifetimeScope>();
-                    var tx = Factory(TransactionScopeOption.RequiresNew);
-                    return new AutofacDispatchStrategy(scope, tx, _hint.Lookup, _contextManager);
-                });
+            autofacBuilder.RegisterInstance(provider).AsSelf();
+            autofacBuilder.RegisterInstance(container);
+            autofacBuilder.RegisterSource(new FunqRegistrationSource(container));
+
+            var autofacContainer = autofacBuilder.Build();
+
+            var tx = Factory(TransactionScopeOption.RequiresNew);
+            var strategy = new AutofacDispatchStrategy(autofacContainer, tx, _hint.Lookup, _contextManager);
+            
+            container.Register<IMessageDispatchStrategy>(strategy);
 
             container.Register(builder);
         }

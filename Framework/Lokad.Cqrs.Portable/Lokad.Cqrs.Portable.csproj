@@ -63,7 +63,6 @@
     <Compile Include="Core.Outbox\QueueWriterRegistry.cs" />
     <Compile Include="Core.Reactive\ImmediateConsoleObserver.cs" />
     <Compile Include="Core.Reactive\ImmediateEventsObserver.cs" />
-    <Compile Include="Core.Serialization\SerializationContractRegistry.cs" />
     <Compile Include="Core\Container.Adapter.cs" />
     <Compile Include="Core\Container.cs" />
     <Compile Include="Core\Container.Overloads.cs" />

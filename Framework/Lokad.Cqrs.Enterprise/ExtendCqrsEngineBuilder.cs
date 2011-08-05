@@ -14,15 +14,9 @@ namespace Lokad.Cqrs
         /// <returns>same builder for inline multiple configuration statements</returns>
         public static void Domain(this CqrsEngineBuilder builder, Action<DispatchDirectoryModule> config)
         {
-            throw new NotImplementedException("Add SCR reg");
-            //builder.
-            //_directory = (registry, contractRegistry) =>
-            //    {
-            //        var m = new DispatchDirectoryModule();
-            //        config(m);
-            //        m.Configure(registry, contractRegistry);
-            //    };
-
+            var module = new DispatchDirectoryModule();
+            config(module);
+            builder.Advanced.ConfigureContainer(c => module.Configure(c, builder.Messages));
         }
     }
 

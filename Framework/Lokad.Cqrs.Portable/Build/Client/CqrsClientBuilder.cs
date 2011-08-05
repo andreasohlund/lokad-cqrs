@@ -16,6 +16,7 @@ using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Core.Serialization;
 using Lokad.Cqrs.Feature.MemoryPartition;
+using System.Linq;
 
 namespace Lokad.Cqrs.Build.Client
 {
@@ -86,8 +87,6 @@ namespace Lokad.Cqrs.Build.Client
             config(_domain);
         }
 
-        readonly SerializationContractRegistry _serializationList = new SerializationContractRegistry();
-
         public CqrsClient Build()
         {
             var container = new Container();
@@ -110,11 +109,9 @@ namespace Lokad.Cqrs.Build.Client
             var system = new SystemObserver(_observers.ToArray());
             reg.Register<ISystemObserver>(system);
             // domain should go before serialization
-
-            _serializationList.AddRange(_domain.LookupMessages());
             _storageModule.Configure(reg);
-
-            var serializer = _dataSerializer(_serializationList.GetAndMakeReadOnly());
+            var types = _domain.LookupMessages().ToArray();
+            var serializer = _dataSerializer(types);
             var streamer = new EnvelopeStreamer(_envelopeSerializer, serializer);
 
             reg.Register(new MemoryAccount());
