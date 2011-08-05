@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Funq;
 using Lokad.Cqrs.Build.Engine.Events;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Evil;
 

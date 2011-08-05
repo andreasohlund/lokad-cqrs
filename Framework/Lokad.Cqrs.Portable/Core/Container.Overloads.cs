@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using Funq;
 
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	public sealed partial class Container
 	{

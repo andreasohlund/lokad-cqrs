@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Container = Lokad.Cqrs.Core.Container;
 
 namespace Funq
 {

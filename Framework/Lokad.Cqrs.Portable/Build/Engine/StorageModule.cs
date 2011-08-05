@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using Funq;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.AtomicStorage;
 using Lokad.Cqrs.Feature.StreamingStorage;
 using Lokad.Cqrs.Feature.TapeStorage;

@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Funq;
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.AtomicStorage;
 using NUnit.Framework;
 

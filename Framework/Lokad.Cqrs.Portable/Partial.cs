@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using Funq;
 using System.Linq;
+using Lokad.Cqrs.Core;
 
 namespace Lokad.Cqrs
 {

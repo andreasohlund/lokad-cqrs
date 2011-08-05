@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Funq;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.AzurePartition;
 using Lokad.Cqrs.Feature.AzurePartition.Sender;

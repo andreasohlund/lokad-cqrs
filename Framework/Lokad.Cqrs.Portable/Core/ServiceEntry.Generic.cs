@@ -1,4 +1,5 @@
 ﻿using System;
+using Lokad.Cqrs.Core;
 
 namespace Funq
 {

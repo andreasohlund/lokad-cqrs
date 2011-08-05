@@ -9,6 +9,7 @@
 using System.Collections.Concurrent;
 using Funq;
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core;
 
 namespace Lokad.Cqrs.Feature.AtomicStorage
 {

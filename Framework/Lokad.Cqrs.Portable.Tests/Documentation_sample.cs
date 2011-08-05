@@ -9,6 +9,7 @@ using System;
 using System.Runtime.Serialization;
 using Funq;
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.AtomicStorage;
 using NUnit.Framework;
 

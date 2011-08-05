@@ -12,10 +12,11 @@ using System.ComponentModel;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.AzurePartition.Sender;
+using Container = Lokad.Cqrs.Core.Container;
 
 namespace Lokad.Cqrs.Build
 {
-    using Container = Funq.Container;
+    using Container = Container;
 
     public sealed class AzureClientModule : HideObjectMembersFromIntelliSense, IFunqlet
     {

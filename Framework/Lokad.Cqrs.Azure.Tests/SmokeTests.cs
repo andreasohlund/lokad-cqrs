@@ -12,6 +12,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using Funq;
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
 using NUnit.Framework;
 

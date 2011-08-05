@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Funq;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Evil;

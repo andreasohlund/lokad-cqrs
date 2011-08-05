@@ -13,6 +13,10 @@ using Lokad.Cqrs.Core.Inbox;
 
 namespace Lokad.Cqrs.Core.Dispatch
 {
+    /// <summary>
+    /// Engine process that coordinates pulling messages from queues and
+    /// dispatching them to the specified handlers
+    /// </summary>
     public sealed class DispatcherProcess : IEngineProcess
     {
         readonly ISingleThreadMessageDispatcher _dispatcher;
@@ -20,7 +24,8 @@ namespace Lokad.Cqrs.Core.Dispatch
         readonly IPartitionInbox _inbox;
         readonly IEnvelopeQuarantine _quarantine;
 
-        public DispatcherProcess(ISystemObserver observer,
+        public DispatcherProcess(
+            ISystemObserver observer,
             ISingleThreadMessageDispatcher dispatcher, 
             IPartitionInbox inbox,
             IEnvelopeQuarantine quarantine,

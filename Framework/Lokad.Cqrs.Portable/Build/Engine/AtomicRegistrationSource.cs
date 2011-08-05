@@ -7,6 +7,7 @@
 
 using System;
 using Funq;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.AtomicStorage;
 
 namespace Lokad.Cqrs.Build.Engine

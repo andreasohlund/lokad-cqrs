@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Funq;
 
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	/// <include file='Container.xdoc' path='docs/doc[@for="Container"]/*'/>
 	public sealed partial class Container : IDisposable

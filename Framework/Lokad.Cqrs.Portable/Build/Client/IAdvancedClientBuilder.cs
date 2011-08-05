@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using Funq;
+using Lokad.Cqrs.Core;
 
 namespace Lokad.Cqrs.Build.Client
 {
