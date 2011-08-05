@@ -29,7 +29,7 @@ namespace Lokad.Cqrs
             TestConfiguration(c => c.Memory(m =>
                 {
                     m.AddMemorySender("test");
-                    m.AddMemoryProcess("test", x => x.DispatcherIsLambda(Factory));
+                    m.AddMemoryProcess("test", x => x.DispatcherIsLambda(Handler));
                 }), 1000000);
         }
 
@@ -39,7 +39,7 @@ namespace Lokad.Cqrs
             TestConfiguration(c => c.Memory(m =>
             {
                 m.AddMemorySender("test");
-                m.AddMemoryProcess("test");
+                m.AddMemoryProcess("test", Handler);
             }), 100000);
         }
 
@@ -51,7 +51,7 @@ namespace Lokad.Cqrs
             TestConfiguration(c => c.Azure(m =>
             {
                 m.AddAzureSender(config, "throughput");
-                m.AddAzureProcess(config, "throughput");
+                m.AddAzureProcess(config, "throughput", Handler);
             }), 100);
         }
 
@@ -63,7 +63,7 @@ namespace Lokad.Cqrs
             TestConfiguration(c => c.Azure(m =>
             {
                 m.AddAzureSender(config, "throughput");
-                m.AddAzureProcess(config, "throughput", x => x.DispatcherIsLambda(Factory));
+                m.AddAzureProcess(config, "throughput", Handler);
             }), 100);
         }
 
@@ -75,7 +75,7 @@ namespace Lokad.Cqrs
             TestConfiguration(c => c.File(m =>
                 {
                     m.AddFileSender(config, "test");
-                    m.AddFileProcess(config, "test", x => x.DispatcherIsLambda(Factory));
+                    m.AddFileProcess(config, "test", Handler);
                 }), 10000);
         }
 
@@ -87,12 +87,12 @@ namespace Lokad.Cqrs
             TestConfiguration(c => c.File(m =>
             {
                 m.AddFileSender(config, "test");
-                m.AddFileProcess(config, "test");
+                m.AddFileProcess(config, "test", Handler);
             }), 10000);
         }
 
 
-        static Action<ImmutableEnvelope> Factory(Container ctx)
+        static Action<ImmutableEnvelope> Handler(Container ctx)
         {
             // pass through the envelope
             return envelope =>

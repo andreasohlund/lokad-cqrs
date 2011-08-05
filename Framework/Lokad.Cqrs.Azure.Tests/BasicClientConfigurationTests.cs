@@ -21,16 +21,7 @@ namespace Lokad.Cqrs
         }
 
         
-        public sealed class Handler : Define.Handle<Message>
-        {
-            public void Consume(Message message)
-            {
-                
-            }
-        }
-
-
-
+        
         // ReSharper disable InconsistentNaming
         [Test]
         public void Test()
@@ -40,7 +31,7 @@ namespace Lokad.Cqrs
 
             var events = new Subject<ISystemEvent>();
             var b = new CqrsEngineBuilder();
-            b.Azure(c => c.AddAzureProcess(dev, "test-publish"));
+            b.Azure(c => c.AddAzureProcess(dev, "test-publish",container => { }));
             b.Advanced.RegisterObserver(events);
             var engine = b.Build();
             var source = new CancellationTokenSource();

@@ -207,12 +207,11 @@
     <Compile Include="ImmutableEnvelope.cs" />
     <Compile Include="ImmutableMessage.cs" />
     <Compile Include="EnvelopeReference.cs" />
+    <Compile Include="Partial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core.Serialization\DataSerializerWithDataContracts.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Feature.DirectoryDispatch\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Core\Container.xdoc" />
   </ItemGroup>

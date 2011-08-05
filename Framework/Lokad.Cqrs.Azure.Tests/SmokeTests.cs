@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
+using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
 using NUnit.Framework;
@@ -25,10 +26,11 @@ namespace Lokad.Cqrs
         static CqrsEngineHost BuildHost()
         {
             var builder = new CqrsEngineBuilder();
-            builder.Azure(x => x.AddAzureProcess(AzureStorage.CreateConfigurationForDev(), "process-vip"));
+            var config = AzureStorage.CreateConfigurationForDev();
+            builder.Azure(x => x.AddAzureProcess(config, "process-vip", DoSomething));
             builder.Memory(x =>
                 {
-                    x.AddMemoryProcess("process-all");
+                    x.AddMemoryProcess("process-all", DoSomething);
                     x.AddMemoryRouter("inbox", e =>
                         {
                             var isVip = e.Items.Any(i => i.MappedType == typeof (VipMessage));
@@ -56,38 +58,50 @@ namespace Lokad.Cqrs
             public string Word { get; set; }
         }
 
-        public sealed class DoSomething : IConsume<VipMessage>, IConsume<UsualMessage>
+        static Action<ImmutableEnvelope> DoSomething(Container container)
         {
-            Func<MessageContext> _context;
-
-            public DoSomething(Func<MessageContext> context)
-            {
-                _context = context;
-            }
-
-            void Print(string value)
-            {
-                if (value.Length > 20)
+            var sender = container.Resolve<IMessageSender>();
+            return envelope =>
                 {
-                    Trace.WriteLine(string.Format("[{0}]: {1}... ({2})", _context().EnvelopeId, value.Substring(0, 16),
-                        value.Length));
-                }
-                else
+                    Dump(envelope);
+                    sender.SendOne(envelope.Items[0].Content);
+                };
+        }
+
+        static void Dump(ImmutableEnvelope envelope)
+        {
+            foreach (var item in envelope.Items)
+            {
+                var vip = item.Content as VipMessage;
+
+                if (vip != null)
                 {
-                    Trace.WriteLine(string.Format("[{0}]: {1}", value, _context().EnvelopeId));
+                    Print(vip.Word, envelope.EnvelopeId);
+                    return;
                 }
-            }
+                var usual = item.Content as UsualMessage;
 
-            public void Consume(UsualMessage message)
-            {
-                Print(message.Word);
-            }
-
-            public void Consume(VipMessage message)
-            {
-                Print(message.Word);
+                if (usual != null)
+                {
+                    Print(usual.Word, envelope.EnvelopeId);
+                }
             }
         }
+
+        static void Print(string value, string id)
+        {
+            if (value.Length > 20)
+            {
+                Trace.WriteLine(string.Format("[{0}]: {1}... ({2})", id, value.Substring(0, 16),
+                    value.Length));
+            }
+            else
+            {
+                Trace.WriteLine(string.Format("[{0}]: {1}", value, id));
+            }
+        }
+
+        
 
         [Test, Explicit]
         public void Test()

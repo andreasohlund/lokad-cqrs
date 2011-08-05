@@ -11,6 +11,7 @@ using System.Concurrency;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
+using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch.Events;
 using Lokad.Cqrs.Core.Outbox;
@@ -54,6 +55,8 @@ namespace Lokad.Cqrs
             }
         }
 
+        
+
         #endregion
 
         static void TestConfiguration(Action<CqrsEngineBuilder> config)
@@ -87,8 +90,14 @@ namespace Lokad.Cqrs
                 {
                     m.AddMemorySender("in", module => module.IdGeneratorForTests());
                     m.AddMemoryRouter("in", me => "memory:do");
-                    m.AddMemoryProcess("do");
+                    m.AddMemoryProcess("do", Resend);
                 }));
+        }
+
+        Action<ImmutableEnvelope> Resend(Container container)
+        {
+            var sender = container.Resolve<IMessageSender>();
+            return envelope => sender.SendOne(envelope.Items[0].Content);
         }
 
         [Test]
@@ -101,7 +110,7 @@ namespace Lokad.Cqrs
                         {
                             m.AddMemorySender("in", module => module.IdGeneratorForTests());
                             m.AddMemoryRouter("in", me => "custom:do");
-                            m.AddMemoryProcess("do");
+                            m.AddMemoryProcess("do", Resend);
                         });
                 });
         }
@@ -112,7 +121,7 @@ namespace Lokad.Cqrs
             TestConfiguration(x => x.Memory(m =>
                 {
                     m.AddMemorySender("do", module => module.IdGeneratorForTests());
-                    m.AddMemoryProcess("do");
+                    m.AddMemoryProcess("do", Resend);
                 }));
         }
 
@@ -125,7 +134,7 @@ namespace Lokad.Cqrs
                     m.AddMemoryRouter("in",
                         me => (((Message1) me.Items[0].Content).Block%2) == 0 ? "memory:do1" : "memory:do2");
                     m.AddMemoryRouter(new[]{"do1", "do2"}, me => "memory:do");
-                    m.AddMemoryProcess("do");
+                    m.AddMemoryProcess("do", Resend);
                 }));
         }
     }

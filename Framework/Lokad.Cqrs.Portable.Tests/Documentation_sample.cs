@@ -5,7 +5,9 @@
 
 #endregion
 
+using System;
 using System.Runtime.Serialization;
+using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Feature.AtomicStorage;
 using NUnit.Framework;
@@ -45,37 +47,18 @@ namespace Lokad.Cqrs
             }
         }
 
-        public sealed class CustomerHandler : Define.Handle<CreateCustomer>
-        {
-            readonly NuclearStorage _storage;
-            readonly IMessageSender _sender;
-
-            public CustomerHandler(NuclearStorage storage, IMessageSender sender)
-            {
-                _storage = storage;
-                _sender = sender;
-            }
-
-            public void Consume(CreateCustomer cmd)
-            {
-                var customer = new Customer(cmd.CustomerId, cmd.CustomerName);
-                _storage.AddEntity(customer.Id, customer);
-                _sender.SendOne(new CustomerCreated
-                    {
-                        CustomerId = cmd.CustomerId,
-                        CustomerName = cmd.CustomerName
-                    });
-            }
-        }
-
         [Test, Explicit]
         public void Run_in_test()
         {
             var builder = new CqrsEngineBuilder();
+
+            
+
+
             builder.Memory(m =>
                 {
                     m.AddMemorySender("work");
-                    m.AddMemoryProcess("work");
+                    m.AddMemoryProcess("work", Lambda);
                 });
             builder.Storage(m => m.AtomicIsInMemory());
 
@@ -88,6 +71,28 @@ namespace Lokad.Cqrs
                 //});
                 engine.RunForever();
             }
+        }
+
+        Action<ImmutableEnvelope> Lambda(Container container)
+        {
+            var handling = new Handling();
+
+            handling.Add<CreateCustomer,NuclearStorage,IMessageSender>(Consume);
+
+
+            var handler = handling.BuildHandler();
+            return envelope => handler(container, envelope);
+        }
+
+        static void Consume(CreateCustomer cmd, NuclearStorage storage, IMessageSender sender)
+        {
+            var customer = new Customer(cmd.CustomerId, cmd.CustomerName);
+            storage.AddEntity(customer.Id, customer);
+            sender.SendOne(new CustomerCreated
+                {
+                    CustomerId = cmd.CustomerId,
+                    CustomerName = cmd.CustomerName
+                });
         }
     }
 }

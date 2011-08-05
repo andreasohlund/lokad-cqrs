@@ -31,7 +31,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             b.Storage(m => m.AtomicIsInFiles(_path, DefaultWithCustomConfig));
             b.Memory(m =>
                 {
-                    m.AddMemoryProcess("azure-dev");
+                    m.AddMemoryProcess("azure-dev", Handling.Empty);
                     m.AddMemorySender("azure-dev", x => x.IdGeneratorForTests());
                 });
         }

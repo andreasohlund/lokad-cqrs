@@ -19,7 +19,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
         {
             config.Memory(m =>
                 {
-                    m.AddMemoryProcess("do");
+                    m.AddMemoryProcess("do", Handling.Empty);
                     m.AddMemorySender("do", cb => cb.IdGeneratorForTests());
                 });
         }

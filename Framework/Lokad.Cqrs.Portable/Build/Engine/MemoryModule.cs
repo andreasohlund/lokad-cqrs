@@ -42,12 +42,6 @@ namespace Lokad.Cqrs.Build.Engine
             _funqlets(componentRegistry);
         }
 
-
-        public void AddMemoryProcess(params string[] queues)
-        {
-            AddMemoryProcess(queues, m => { });
-        }
-
         public void AddMemorySender(string queueName)
         {
             AddMemorySender(queueName, module => { });
@@ -64,6 +58,11 @@ namespace Lokad.Cqrs.Build.Engine
         public void AddMemoryProcess(string queueName, Action<MemoryPartitionModule> config)
         {
             AddMemoryProcess(new[] {queueName}, config);
+        }
+
+        public void AddMemoryProcess(string queueName, Func<Container, Action<ImmutableEnvelope>> lambda)
+        {
+            AddMemoryProcess(new[] {queueName}, c => c.DispatcherIsLambda(lambda));
         }
 
         public void AddMemoryRouter(string queueName, Func<ImmutableEnvelope, string> config)

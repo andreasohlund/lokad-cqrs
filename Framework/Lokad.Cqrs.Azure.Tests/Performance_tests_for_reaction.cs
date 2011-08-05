@@ -27,7 +27,7 @@ namespace Lokad.Cqrs
             TestConfiguration(c => c.Memory(m =>
                 {
                     m.AddMemorySender("test-accelerated");
-                    m.AddMemoryProcess("test-accelerated");
+                    m.AddMemoryProcess("test-accelerated", Handling.Empty);
                 }));
         }
 
@@ -54,17 +54,17 @@ namespace Lokad.Cqrs
                 }));
         }
 
-        [Test]
-        public void Azure_partition_with_polymorphic()
-        {
-            var config = AzureStorage.CreateConfigurationForDev();
-            WipeAzureAccount.Fast(s => s.StartsWith("performance"), config);
-            TestConfiguration(c => c.Azure(m =>
-                {
-                    m.AddAzureSender(config, "performance");
-                    m.AddAzureProcess(config, "performance");
-                }));
-        }
+        //[Test]
+        //public void Azure_partition_with_polymorphic()
+        //{
+        //    var config = AzureStorage.CreateConfigurationForDev();
+        //    WipeAzureAccount.Fast(s => s.StartsWith("performance"), config);
+        //    TestConfiguration(c => c.Azure(m =>
+        //        {
+        //            m.AddAzureSender(config, "performance");
+        //            m.AddAzureProcess(config, "performance");
+        //        }));
+        //}
 
 
         [Test]
@@ -79,17 +79,17 @@ namespace Lokad.Cqrs
                 }));
         }
 
-        [Test]
-        public void File_partition_with_polymorphic()
-        {
-            var config = FileStorage.CreateConfig("throughput-tests");
-            config.Wipe();
-            TestConfiguration(c => c.File(m =>
-                {
-                    m.AddFileSender(config, "test-accelerated");
-                    m.AddFileProcess(config, "test-accelerated");
-                }));
-        }
+        //[Test]
+        //public void File_partition_with_polymorphic()
+        //{
+        //    var config = FileStorage.CreateConfig("throughput-tests");
+        //    config.Wipe();
+        //    TestConfiguration(c => c.File(m =>
+        //        {
+        //            m.AddFileSender(config, "test-accelerated");
+        //            m.AddFileProcess(config, "test-accelerated");
+        //        }));
+        //}
 
 
         static Action<ImmutableEnvelope> Factory(Container componentContext)

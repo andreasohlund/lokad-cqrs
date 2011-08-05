@@ -64,11 +64,9 @@ namespace Lokad.Cqrs.Build.Engine
         }
 
 
-        public void AddAzureProcess(IAzureStorageConfig config, string firstQueue, params string[] otherQueues)
+        public void AddAzureProcess(IAzureStorageConfig config, string firstQueue, Func<Container,Action<ImmutableEnvelope>> handler)
         {
-            var queues = Enumerable.Repeat(firstQueue, 1).Concat(otherQueues).ToArray();
-
-            AddAzureProcess(config, queues, m => { });
+            AddAzureProcess(config, new[] { firstQueue}, m => m.DispatcherIsLambda(handler));
         }
 
         public void AddAzureProcess(IAzureStorageConfig config, string firstQueue, Action<AzurePartitionModule> configure)
