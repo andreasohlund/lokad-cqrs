@@ -8,8 +8,8 @@
     <ProjectGuid>{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lokad.Cqrs.Autofac.Tests</RootNamespace>
-    <AssemblyName>Lokad.Cqrs.Autofac.Tests</AssemblyName>
+    <RootNamespace>Lokad.Cqrs.Enterprise</RootNamespace>
+    <AssemblyName>Lokad.Cqrs.Enterprise</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -58,6 +58,7 @@
     <Compile Include="Core.Directory\When_activation_map_constrained_to_catch_all_consumer.cs" />
     <Compile Include="Core.Directory\When_builder_is_available.cs" />
     <Compile Include="Core.Directory\When_there_are_no_catch_all_handlers.cs" />
+    <Compile Include="Given_synthetic_setup_When_memory_composite.cs" />
     <Compile Include="Given_MessageContext_Omitted.cs" />
     <Compile Include="Given_MessageContext_Specified.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

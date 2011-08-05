@@ -1,4 +1,5 @@
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Feature.AtomicStorage;
 using NUnit.Framework;
 
 namespace Lokad.Cqrs.Synthetic

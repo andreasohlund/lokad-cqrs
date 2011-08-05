@@ -7,7 +7,6 @@ namespace Lokad.Cqrs.Core.Dispatch
     public sealed class MemoryQuarantine : IEnvelopeQuarantine
     {
         readonly ConcurrentDictionary<string,int> _failures = new ConcurrentDictionary<string, int>();
-
         public bool TryToQuarantine(EnvelopeTransportContext context, Exception ex)
         {
             var current = _failures.AddOrUpdate(context.Unpacked.EnvelopeId, s => 1, (s1, i) => i + 1);

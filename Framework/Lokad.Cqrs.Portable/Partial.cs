@@ -23,7 +23,7 @@ namespace Lokad.Cqrs
   //      }
   //  }
 
-    public sealed class Handling
+    public sealed class Handling : HideObjectMembersFromIntelliSense
     {
         readonly IDictionary<Type, Action<Container, object>> _handler = new Dictionary<Type, Action<Container, object>>();
 
@@ -35,6 +35,11 @@ namespace Lokad.Cqrs
                     var a2 = container.Resolve<T3>();
                     add((T1) o, a1, a2);
                 });
+        }
+
+        public void Add<T1>(Action<T1> add)
+        {
+            _handler.Add(typeof(T1), (container, o) => add((T1)o));
         }
 
         public Action<ImmutableEnvelope> BuildHandler(Container container)
