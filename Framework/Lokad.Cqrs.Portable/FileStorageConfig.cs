@@ -25,5 +25,9 @@ namespace Lokad.Cqrs
             if (Folder.Exists)
                 Folder.Delete(true);
         }
+        public void EnsureDirectory()
+        {
+            Folder.Create();
+        }
     }
 }

@@ -19,11 +19,9 @@ namespace Lokad.Cqrs.Build.Engine
         {
             Contract.Requires(factory != null);
             Contract.Requires(serviceType != null);
+            Contract.Requires(serviceType.IsGenericType);
             Contract.Ensures(Contract.Result<object>()!=null);
             
-            if (!serviceType.IsGenericType)
-                return false;
-
             var definition = serviceType.GetGenericTypeDefinition();
             var arguments = serviceType.GetGenericArguments();
             

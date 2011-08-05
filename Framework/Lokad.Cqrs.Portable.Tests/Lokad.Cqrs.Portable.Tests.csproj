@@ -53,8 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Documentation_sample.cs" />
-    <Compile Include="Feature.AtomicStorage\Atomic_storage_scenarios.cs" />
-    <Compile Include="Feature.AtomicStorage\Given_File_Configuration.cs" />
+    <Compile Include="Feature.AtomicStorage\When_file_storage_is_used.cs" />
     <Compile Include="Feature.AtomicStorage\Syntax_verification.cs" />
     <Compile Include="Core.Envelope\Play_all_for_DataContracts.cs" />
     <Compile Include="Core.Envelope\Play_all_for_Memory.cs" />
@@ -64,15 +63,14 @@
     <Compile Include="Core.Envelope\Play_all_for_BinaryFormatter.cs" />
     <Compile Include="ExtendMaybe.cs" />
     <Compile Include="Feature.AtomicStorage\Engine_scenario_for_custom_view_domain.cs" />
+    <Compile Include="Feature.AtomicStorage\When_memory_is_used.cs" />
     <Compile Include="Feature.StreamingStorage\Engine_scenario_for_streaming_storage.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\When_listing_items_in.cs" />
     <Compile Include="Feature.TapeStorage\FileTapeStorageTests.cs" />
     <Compile Include="Feature.TapeStorage\MemoryTapeStorageTests.cs" />
     <Compile Include="Feature.TapeStorage\TapeStorageTests.cs" />
     <Compile Include="FiniteEngineScenario.cs" />
-    <Compile Include="Feature.AtomicStorage\Given_Memory_Configuration.cs" />
-    <Compile Include="Feature.AtomicStorage\Engine_scenario_for_NuclearStorage_in_partition.cs" />
-    <Compile Include="Feature.AtomicStorage\Engine_scenario_for_AtomicStorage_in_partition.cs" />
+    <Compile Include="Feature.AtomicStorage\Given_atomic_storage_setup.cs" />
     <Compile Include="Feature.StreamingStorage\Run_all_StreamingStorage_scenarios_for_Files.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\ITestStorage.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\StorageItemFixture.cs" />
