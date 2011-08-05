@@ -41,7 +41,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                 h.Add<AtomicMessage,IMessageSender,IAtomicSingletonWriter<Entity>>((message, sender, arg3) =>
                     {
                         var entity = arg3.AddOrUpdate(r => r.Count += 1);
-                        if (entity.Count == 5)
+                        if (entity.Count >= 5)
                         {
                             source.Cancel();
                             return;
