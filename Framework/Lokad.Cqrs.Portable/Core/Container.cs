@@ -265,8 +265,8 @@ namespace Lokad.Cqrs.Core
 				        if (source.Supports(typeof(TService)))
 				        {
 				            var provider = source.GetProvider(typeof(TService));
-				            return new ServiceEntry<TService, TFunc>(
-                            (TFunc)(object)(Func<Container, TService>)(c => (TService)provider(c)));
+				            var serviceEntry = new ServiceEntry<TService, TFunc>((TFunc)(object)(Func<Container, TService>)(c => (TService)provider(c)));
+				            return serviceEntry.CloneFor(this);
 				        }
 				    }
 
@@ -280,8 +280,8 @@ namespace Lokad.Cqrs.Core
                         if (source.Supports(typeof(TService)))
                         {
                             var provider = source.GetProvider(typeof(TService));
-                            return new ServiceEntry<TService, TFunc>(
-                            (TFunc)(object)(Func<Container, TService>)(c => (TService)provider(c)));
+                            var serviceEntry = new ServiceEntry<TService, TFunc>((TFunc)(object)(Func<Container, TService>)(c => (TService)provider(c)));
+                            return serviceEntry.CloneFor(this);
                         }
                     }
 				}

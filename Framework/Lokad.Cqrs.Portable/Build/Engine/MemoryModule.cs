@@ -61,7 +61,7 @@ namespace Lokad.Cqrs.Build.Engine
             AddMemoryProcess(new[] {queueName}, config);
         }
 
-        public void AddMemoryProcess(string queueName, Func<Container, Action<ImmutableEnvelope>> lambda)
+        public void AddMemoryProcess(string queueName, HandlerFactory lambda)
         {
             AddMemoryProcess(new[] {queueName}, c => c.DispatcherIsLambda(lambda));
         }

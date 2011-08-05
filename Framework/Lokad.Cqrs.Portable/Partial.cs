@@ -37,12 +37,16 @@ namespace Lokad.Cqrs
                 });
         }
 
-        public Action<Container,ImmutableEnvelope> BuildHandler()
+        public Action<ImmutableEnvelope> BuildHandler(Container container)
         {
-            return (container, envelope) => Execute(container, envelope, (container1, o) => { });
+            return envelope => Execute(container, envelope, (container1, o) => { });
+        }
+        public HandlerFactory BuildFactory()
+        {
+            return container => (envelope => Execute(container, envelope, (container1, o) => { }));
         }
 
-        public static Func<Container, Action<ImmutableEnvelope>> Empty = container => (envelope => { }); 
+        public static HandlerFactory Empty = container => (envelope => { }); 
 
 
 

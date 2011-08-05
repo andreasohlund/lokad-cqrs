@@ -77,12 +77,8 @@ namespace Lokad.Cqrs
         Action<ImmutableEnvelope> Lambda(Container container)
         {
             var handling = new Handling();
-
             handling.Add<CreateCustomer,NuclearStorage,IMessageSender>(Consume);
-
-
-            var handler = handling.BuildHandler();
-            return envelope => handler(container, envelope);
+            return handling.BuildFactory()(container);
         }
 
         static void Consume(CreateCustomer cmd, NuclearStorage storage, IMessageSender sender)

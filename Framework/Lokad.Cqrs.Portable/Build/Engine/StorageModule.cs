@@ -103,6 +103,7 @@ namespace Lokad.Cqrs.Build.Engine
 
             container.Sources.Push(new AtomicRegistrationCore());
             container.Register(new NuclearStorage(_atomicStorageFactory));
+            container.Register(_atomicStorageFactory);
 
             var setup = container.TryResolve<EngineSetup>();
             if (null!=setup)

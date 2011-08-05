@@ -5,17 +5,39 @@
 
 #endregion
 
+using System;
 using System.Runtime.Serialization;
+using System.Threading;
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core;
+using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
 namespace Lokad.Cqrs.Feature.AtomicStorage
 {
-    public sealed class Engine_scenario_for_AtomicStorage_in_partition : FiniteEngineScenario
+
+    [TestFixture]
+    public sealed class When_memory_is_used : Given_atomic_storage_setup
     {
+        // ReSharper disable InconsistentNaming
+
+        protected override void Wire_in_the_partition(CqrsEngineBuilder builder, HandlerFactory storage)
+        {
+            builder.Memory(mm =>
+                {
+                    mm.AddMemorySender("do");
+                    mm.AddMemoryProcess("do",storage);
+                });
+        }
+    }
+
+    public abstract class Given_atomic_storage_setup
+    {
+        protected abstract void Wire_in_the_partition(CqrsEngineBuilder builder, HandlerFactory factory);
+
         [DataContract]
-        public sealed class AtomicMessage : Define.Command {}
+        public sealed class AtomicMessage : Define.Command { }
 
         [DataContract]
         public sealed class Entity : Define.AtomicEntity
@@ -24,34 +46,63 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             public int Count;
         }
 
-        public sealed class Consumer : Define.Handle<AtomicMessage>
+        [Test]
+        public void Then_singleton_should_be_accessable_from_handler()
         {
-            readonly IMessageSender _sender;
-            readonly IAtomicSingletonWriter<Entity> _singleton;
+            var builder = new CqrsEngineBuilder();
 
-            public Consumer(IMessageSender sender, IAtomicSingletonWriter<Entity> singleton)
+            using (var source = new CancellationTokenSource())
             {
-                _sender = sender;
-                _singleton = singleton;
-            }
+                var h = new Handling();
+                h.Add<AtomicMessage,IMessageSender,IAtomicSingletonWriter<Entity>>((message, sender, arg3) =>
+                    {
+                        var entity = arg3.AddOrUpdate(r => r.Count += 1);
+                        if (entity.Count == 5)
+                        {
+                            source.Cancel();
+                            return;
+                        }
+                        sender.SendOne(new AtomicMessage());
+                    });
 
-            public void Consume(AtomicMessage message)
-            {
-                var entity = _singleton.AddOrUpdate(r => r.Count += 1);
-                if (entity.Count == 5)
-                {
-                    _sender.SendOne(new AtomicMessage(), cb => cb.AddString("finish"));
-                }
-                else
-                {
-                    _sender.SendOne(new AtomicMessage());
-                }
+                Wire_in_the_partition(builder, h.BuildFactory());
+                Send_message_and_wait_for_completion(source, builder);
             }
         }
 
-        protected override void Configure(CqrsEngineBuilder config)
+        [Test]
+        public void Then_nuclear_storage_should_be_available()
         {
-            EnlistMessage(new AtomicMessage());
+            var builder = new CqrsEngineBuilder();
+
+            using (var source = new CancellationTokenSource())
+            {
+                var h = new Handling();
+                h.Add<AtomicMessage, IMessageSender, NuclearStorage>((message, sender, arg3) =>
+                {
+                    var entity = arg3.UpdateSingletonEnforcingNew<Entity>(r => r.Count += 1);
+                    if (entity.Count == 5)
+                    {
+                        source.Cancel();
+                        return;
+                    }
+                    sender.SendOne(new AtomicMessage());
+                });
+
+                Wire_in_the_partition(builder, h.BuildFactory());
+                Send_message_and_wait_for_completion(source, builder);
+            }
+        }
+
+        static void Send_message_and_wait_for_completion(CancellationTokenSource source, CqrsEngineBuilder builder)
+        {
+            using (var engine = builder.Build())
+            {
+                var task = engine.Start(source.Token);
+                engine.Resolve<IMessageSender>().SendOne(new AtomicMessage());
+                task.Wait(2000);
+                Assert.IsTrue(source.IsCancellationRequested);
+            }
         }
     }
 }

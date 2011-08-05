@@ -109,6 +109,7 @@
     <Compile Include="Feature.TapeStorage\FileTapeStream.cs" />
     <Compile Include="Feature.TapeStorage\TapeRecord.cs" />
     <Compile Include="FileStorageConfig.cs" />
+    <Compile Include="HandlerFactory.cs" />
     <Compile Include="ImmutableAttribute.cs" />
     <Compile Include="MemoryStorage.cs" />
     <Compile Include="MessageContext.cs" />

@@ -39,7 +39,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
         /// Defines dispatcher as lambda method that is resolved against the container
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public void DispatcherIsLambda(Func<Container, Action<ImmutableEnvelope>> factory)
+        public void DispatcherIsLambda(HandlerFactory factory)
         {
             _dispatcher = context =>
                 {

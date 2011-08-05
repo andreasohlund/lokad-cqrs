@@ -6,6 +6,7 @@
 #endregion
 
 using System;
+using System.Diagnostics.Contracts;
 using Funq;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.AtomicStorage;
@@ -14,10 +15,11 @@ namespace Lokad.Cqrs.Build.Engine
 {
     public sealed class AtomicRegistrationCore : IRegistrationSource
     {
-        
-
-        public object Resolve(IAtomicStorageFactory factory, Type serviceType)
+        object Resolve(IAtomicStorageFactory factory, Type serviceType)
         {
+            Contract.Requires(factory != null);
+            Contract.Requires(serviceType != null);
+            Contract.Ensures(Contract.Result<object>()!=null);
             
             if (!serviceType.IsGenericType)
                 return false;
@@ -67,7 +69,11 @@ namespace Lokad.Cqrs.Build.Engine
 
         public Func<Container,object> GetProvider(Type type)
         {
-            return container => Resolve(container.Resolve<IAtomicStorageFactory>(), type);
+            return container =>
+                {
+                    var factory = container.Resolve<IAtomicStorageFactory>();
+                    return Resolve(factory, type);
+                };
         }
     }
 }
