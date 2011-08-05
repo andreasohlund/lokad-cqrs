@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Lokad.Cqrs.Feature.AtomicStorage
 {
     [TestFixture]
-    public sealed class When_memory_is_used : Given_atomic_storage_setup
+    public sealed class Given_atomic_storage_When_memory_is_used : Given_atomic_storage_setup
     {
         protected override void Wire_in_the_partition(CqrsEngineBuilder builder, HandlerFactory storage)
         {
