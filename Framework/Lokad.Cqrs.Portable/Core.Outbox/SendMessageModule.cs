@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Funq;
 using System.Linq;
 
 namespace Lokad.Cqrs.Core.Outbox

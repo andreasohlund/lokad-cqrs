@@ -8,7 +8,7 @@
 using Lokad.Cqrs.Feature.DirectoryDispatch;
 using NUnit.Framework;
 
-namespace Lokad.Cqrs.Core.Directory
+namespace Lokad.Cqrs.Composition.Core.Directory
 {
     [TestFixture]
     public sealed class When_there_are_no_catch_all_handlers : MessageDirectoryFixture

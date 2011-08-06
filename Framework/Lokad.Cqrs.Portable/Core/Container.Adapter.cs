@@ -13,7 +13,7 @@ namespace Lokad.Cqrs.Core
 {
     public partial class Container
     {
-        public Stack<IRegistrationSource> Sources = new Stack<IRegistrationSource>();
+        public readonly Stack<IRegistrationSource> Sources = new Stack<IRegistrationSource>();
     }
 
     /// <summary>

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
-using Container = Lokad.Cqrs.Core.Container;
 
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	/// <summary>
 	/// Fluent API for customizing the registration of a service.
 	/// </summary>
 	[EditorBrowsable(EditorBrowsableState.Never)]
-	public interface IRegistration : IFluentInterface, IReusedOwned
+	public interface IRegistration : IHideObjectMembersFromIntelliSense, IReusedOwned
 	{
 	}
 
@@ -16,7 +15,7 @@ namespace Funq
 	/// Fluent API for customizing the registration of a service.
 	/// </summary>
 	[EditorBrowsable(EditorBrowsableState.Never)]
-	public interface IRegistration<TService> : IFluentInterface, IRegistration, IInitializable<TService>
+	public interface IRegistration<TService> : IHideObjectMembersFromIntelliSense, IRegistration, IInitializable<TService>
 	{
 	}
 
@@ -25,7 +24,7 @@ namespace Funq
 	/// service.
 	/// </summary>
 	[EditorBrowsable(EditorBrowsableState.Never)]
-	public interface IInitializable<TService> : IFluentInterface 
+	public interface IInitializable<TService> : IHideObjectMembersFromIntelliSense
 	{
 		/// <summary>
 		/// Specifies an initializer that should be invoked after 
@@ -39,13 +38,13 @@ namespace Funq
 	/// and owner (<see cref="IOwned.OwnedBy"/>).
 	/// </summary>
 	[EditorBrowsable(EditorBrowsableState.Never)]
-	public interface IReusedOwned : IFluentInterface, IReused, IOwned { }
+	public interface IReusedOwned : IHideObjectMembersFromIntelliSense, IReused, IOwned { }
 
 	/// <summary>
 	/// Fluent API that allows specifying the reuse instances.
 	/// </summary>
 	[EditorBrowsable(EditorBrowsableState.Never)]
-	public interface IReused : IFluentInterface
+	public interface IReused : IHideObjectMembersFromIntelliSense
 	{
 		/// <summary>
 		/// Specifies how instances are reused within a container or hierarchy. Default 
@@ -59,7 +58,7 @@ namespace Funq
 	/// created from a registration.
 	/// </summary>
 	[EditorBrowsable(EditorBrowsableState.Never)]
-	public interface IOwned : IFluentInterface
+	public interface IOwned : IHideObjectMembersFromIntelliSense
 	{
 		/// <summary>
 		/// Specifies the owner of instances created from this registration. Default 

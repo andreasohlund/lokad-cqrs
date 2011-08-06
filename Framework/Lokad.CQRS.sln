@@ -16,9 +16,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Azure", "Lokad.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Azure.Tests", "Lokad.Cqrs.Azure.Tests\Lokad.Cqrs.Azure.Tests.csproj", "{24DA9150-1C7E-45B3-8A75-EA529081237F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Enterprise", "Lokad.Cqrs.Enterprise\Lokad.Cqrs.Enterprise.csproj", "{F60E517D-CEE9-4F8B-9166-075FE6AA677A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Composition", "Lokad.Cqrs.Composition\Lokad.Cqrs.Composition.csproj", "{F60E517D-CEE9-4F8B-9166-075FE6AA677A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Enterprise.Tests", "Lokad.Cqrs.Enterprise.Tests\Lokad.Cqrs.Enterprise.Tests.csproj", "{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Composition.Tests", "Lokad.Cqrs.Composition.Tests\Lokad.Cqrs.Composition.Tests.csproj", "{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Autofac;
-using Funq;
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Scenarios.SimpleES.Contracts;
 using Lokad.Cqrs.Scenarios.SimpleES.Definitions;
 using NUnit.Framework;

@@ -7,8 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-
-using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Envelope;

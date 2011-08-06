@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	/// <summary>
 	/// Exception thrown by the container when a service cannot be resolved.
 	/// </summary>
-#if !SILVERLIGHT
 	[Serializable]
-#endif
 	public class ResolutionException : Exception
 	{
 		/// <summary>

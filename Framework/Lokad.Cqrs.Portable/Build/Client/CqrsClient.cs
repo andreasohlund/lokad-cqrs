@@ -1,5 +1,4 @@
 ﻿using System;
-using Funq;
 using Lokad.Cqrs.Core;
 
 namespace Lokad.Cqrs.Build.Client

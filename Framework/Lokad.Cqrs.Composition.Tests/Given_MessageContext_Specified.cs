@@ -15,7 +15,7 @@ using NUnit.Framework;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 
-namespace Lokad.Cqrs
+namespace Lokad.Cqrs.Composition
 {
     [TestFixture]
     public sealed class Given_MessageContext_Specified : FiniteEngineScenario

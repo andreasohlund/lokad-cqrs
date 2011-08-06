@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.Linq;
 
 // ReSharper disable InconsistentNaming
-namespace Lokad.Cqrs.Core.Directory
+namespace Lokad.Cqrs.Composition.Core.Directory
 {
     [TestFixture]
     public sealed class When_activations_constrained_to_handler_type_with_interface : MessageDirectoryFixture

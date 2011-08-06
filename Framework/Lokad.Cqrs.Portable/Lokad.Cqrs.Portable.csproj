@@ -66,8 +66,6 @@
     <Compile Include="Core\Container.Adapter.cs" />
     <Compile Include="Core\Container.cs" />
     <Compile Include="Core\Container.Overloads.cs" />
-    <Compile Include="Core\FunqContainer.cs" />
-    <Compile Include="Core\IFluentInterface.cs" />
     <Compile Include="Core\IFunqlet.cs" />
     <Compile Include="Core\Owner.cs" />
     <Compile Include="Core\ResolutionException.cs" />

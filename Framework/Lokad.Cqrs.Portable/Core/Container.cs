@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Funq;
 
 namespace Lokad.Cqrs.Core
 {
 	/// <include file='Container.xdoc' path='docs/doc[@for="Container"]/*'/>
 	public sealed partial class Container : IDisposable
 	{
-		Dictionary<ServiceKey, ServiceEntry> services = new Dictionary<ServiceKey, ServiceEntry>();
+	    readonly Dictionary<ServiceKey, ServiceEntry> _services = new Dictionary<ServiceKey, ServiceEntry>();
 		// Disposable components include factory-scoped instances that we don't keep 
 		// a strong reference to. 
-		Stack<WeakReference> disposables = new Stack<WeakReference>();
+	    readonly Stack<WeakReference> _disposables = new Stack<WeakReference>();
 		// We always hold a strong reference to child containers.
-		Stack<Container> childContainers = new Stack<Container>();
-		Container parent;
+	    readonly Stack<Container> _childContainers = new Stack<Container>();
+		Container _parent;
 
 		/// <include file='Container.xdoc' path='docs/doc[@for="Container.ctor"]/*'/>
 		public Container()
 		{
-			services[new ServiceKey(typeof(Func<Container, Container>), null)] =
+			_services[new ServiceKey(typeof(Func<Container, Container>), null)] =
 				new ServiceEntry<Container, Func<Container, Container>>((Func<Container, Container>)(c => c))
 				{
 					Container = this,
@@ -35,27 +34,19 @@ namespace Lokad.Cqrs.Core
 		/// <include file='Container.xdoc' path='docs/doc[@for="Container.DefaultReuse"]/*'/>
 		public ReuseScope DefaultReuse { get; set; }
 
-		/// <include file='Container.xdoc' path='docs/doc[@for="Container.CreateChildContainer"]/*'/>
-		public Container CreateChildContainer()
-		{
-			var child = new Container { parent = this };
-			childContainers.Push(child);
-			return child;
-		}
-
 		/// <include file='Container.xdoc' path='docs/doc[@for="Container.Dispose"]/*'/>
 		public void Dispose()
 		{
-			while (disposables.Count > 0)
+			while (_disposables.Count > 0)
 			{
-				var wr = disposables.Pop();
+				var wr = _disposables.Pop();
 				var disposable = (IDisposable)wr.Target;
 				if (wr.IsAlive)
 					disposable.Dispose();
 			}
-			while (childContainers.Count > 0)
+			while (_childContainers.Count > 0)
 			{
-				childContainers.Pop().Dispose();
+				_childContainers.Pop().Dispose();
 			}
 		}
 
@@ -89,7 +80,7 @@ namespace Lokad.Cqrs.Core
 			};
 			var key = new ServiceKey(typeof(TFunc), name);
 
-			services[key] = entry;
+			_services[key] = entry;
 
 			return entry;
 		}
@@ -232,7 +223,7 @@ namespace Lokad.Cqrs.Core
 
 		internal void TrackDisposable(object instance)
 		{
-			disposables.Push(new WeakReference(instance));
+			_disposables.Push(new WeakReference(instance));
 		}
 
 		private ServiceEntry<TService, TFunc> GetEntry<TService, TFunc>(string serviceName, bool throwIfMissing)
@@ -242,9 +233,9 @@ namespace Lokad.Cqrs.Core
 			Container container = this;
 
 			// Go up the hierarchy always for registrations.
-			while (!container.services.TryGetValue(key, out entry) && container.parent != null)
+			while (!container._services.TryGetValue(key, out entry) && container._parent != null)
 			{
-				container = container.parent;
+				container = container._parent;
 			}
 
 			if (entry != null)
@@ -252,7 +243,7 @@ namespace Lokad.Cqrs.Core
 				if (entry.Reuse == ReuseScope.Container && entry.Container != this)
 				{
 					entry = ((ServiceEntry<TService, TFunc>)entry).CloneFor(this);
-					services[key] = entry;
+					_services[key] = entry;
 				}
 			}
 			else
@@ -260,7 +251,7 @@ namespace Lokad.Cqrs.Core
 				//i.e. if called Resolve<> for Constructor injection
 				if (throwIfMissing) 
 				{
-				    foreach (var source in this.Sources)
+				    foreach (var source in Sources)
 				    {
 				        if (source.Supports(typeof(TService)))
 				        {
@@ -275,7 +266,7 @@ namespace Lokad.Cqrs.Core
 				}
 				else
 				{
-                    foreach (var source in this.Sources)
+                    foreach (var source in Sources)
                     {
                         if (source.Supports(typeof(TService)))
                         {
@@ -290,15 +281,14 @@ namespace Lokad.Cqrs.Core
 			return (ServiceEntry<TService, TFunc>)entry;
 		}
         [DebuggerNonUserCode]
-		private static TService ThrowMissing<TService>(string serviceName)
-		{
-			if (serviceName == null)
+		private static void ThrowMissing<TService>(string serviceName)
+        {
+            if (serviceName == null)
 				throw new ResolutionException(typeof(TService));
-			else
-				throw new ResolutionException(typeof(TService), serviceName);
-		}
+            throw new ResolutionException(typeof(TService), serviceName);
+        }
 
-		private void ThrowIfNotRegistered<TService, TFunc>(string name)
+	    private void ThrowIfNotRegistered<TService, TFunc>(string name)
 		{
 			GetEntry<TService, TFunc>(name, true);
 		}

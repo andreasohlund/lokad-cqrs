@@ -1,7 +1,7 @@
 ﻿using Lokad.Cqrs.Feature.DirectoryDispatch;
 using NUnit.Framework;
 
-namespace Lokad.Cqrs.Core.Directory
+namespace Lokad.Cqrs.Composition.Core.Directory
 {
     [TestFixture]
     public sealed class When_activations_constrained_to_handler_type_with_type : MessageDirectoryFixture

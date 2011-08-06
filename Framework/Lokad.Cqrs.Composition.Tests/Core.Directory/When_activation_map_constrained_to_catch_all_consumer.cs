@@ -9,7 +9,7 @@ using Lokad.Cqrs.Feature.DirectoryDispatch;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Lokad.Cqrs.Core.Directory
+namespace Lokad.Cqrs.Composition.Core.Directory
 {
     [TestFixture]
     public sealed class When_activation_map_constrained_to_catch_all_consumer : MessageDirectoryFixture

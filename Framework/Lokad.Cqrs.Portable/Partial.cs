@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Transactions;
-using Funq;
 using System.Linq;
 using Lokad.Cqrs.Core;
 

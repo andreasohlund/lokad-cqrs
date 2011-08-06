@@ -1,5 +1,5 @@
 ﻿
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	/// <summary>
 	/// Determines visibility and reuse of instances provided by the container.

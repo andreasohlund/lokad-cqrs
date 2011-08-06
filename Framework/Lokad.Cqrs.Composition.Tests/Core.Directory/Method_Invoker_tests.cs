@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Lokad.Cqrs.Core.Directory
+namespace Lokad.Cqrs.Composition.Core.Directory
 {
     [TestFixture]
     public sealed class Method_Invoker_tests

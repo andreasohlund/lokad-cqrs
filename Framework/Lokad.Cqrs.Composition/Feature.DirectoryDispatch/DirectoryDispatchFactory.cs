@@ -1,5 +1,4 @@
 using System;
-using Funq;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 

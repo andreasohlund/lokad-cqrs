@@ -1,23 +1,23 @@
 ﻿using System;
 
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	internal sealed class ServiceKey
 	{
-		int hash;
+	    readonly int _hash;
 
 		public ServiceKey(Type factoryType, string serviceName)
 		{
 			FactoryType = factoryType;
 			Name = serviceName;
 
-			hash = factoryType.GetHashCode();
+			_hash = factoryType.GetHashCode();
 			if (serviceName != null)
-				hash ^= serviceName.GetHashCode();
+				_hash ^= serviceName.GetHashCode();
 		}
 
-		public Type FactoryType;
-		public string Name;
+		public readonly Type FactoryType;
+		public readonly string Name;
 
 		#region Equality
 
@@ -43,7 +43,7 @@ namespace Funq
 
 		public override int GetHashCode()
 		{
-			return hash;
+			return _hash;
 		}
 
 		#endregion

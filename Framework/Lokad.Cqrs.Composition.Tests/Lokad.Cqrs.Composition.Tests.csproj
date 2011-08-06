@@ -8,8 +8,8 @@
     <ProjectGuid>{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lokad.Cqrs.Enterprise</RootNamespace>
-    <AssemblyName>Lokad.Cqrs.Enterprise</AssemblyName>
+    <RootNamespace>Lokad.Cqrs.Composition</RootNamespace>
+    <AssemblyName>Lokad.Cqrs.Composition.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -82,9 +82,9 @@
     <Compile Include="Scenarios\002-Multiverse\MultiverseTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lokad.Cqrs.Enterprise\Lokad.Cqrs.Enterprise.csproj">
+    <ProjectReference Include="..\Lokad.Cqrs.Composition\Lokad.Cqrs.Composition.csproj">
       <Project>{F60E517D-CEE9-4F8B-9166-075FE6AA677A}</Project>
-      <Name>Lokad.Cqrs.Enterprise</Name>
+      <Name>Lokad.Cqrs.Composition</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lokad.Cqrs.Portable.Tests\Lokad.Cqrs.Portable.Tests.csproj">
       <Project>{96E3B247-C04C-4138-A042-7969562B4B0F}</Project>

@@ -1,7 +1,5 @@
 ﻿
-using Lokad.Cqrs.Core;
-
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	internal class ServiceEntry : IRegistration
 	{

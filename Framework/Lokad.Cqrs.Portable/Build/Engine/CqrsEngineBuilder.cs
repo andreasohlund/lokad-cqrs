@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using Funq;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Envelope;
 using Lokad.Cqrs.Core.Inbox;

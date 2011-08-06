@@ -4,7 +4,7 @@
 // This code is released as Open Source under the terms of the New BSD Licence
 
 #endregion
-using Funq;
+
 using System;
 using System.ComponentModel;
 

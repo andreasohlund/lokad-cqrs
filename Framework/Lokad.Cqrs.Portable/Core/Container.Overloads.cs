@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Funq;
 
 namespace Lokad.Cqrs.Core
 {

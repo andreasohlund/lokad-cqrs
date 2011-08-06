@@ -1,7 +1,6 @@
 ﻿using System;
-using Lokad.Cqrs.Core;
 
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	internal sealed class ServiceEntry<TService, TFunc> : ServiceEntry, IRegistration<TService>
 	{
@@ -13,7 +12,7 @@ namespace Funq
 		/// <summary>
 		/// The Func delegate that creates instances of the service.
 		/// </summary>
-		public TFunc Factory;
+		public readonly TFunc Factory;
 
 		/// <summary>
 		/// The cached service instance if the scope is <see cref="ReuseScope.Hierarchy"/> or 

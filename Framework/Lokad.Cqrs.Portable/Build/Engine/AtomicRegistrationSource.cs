@@ -7,7 +7,6 @@
 
 using System;
 using System.Diagnostics.Contracts;
-using Funq;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.AtomicStorage;
 

@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using Lokad.Cqrs.Feature.DirectoryDispatch;
 
-namespace Lokad.Cqrs.Core.Directory
+namespace Lokad.Cqrs.Composition.Core.Directory
 {
     public class MessageDirectoryFixture
     {

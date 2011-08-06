@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using Funq;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.FilePartition;
 using Container = Lokad.Cqrs.Core.Container;

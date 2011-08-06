@@ -1,5 +1,5 @@
 ﻿
-namespace Funq
+namespace Lokad.Cqrs.Core
 {
 	/// <summary>
 	/// Determines who is responsible for disposing instances 

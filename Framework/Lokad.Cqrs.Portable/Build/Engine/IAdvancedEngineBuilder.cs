@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using Funq;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Outbox;
 

@@ -6,7 +6,6 @@
 #endregion
 
 using System;
-using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;

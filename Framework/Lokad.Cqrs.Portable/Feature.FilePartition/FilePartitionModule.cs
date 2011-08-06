@@ -9,7 +9,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Funq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;

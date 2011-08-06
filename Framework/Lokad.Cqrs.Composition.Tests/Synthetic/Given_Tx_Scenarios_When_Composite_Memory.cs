@@ -13,7 +13,7 @@ using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Lokad.Cqrs.Enterprise.Synthetic
+namespace Lokad.Cqrs.Composition.Synthetic
 {
     [TestFixture]
     public sealed class Given_Tx_Scenarios_When_Composite_Memory : Given_Tx_Scenarios

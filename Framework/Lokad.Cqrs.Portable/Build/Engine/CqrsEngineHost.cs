@@ -12,7 +12,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Funq;
 using Lokad.Cqrs.Build.Engine.Events;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Reactive;

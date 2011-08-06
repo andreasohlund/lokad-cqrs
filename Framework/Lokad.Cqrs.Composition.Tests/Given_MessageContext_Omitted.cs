@@ -6,13 +6,11 @@
 #endregion
 
 using System.Runtime.Serialization;
-using Lokad.Cqrs.Build.Engine;
-using Lokad.Cqrs.Feature.DirectoryDispatch;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Lokad.Cqrs
+namespace Lokad.Cqrs.Composition
 {
     [TestFixture]
     public sealed class Given_MessageContext_Omitted : FiniteEngineScenario
