@@ -61,19 +61,11 @@
     <Compile Include="Feature.AtomicStorage\Given_Atomic_Scenarios_When_Composite_Azure.cs" />
     <Compile Include="Feature.AtomicStorage\When_DefaultAzureAtomicStorageStrategy_is_used.cs" />
     <Compile Include="Feature.TapeStorage\BlobTapeStorageTests.cs" />
-    <Compile Include="Feature.TapeStorage\DatabaseHelper.cs" />
-    <Compile Include="Feature.TapeStorage\SqlTapeStorageTests.cs" />
     <Compile Include="Performance_tests_for_throughput.cs" />
     <Compile Include="Performance_tests_for_reaction.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Synthetic\Given_Basic_Scenarios_When_Azure.cs" />
     <Compile Include="Core.Serialization\ProtobufFixture.cs" />
     <Compile Include="Core.Envelope\Play_all_for_ProtoBuf.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core.Serialization\ProtoBufDataTests.cs" />
     <Compile Include="Core.Serialization\ProtoBufNativeTests.cs" />
     <Compile Include="Core.Serialization\ProtoBufXmlTests.cs" />
@@ -102,11 +94,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

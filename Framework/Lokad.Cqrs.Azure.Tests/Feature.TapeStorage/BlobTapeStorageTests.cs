@@ -1,5 +1,5 @@
 ﻿using System;
-using Lokad.Cqrs.Properties;
+
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
 using NUnit.Framework;
@@ -11,15 +11,11 @@ namespace Lokad.Cqrs.Feature.TapeStorage
     {
         const string ContainerName = "blob-tape-test";
 
-        CloudStorageAccount _cloudStorageAccount;
+        readonly CloudStorageAccount _cloudStorageAccount = CloudStorageAccount.DevelopmentStorageAccount;
         ITapeStorageFactory _storageFactory;
 
         protected override void PrepareEnvironment()
         {
-            CloudStorageAccount.SetConfigurationSettingPublisher(
-                (configName, configSetter) => configSetter((string) Settings.Default[configName]));
-
-            _cloudStorageAccount = CloudStorageAccount.FromConfigurationSetting("StorageConnectionString");
             var cloudBlobClient = _cloudStorageAccount.CreateCloudBlobClient();
 
             try

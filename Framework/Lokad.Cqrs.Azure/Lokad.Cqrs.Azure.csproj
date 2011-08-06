@@ -64,8 +64,6 @@
     <Compile Include="Feature.TapeStorage\BlobTapeStorageFactory.cs" />
     <Compile Include="Feature.TapeStorage\BlobTapeStream.cs" />
     <Compile Include="Feature.TapeStorage\PageBlobAppendStream.cs" />
-    <Compile Include="Feature.TapeStorage\SqlTapeStream.cs" />
-    <Compile Include="Feature.TapeStorage\SqlTapeStorageFactory.cs" />
     <Compile Include="WipeAzureAccount.cs" />
     <Compile Include="ExtendStorageModule.cs" />
     <Compile Include="ExtendSerializationModule.cs" />
