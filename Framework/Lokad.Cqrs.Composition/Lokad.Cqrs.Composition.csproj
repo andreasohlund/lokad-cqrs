@@ -53,8 +53,6 @@
     <Compile Include="Feature.DirectoryDispatch\DomainAssemblyScanner.cs" />
     <Compile Include="ExtendCqrsEngineBuilder.cs" />
     <Compile Include="Feature.DirectoryDispatch\FunqRegistrationSource.cs" />
-    <Compile Include="Feature.DirectoryDispatch\IMessageDispatchScope.cs" />
-    <Compile Include="Feature.DirectoryDispatch\IMessageDispatchStrategy.cs" />
     <Compile Include="Feature.DirectoryDispatch\IMethodContextManager.cs" />
     <Compile Include="Feature.DirectoryDispatch\MessageActivationInfo.cs" />
     <Compile Include="Feature.DirectoryDispatch\MessageDirectoryBuilder.cs" />

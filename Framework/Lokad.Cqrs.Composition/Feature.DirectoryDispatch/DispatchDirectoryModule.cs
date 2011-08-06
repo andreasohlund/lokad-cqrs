@@ -134,7 +134,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             var tx = Factory(TransactionScopeOption.RequiresNew);
             var strategy = new AutofacDispatchStrategy(autofacContainer, tx, _hint.Lookup, _contextManager);
             
-            container.Register<IMessageDispatchStrategy>(strategy);
+            container.Register(strategy);
 
             container.Register(builder);
         }
