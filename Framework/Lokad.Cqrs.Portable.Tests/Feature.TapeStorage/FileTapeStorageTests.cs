@@ -20,7 +20,8 @@ namespace Lokad.Cqrs.Feature.TapeStorage
         protected override void PrepareEnvironment()
         {
             _path = Path.Combine(Directory.GetCurrentDirectory(), "file-tape-store");
-            File.Delete(_path);
+            if (Directory.Exists(_path))
+                Directory.Delete(_path, true);
         }
 
         protected override ITapeStream InitializeAndGetTapeStorage()
