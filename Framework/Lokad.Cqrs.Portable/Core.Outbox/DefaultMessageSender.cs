@@ -1,7 +1,8 @@
-﻿#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
@@ -56,9 +57,8 @@ namespace Lokad.Cqrs.Core.Outbox
         readonly Random _random = new Random();
 
 
-        void InnerSendBatch(Action<EnvelopeBuilder> configure, object[] messageItems) {
-            
-
+        void InnerSendBatch(Action<EnvelopeBuilder> configure, object[] messageItems)
+        {
             var id = _idGenerator();
 
             var builder = new EnvelopeBuilder(id);
@@ -66,7 +66,7 @@ namespace Lokad.Cqrs.Core.Outbox
             {
                 builder.AddItem(item);
             }
-            
+
             configure(builder);
             var envelope = builder.Build();
 
@@ -75,7 +75,7 @@ namespace Lokad.Cqrs.Core.Outbox
             if (Transaction.Current == null)
             {
                 queue.PutMessage(envelope);
-                
+
                 _observer.Notify(new EnvelopeSent(queue.Name, envelope.EnvelopeId, false,
                     envelope.Items.Select(x => x.MappedType.Name).ToArray(), envelope.GetAllAttributes()));
             }

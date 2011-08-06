@@ -8,15 +8,14 @@
 
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Feature.AtomicStorage;
-using Lokad.Cqrs.Synthetic;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Lokad.Cqrs.Composition.Synthetic
+namespace Lokad.Cqrs.Synthetic
 {
     [TestFixture]
-    public sealed class Given_Basic_Scenarios_When_Composite_Memory : Given_Basic_Scenarios
+    public sealed class Given_Basic_Scenarios_When_Composite_Azure : Given_Basic_Scenarios
     {
         public sealed class Handler : Define.Handle<FailingMessage>
         {
@@ -35,11 +34,22 @@ namespace Lokad.Cqrs.Composition.Synthetic
 
         protected override void Wire_partition_to_handler(CqrsEngineBuilder config)
         {
+            // Azure dev is implemented via WS on top of SQL on top of FS.
+            // this can be slow. And it will be
+            TestSpeed = 7000;
+
+            var dev = AzureStorage.CreateConfigurationForDev();
+            WipeAzureAccount.Fast(s => s.StartsWith("test-"), dev);
+
             config.Domain(ddd => ddd.WhereMessages(t => t.BaseType == GetType()));
-            config.Memory(m =>
+            config.Azure(m =>
                 {
-                    m.AddMemorySender("do");
-                    m.AddMemoryProcess("do", x => x.DispatchAsCommandBatch());
+                    m.AddAzureProcess(dev, new[] {"test-incoming"}, c =>
+                        {
+                            c.QueueVisibility(1);
+                            c.DispatchAsCommandBatch();
+                        });
+                    m.AddAzureSender(dev, "test-incoming", x => x.IdGeneratorForTests());
                 });
         }
     }

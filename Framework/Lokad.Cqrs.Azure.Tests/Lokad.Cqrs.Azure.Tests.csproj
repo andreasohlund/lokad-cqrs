@@ -80,6 +80,7 @@
     <Compile Include="SmokeTests.cs" />
     <Compile Include="Feature.StreamingStorage\Play_all_for_BlobStreaming.cs" />
     <Compile Include="Feature.StreamingStorage\HashingTests.cs" />
+    <Compile Include="Synthetic\Given_Basic_Scenarios_When_Composite_Azure.cs" />
     <Compile Include="Synthetic\Given_Tx_Scenarios_When_Composite_Azure.cs" />
   </ItemGroup>
   <ItemGroup>
