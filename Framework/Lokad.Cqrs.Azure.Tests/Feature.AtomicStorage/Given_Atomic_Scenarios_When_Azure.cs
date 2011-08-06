@@ -14,16 +14,21 @@ using NUnit.Framework;
 namespace Lokad.Cqrs.Feature.AtomicStorage
 {
     [TestFixture]
-    public sealed class Given_atomic_storage_When_Azure_is_used : Given_atomic_storage_setup
+    public sealed class Given_Atomic_Scenarios_When_Azure : Given_Atomic_Scenarios
     {
         protected override void Wire_in_the_partition(CqrsEngineBuilder builder, HandlerFactory factory)
         {
             var account = AzureStorage.CreateConfigurationForDev();
             WipeAzureAccount.Fast(s => s.StartsWith("test-"), account);
+            TestSpeed = 5000;
 
             builder.Azure(m =>
                 {
-                    m.AddAzureProcess(account, new[] {"test-incoming"}, c => c.QueueVisibility(1));
+                    m.AddAzureProcess(account, new[] {"test-incoming"}, c =>
+                        {
+                            c.QueueVisibility(1);
+                            c.DispatcherIsLambda(factory);
+                        });
                     m.AddAzureSender(account, "test-incoming", x => x.IdGeneratorForTests());
                 });
             builder.Storage(m => m.AtomicIsInAzure(account));

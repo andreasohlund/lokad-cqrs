@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Lokad.Cqrs.Feature.AtomicStorage
 {
     [TestFixture]
-    public sealed class Given_atomic_storage_When_files_are_used : Given_atomic_storage_setup
+    public sealed class Given_atomic_storage_When_files_are_used : Given_Atomic_Scenarios
     {
         readonly FileStorageConfig _config;
         

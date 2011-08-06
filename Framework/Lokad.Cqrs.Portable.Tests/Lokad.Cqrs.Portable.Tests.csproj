@@ -69,7 +69,7 @@
     <Compile Include="Feature.TapeStorage\MemoryTapeStorageTests.cs" />
     <Compile Include="Feature.TapeStorage\TapeStorageTests.cs" />
     <Compile Include="FiniteEngineScenario.cs" />
-    <Compile Include="Feature.AtomicStorage\Given_atomic_storage_setup.cs" />
+    <Compile Include="Feature.AtomicStorage\Given_Atomic_Scenarios.cs" />
     <Compile Include="Feature.StreamingStorage\Run_all_StreamingStorage_scenarios_for_Files.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\ITestStorage.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\StorageItemFixture.cs" />

@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicClientConfigurationTests.cs" />
-    <Compile Include="Feature.AtomicStorage\Given_atomic_storage_When_Azure_is_used.cs" />
+    <Compile Include="Feature.AtomicStorage\Given_Atomic_Scenarios_When_Azure.cs" />
     <Compile Include="Feature.AtomicStorage\When_DefaultAzureAtomicStorageStrategy_is_used.cs" />
     <Compile Include="Feature.TapeStorage\BlobTapeStorageTests.cs" />
     <Compile Include="Feature.TapeStorage\DatabaseHelper.cs" />
