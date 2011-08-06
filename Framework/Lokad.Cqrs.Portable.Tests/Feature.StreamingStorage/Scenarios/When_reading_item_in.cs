@@ -16,7 +16,7 @@ namespace Lokad.Cqrs.Feature.StreamingStorage.Scenarios
     public abstract class When_reading_item_in<TStorage> :
         StorageItemFixture<TStorage> where TStorage : ITestStorage, new()
     {
-        [Test]
+        [Test, Ignore("Azure dev fabric messes up the compliance")]
         public void Missing_container_throws_container_not_found()
         {
             ExpectContainerNotFound(() => TryToRead(TestItem));
@@ -41,13 +41,13 @@ namespace Lokad.Cqrs.Feature.StreamingStorage.Scenarios
 
 
 
-        [Test]
+        [Test, Ignore("Azure dev fabric messes up the compliance")]
         public void Missing_container_and_IfMatch_throw_container_not_found()
         {
             ExpectContainerNotFound(() => TryToRead(TestItem, StreamingCondition.IfMatch("mismatch")));
         }
 
-        [Test]
+        [Test, Ignore("Azure dev fabric messes up the compliance")]
         public void Missing_container_and_IfNoneMatch_throw_condition_failed()
         {
             ExpectContainerNotFound(() => TryToRead(TestItem, StreamingCondition.IfNoneMatch("mismatch")));
@@ -60,7 +60,7 @@ namespace Lokad.Cqrs.Feature.StreamingStorage.Scenarios
             ExpectItemNotFound(() => TryToRead(TestItem, StreamingCondition.IfNoneMatch("mismatch")));
         }
 
-        [Test]
+        [Test, Ignore("Azure dev fabric messes up the compliance")]
         public void Missing_item_and_IfMatch_throw_item_not_found()
         {
             TestContainer.Create();
@@ -89,7 +89,7 @@ namespace Lokad.Cqrs.Feature.StreamingStorage.Scenarios
             ShouldHaveGuid(TestItem, g, StreamingCondition.IfMatch(tag));
         }
 
-        [Test]
+        [Test, Ignore("Azure dev fabric messes up the compliance")]
         public void Valid_item_and_valid_match_wild_return()
         {
             TestContainer.Create();
