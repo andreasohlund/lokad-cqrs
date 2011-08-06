@@ -62,13 +62,14 @@
     <Compile Include="Feature.DirectoryDispatch\MessageMapping.cs" />
     <Compile Include="Feature.DirectoryDispatch\MethodContextManager.cs" />
     <Compile Include="Feature.DirectoryDispatch\MethodInvokerHint.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lokad.Cqrs.Portable\Lokad.Cqrs.Portable.csproj">
       <Project>{4E2E749C-4D6F-4EF8-8E9D-96D467306997}</Project>
       <Name>Lokad.Cqrs.Portable</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
