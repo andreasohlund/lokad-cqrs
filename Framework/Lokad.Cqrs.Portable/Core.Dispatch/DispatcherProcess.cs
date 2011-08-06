@@ -79,6 +79,10 @@ namespace Lokad.Cqrs.Core.Dispatch
                     {
                         ProcessMessage(context);
                     }
+                    catch (ThreadAbortException)
+                    {
+                         // Nothing. we are being shutdown
+                    }
                     catch(Exception ex)
                     {
                         var e = new DispatchRecoveryFailed(ex, context.Unpacked, context.QueueName);
@@ -134,6 +138,10 @@ namespace Lokad.Cqrs.Core.Dispatch
                     // 3rd - notify.
                     _observer.Notify(new EnvelopeAcked(context.QueueName, context.Unpacked.EnvelopeId, context.Unpacked.GetAllAttributes()));
                 }
+            }
+            catch (ThreadAbortException)
+            {
+                // nothing. We are going to sleep
             }
             catch (Exception ex)
             {

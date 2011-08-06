@@ -41,6 +41,9 @@ namespace Lokad.Cqrs.Core.Outbox
 
         public void SendBatch(object[] content)
         {
+            if (content.Length == 0)
+                return;
+
             InnerSendBatch(cb => { }, content);
         }
 
@@ -49,13 +52,12 @@ namespace Lokad.Cqrs.Core.Outbox
             InnerSendBatch(builder, content);
         }
 
-        
-        Random _random = new Random();
+
+        readonly Random _random = new Random();
 
 
         void InnerSendBatch(Action<EnvelopeBuilder> configure, object[] messageItems) {
-            if (messageItems.Length == 0)
-                return;
+            
 
             var id = _idGenerator();
 
@@ -73,8 +75,9 @@ namespace Lokad.Cqrs.Core.Outbox
             if (Transaction.Current == null)
             {
                 queue.PutMessage(envelope);
+                
                 _observer.Notify(new EnvelopeSent(queue.Name, envelope.EnvelopeId, false,
-                    envelope.Items.Select(x => x.MappedType.Name).ToArray()));
+                    envelope.Items.Select(x => x.MappedType.Name).ToArray(), envelope.GetAllAttributes()));
             }
             else
             {
@@ -82,7 +85,7 @@ namespace Lokad.Cqrs.Core.Outbox
                     {
                         queue.PutMessage(envelope);
                         _observer.Notify(new EnvelopeSent(queue.Name, envelope.EnvelopeId, true,
-                            envelope.Items.Select(x => x.MappedType.Name).ToArray()));
+                            envelope.Items.Select(x => x.MappedType.Name).ToArray(), envelope.GetAllAttributes()));
                     });
                 Transaction.Current.EnlistVolatile(action, EnlistmentOptions.None);
             }

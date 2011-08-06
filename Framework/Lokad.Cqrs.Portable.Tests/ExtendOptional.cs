@@ -50,6 +50,11 @@ namespace Lokad.Cqrs
         public static IDisposable TestSubscribe<T>(this CqrsEngineBuilder host, Action<T> when)
             where T : ISystemEvent
         {
+            
+            return host.TestOfType<T>().Subscribe(when);
+        }
+        public static IObservable<T> TestOfType<T>(this CqrsEngineBuilder host)
+        {
             var observers = host.Advanced.Observers;
             var subject = observers
                 .Where(t => typeof(IObservable<ISystemEvent>).IsAssignableFrom(t.GetType()))
@@ -61,7 +66,7 @@ namespace Lokad.Cqrs
                 subject = s;
                 observers.Add(s);
             }
-            return subject.OfType<T>().Subscribe(when);
-        }
+            return subject.OfType<T>();
+        } 
     }
 }

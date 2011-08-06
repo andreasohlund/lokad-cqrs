@@ -7,6 +7,7 @@
 #endregion
 
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
@@ -16,7 +17,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
     [TestFixture]
     public sealed class Given_Atomic_Scenarios_When_Azure : Given_Atomic_Scenarios
     {
-        protected override void Wire_in_the_partition(CqrsEngineBuilder builder, HandlerFactory factory)
+        protected override void Wire_in_the_partition(CqrsEngineBuilder builder)
         {
             var account = AzureStorage.CreateConfigurationForDev();
             WipeAzureAccount.Fast(s => s.StartsWith("test-"), account);
@@ -27,7 +28,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                     m.AddAzureProcess(account, new[] {"test-incoming"}, c =>
                         {
                             c.QueueVisibility(1);
-                            c.DispatcherIsLambda(factory);
+                            c.DispatcherIsLambda(Bootstrap);
                         });
                     m.AddAzureSender(account, "test-incoming", x => x.IdGeneratorForTests());
                 });

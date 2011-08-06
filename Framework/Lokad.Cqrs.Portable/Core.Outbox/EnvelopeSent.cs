@@ -5,6 +5,8 @@
 
 #endregion
 
+using System.Collections.Generic;
+
 namespace Lokad.Cqrs.Core.Outbox
 {
     public sealed class EnvelopeSent : ISystemEvent
@@ -13,13 +15,15 @@ namespace Lokad.Cqrs.Core.Outbox
         public readonly string EnvelopeId;
         public readonly bool Transactional;
         public readonly string[] MappedTypes;
+        public readonly ICollection<ImmutableAttribute> Attributes; 
 
-        public EnvelopeSent(string queueName, string envelopeId, bool transactional, string[] mappedTypes)
+        public EnvelopeSent(string queueName, string envelopeId, bool transactional, string[] mappedTypes, ICollection<ImmutableAttribute> attributes)
         {
             QueueName = queueName;
             EnvelopeId = envelopeId;
             Transactional = transactional;
             MappedTypes = mappedTypes;
+            Attributes = attributes;
         }
 
         public override string ToString()

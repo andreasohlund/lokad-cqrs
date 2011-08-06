@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Documentation_sample.cs" />
-    <Compile Include="Feature.AtomicStorage\Given_atomic_storage_When_files_are_used.cs" />
+    <Compile Include="Feature.AtomicStorage\Given_Atomic_Scenarios_When_Files.cs" />
     <Compile Include="Feature.AtomicStorage\Syntax_verification.cs" />
     <Compile Include="Core.Envelope\Play_all_for_DataContracts.cs" />
     <Compile Include="Core.Envelope\Play_all_for_Memory.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="Core.Envelope\Play_all_for_BinaryFormatter.cs" />
     <Compile Include="ExtendOptional.cs" />
     <Compile Include="Feature.AtomicStorage\Engine_scenario_for_custom_view_domain.cs" />
-    <Compile Include="Feature.AtomicStorage\Given_atomic_storage_When_memory_is_used.cs" />
+    <Compile Include="Feature.AtomicStorage\Given_Atomic_Scenarios_When_Memory.cs" />
     <Compile Include="Feature.StreamingStorage\Engine_scenario_for_streaming_storage.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\When_listing_items_in.cs" />
     <Compile Include="Feature.TapeStorage\FileTapeStorageTests.cs" />
