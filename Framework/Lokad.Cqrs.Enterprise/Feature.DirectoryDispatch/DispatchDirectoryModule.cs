@@ -89,6 +89,11 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             _scanner.WhereMessages(constraint);
         }
 
+        public void WhereMessagesAre<T>()
+        {
+            _scanner.WhereMessages(t => typeof(T).IsAssignableFrom(t));
+        }
+
 
         public void Configure(Container container, Action<IEnumerable<Type>> serializationVisitor)
         {

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Funq;
+using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;
@@ -65,7 +66,7 @@ namespace Lokad.Cqrs.Feature.FilePartition
         /// Defines dispatcher as lambda method that is resolved against the container
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public void DispatcherIsLambda(Func<Container, Action<ImmutableEnvelope>> factory)
+        public void DispatcherIsLambda(HandlerFactory factory)
         {
             _dispatcher = context =>
             {
@@ -144,7 +145,19 @@ namespace Lokad.Cqrs.Feature.FilePartition
 
         public void Configure(Container container)
         {
-            container.Register(BuildConsumingProcess);
+            if (null == _dispatcher)
+            {
+                var message = @"No message dispatcher configured, please supply one.
+
+You can use either 'DispatcherIsLambda' or reference Lokad.CQRS.Composite and 
+use Command/Event dispatchers. If you are migrating from v2.0, that's what you 
+should do.";
+                throw new InvalidOperationException(message);
+            }
+
+            var process = BuildConsumingProcess(container);
+            var setup = container.Resolve<EngineSetup>();
+            setup.AddProcess(process);
         }
     }
 }

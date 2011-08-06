@@ -28,7 +28,7 @@ namespace Lokad.Cqrs
             TestConfiguration(c => c.Memory(m =>
                 {
                     m.AddMemorySender("test-accelerated");
-                    m.AddMemoryProcess("test-accelerated", Handling.Empty);
+                    m.AddMemoryProcess("test-accelerated", HandlerComposer.Empty);
                 }));
         }
 

@@ -5,7 +5,11 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using Lokad.Cqrs.Build.Engine;
 using NUnit.Framework;
+using System.Linq;
 
 namespace Lokad.Cqrs
 {
@@ -36,6 +40,28 @@ namespace Lokad.Cqrs
         {
             Assert.IsFalse(optional.HasValue, "Maybe should not have value");
             return;
+        }
+    }
+
+    public static class ExtendEngineHostForTests
+    {
+
+        
+        public static IDisposable TestSubscribe<T>(this CqrsEngineBuilder host, Action<T> when)
+            where T : ISystemEvent
+        {
+            var observers = host.Advanced.Observers;
+            var subject = observers
+                .Where(t => typeof(IObservable<ISystemEvent>).IsAssignableFrom(t.GetType()))
+                .Cast<IObservable<ISystemEvent>>()
+                .FirstOrDefault();
+            if (null == subject)
+            {
+                var s = new Subject<ISystemEvent>();
+                subject = s;
+                observers.Add(s);
+            }
+            return subject.OfType<T>().Subscribe(when);
         }
     }
 }

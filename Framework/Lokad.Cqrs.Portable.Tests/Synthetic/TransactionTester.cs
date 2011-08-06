@@ -11,6 +11,10 @@ namespace Lokad.Cqrs.Synthetic
 
         public TransactionTester()
         {
+            if (Transaction.Current == null)
+            {
+                throw new InvalidOperationException("Ambient transaction not present!");
+            }
             Transaction.Current.EnlistVolatile(this, EnlistmentOptions.None);
         }
 

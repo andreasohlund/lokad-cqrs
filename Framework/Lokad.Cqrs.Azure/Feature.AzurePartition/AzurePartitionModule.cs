@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Funq;
+using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;
@@ -36,9 +37,6 @@ namespace Lokad.Cqrs.Feature.AzurePartition
 
         public AzurePartitionModule(IAzureStorageConfig config, string[] queueNames)
         {
-            DispatcherIsLambda(
-                context => (envelope => { throw new InvalidOperationException("Dispatcher was not configured"); }));
-
             QueueVisibility(30000);
 
             _config = config;
@@ -87,7 +85,7 @@ namespace Lokad.Cqrs.Feature.AzurePartition
         /// Defines dispatcher as lambda method that is resolved against the container
         /// </summary>
         /// <param name="factory">The factory.</param>
-        public void DispatcherIsLambda(Func<Container, Action<ImmutableEnvelope>> factory)
+        public void DispatcherIsLambda(HandlerFactory factory)
         {
             _dispatcher = context =>
                 {
@@ -105,6 +103,7 @@ namespace Lokad.Cqrs.Feature.AzurePartition
         IEngineProcess BuildConsumingProcess(Container context)
         {
             var log = context.Resolve<ISystemObserver>();
+
             var dispatcher = _dispatcher(context);
             dispatcher.Init();
 
@@ -139,7 +138,17 @@ namespace Lokad.Cqrs.Feature.AzurePartition
 
         public void Configure(Container container)
         {
-            container.Register(BuildConsumingProcess);
+            if (null == _dispatcher)
+            {
+                throw new InvalidOperationException(@"No message dispatcher configured, please supply one.
+
+You can use either 'DispatcherIsLambda' or reference Lokad.CQRS.Composite and 
+use Command/Event dispatchers. If you are migrating from v2.0, that's what you 
+should do.");
+            }
+            var setup = container.Resolve<EngineSetup>();
+            var process = BuildConsumingProcess(container);
+            setup.AddProcess(process);
         }
     }
 }

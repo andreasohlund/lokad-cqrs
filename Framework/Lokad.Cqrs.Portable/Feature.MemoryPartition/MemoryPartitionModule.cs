@@ -24,9 +24,6 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
         public MemoryPartitionModule(string[] memoryQueues)
         {
             _memoryQueues = memoryQueues;
-
-            //DispatcherIsLambda(c => (envelope => { throw new InvalidOperationException("There was no dispatcher configured");}) );
-
             Quarantine(c => new MemoryQuarantine());
         }
 
@@ -83,7 +80,7 @@ namespace Lokad.Cqrs.Feature.MemoryPartition
             {
                 throw new InvalidOperationException(@"No message dispatcher configured, please supply one.
 
-You can use either 'DispatcherIsLambda' or reference Lokad.CQRS.Enterprise and 
+You can use either 'DispatcherIsLambda' or reference Lokad.CQRS.Composite and 
 use Command/Event dispatchers. If you are migrating from v2.0, that's what you 
 should do.");
             }

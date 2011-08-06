@@ -2,68 +2,82 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Transactions;
 using Funq;
 using System.Linq;
 using Lokad.Cqrs.Core;
 
 namespace Lokad.Cqrs
 {
-    
-    [ComVisible(true)]
-  [Serializable]
-  //[StructLayout(LayoutKind.Sequential, Size = 1)]
-  //public struct unit
-  //  {
-  //      public static readonly unit it = default(unit);
 
-  //      public static implicit operator unit(int value)
-  //      {
-  //          if (value != 0) throw new InvalidOperationException();
-  //          return default(unit);
-  //      }
-  //  }
-
-    public sealed class Handling : HideObjectMembersFromIntelliSense
+    public sealed class HandlerComposer : HideObjectMembersFromIntelliSense
     {
         readonly IDictionary<Type, Action<Container, object>> _handler = new Dictionary<Type, Action<Container, object>>();
+        readonly Func<TransactionScope> _optionalTxProvider;
+        readonly Action<Container, object> _whenNotFound = (container, o) => { };
 
-        public void Add<T1,T2,T3>(Action<T1,T2,T3> add)
+        public void Add<TMessage,TArg1,TArg2>(Action<TMessage,TArg1,TArg2> add)
         {
-            _handler.Add(typeof(T1), (container, o) =>
+            _handler.Add(typeof(TMessage), (container, o) =>
                 {
-                    var a1 = container.Resolve<T2>();
-                    var a2 = container.Resolve<T3>();
-                    add((T1) o, a1, a2);
+                    var a1 = container.Resolve<TArg1>();
+                    var a2 = container.Resolve<TArg2>();
+                    add((TMessage) o, a1, a2);
                 });
         }
 
-        public void Add<T1>(Action<T1> add)
+        public HandlerComposer(Func<TransactionScope> optionalTxProvider = null)
         {
-            _handler.Add(typeof(T1), (container, o) => add((T1)o));
+            _optionalTxProvider = optionalTxProvider;
+        }
+
+        public void Add<TMessage>(Action<TMessage> add)
+        {
+            _handler.Add(typeof(TMessage), (container, o) => add((TMessage)o));
+        }
+
+        public void Add<TMessage,TArg>(Action<TMessage,TArg> add)
+        {
+            _handler.Add(typeof(TMessage), (container, o) =>
+                {
+                    var a1 = container.Resolve<TArg>();
+                    add((TMessage) o, a1);
+                });
         }
 
         public Action<ImmutableEnvelope> BuildHandler(Container container)
         {
-            return envelope => Execute(container, envelope, (container1, o) => { });
+            return envelope => Execute(container, envelope);
         }
         public HandlerFactory BuildFactory()
         {
-            return container => (envelope => Execute(container, envelope, (container1, o) => { }));
+            return container => (envelope => Execute(container, envelope));
         }
 
         public static HandlerFactory Empty = container => (envelope => { }); 
 
+        void Execute(Container container, ImmutableEnvelope envelope)
+        {
+            if (_optionalTxProvider == null)
+            {
+                ExecuteInner(container, envelope);
+                return;
+            }
+            using (var scope = _optionalTxProvider())
+            {
+                ExecuteInner(container, envelope);
+                scope.Complete();
+            }
+        }
 
-
-        void Execute(Container container, ImmutableEnvelope envelope, Action<Container,object> whenNotFound)
+        void ExecuteInner(Container container, ImmutableEnvelope envelope)
         {
             foreach (var item in envelope.Items)
             {
                 Action<Container, object> action;
                 if (!_handler.TryGetValue(item.MappedType, out action))
                 {
-                    whenNotFound(container, item);
-                    
+                    _whenNotFound(container, item);
                 }
                 else
                 {
@@ -72,5 +86,4 @@ namespace Lokad.Cqrs
             }
         }
     }
-    
 }

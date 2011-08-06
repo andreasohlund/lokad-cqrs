@@ -6,6 +6,7 @@
 #endregion
 
 using System;
+using System.Threading;
 using Lokad.Cqrs.Core.Inbox;
 using Lokad.Cqrs.Core.Inbox.Events;
 using Microsoft.WindowsAzure.StorageClient;
@@ -59,6 +60,11 @@ namespace Lokad.Cqrs.Feature.AzurePartition
             try
             {
                 message = _queue.GetMessage(_visibilityTimeout);
+            }
+            catch (ThreadAbortException)
+            {
+                // we are stopping
+                return GetEnvelopeResult.Empty;
             }
             catch (Exception ex)
             {

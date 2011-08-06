@@ -65,6 +65,11 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             return Factory.GetEntityWriter<object, TEntity>().AddOrUpdate(key, addFactory, update);
         }
 
+        public TEntity AddOrUpdateEntity<TEntity>(object key, Func<TEntity> addFactory, Func<TEntity,TEntity> update)
+        {
+            return Factory.GetEntityWriter<object, TEntity>().AddOrUpdate(key, addFactory, update);
+        }
+
         public TEntity AddEntity<TEntity>(object key, TEntity newEntity)
         {
             return Factory.GetEntityWriter<object, TEntity>().Add(key, newEntity);

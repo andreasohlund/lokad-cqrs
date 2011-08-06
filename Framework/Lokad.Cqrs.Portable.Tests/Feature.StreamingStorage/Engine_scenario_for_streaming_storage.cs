@@ -67,7 +67,7 @@ namespace Lokad.Cqrs.Feature.StreamingStorage
 
         static Action<ImmutableEnvelope> Lambda(Container container)
         {
-            var handler = new Handling();
+            var handler = new HandlerComposer();
             handler.Add<Do,IStreamingRoot,IMessageSender>(Consume);
             return handler.BuildHandler(container);
         }

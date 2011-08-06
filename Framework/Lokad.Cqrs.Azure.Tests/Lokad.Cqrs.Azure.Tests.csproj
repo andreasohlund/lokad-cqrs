@@ -69,7 +69,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Synthetic\Run_all_Synthetic_tests_on_azure.cs" />
+    <Compile Include="Synthetic\Given_Basic_Scenarios_When_Azure.cs" />
     <Compile Include="Core.Serialization\ProtobufFixture.cs" />
     <Compile Include="Core.Envelope\Play_all_for_ProtoBuf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,11 +79,16 @@
     <Compile Include="SmokeTests.cs" />
     <Compile Include="Feature.StreamingStorage\Play_all_for_BlobStreaming.cs" />
     <Compile Include="Feature.StreamingStorage\HashingTests.cs" />
+    <Compile Include="Synthetic\Given_Tx_Scenarios_When_Composite_Azure.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lokad.Cqrs.Azure\Lokad.Cqrs.Azure.csproj">
       <Project>{AEE2B47D-591D-42B5-8EDC-CC676A661F9D}</Project>
       <Name>Lokad.Cqrs.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lokad.Cqrs.Enterprise\Lokad.Cqrs.Enterprise.csproj">
+      <Project>{F60E517D-CEE9-4F8B-9166-075FE6AA677A}</Project>
+      <Name>Lokad.Cqrs.Enterprise</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lokad.Cqrs.Portable.Tests\Lokad.Cqrs.Portable.Tests.csproj">
       <Project>{96E3B247-C04C-4138-A042-7969562B4B0F}</Project>

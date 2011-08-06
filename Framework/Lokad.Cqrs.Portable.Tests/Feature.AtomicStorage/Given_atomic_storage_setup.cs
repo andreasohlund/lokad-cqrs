@@ -37,7 +37,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
             using (var source = new CancellationTokenSource())
             {
-                var h = new Handling();
+                var h = new HandlerComposer();
                 h.Add<AtomicMessage,IMessageSender,IAtomicSingletonWriter<Entity>>((message, sender, arg3) =>
                     {
                         var entity = arg3.AddOrUpdate(r => r.Count += 1);
@@ -61,7 +61,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
             using (var source = new CancellationTokenSource())
             {
-                var h = new Handling();
+                var h = new HandlerComposer();
                 h.Add<AtomicMessage, IMessageSender, NuclearStorage>((message, sender, arg3) =>
                 {
                     var entity = arg3.UpdateSingletonEnforcingNew<Entity>(r => r.Count += 1);

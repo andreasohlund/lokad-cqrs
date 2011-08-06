@@ -47,6 +47,7 @@
       <HintPath>..\Library\Reactive\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -58,12 +59,11 @@
     <Compile Include="Core.Directory\When_activation_map_constrained_to_catch_all_consumer.cs" />
     <Compile Include="Core.Directory\When_builder_is_available.cs" />
     <Compile Include="Core.Directory\When_there_are_no_catch_all_handlers.cs" />
-    <Compile Include="Given_synthetic_setup_When_memory_composite.cs" />
+    <Compile Include="Synthetic\Given_Tx_Scenarios_When_Composite_Memory.cs" />
+    <Compile Include="Synthetic\Given_Basic_Scenarios_When_Composite_Memory.cs" />
     <Compile Include="Given_MessageContext_Omitted.cs" />
     <Compile Include="Given_MessageContext_Specified.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Run_all_synthetic_scenarios_for_files.cs" />
-    <Compile Include="Run_all_Synthetic_scenarios_in_memory.cs" />
     <Compile Include="Scenarios\001-SimpleES\AccountAggregateReader.cs" />
     <Compile Include="Scenarios\001-SimpleES\AccountAggregateRepository.cs" />
     <Compile Include="Scenarios\001-SimpleES\AccountAggregateWriter.cs" />

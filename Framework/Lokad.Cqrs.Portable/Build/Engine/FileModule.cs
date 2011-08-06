@@ -22,7 +22,7 @@ namespace Lokad.Cqrs.Build.Engine
             _funqlets += module.Configure;
         }
 
-        public void AddFileProcess(FileStorageConfig folder, string queues, Func<Container,Action<ImmutableEnvelope>> handler)
+        public void AddFileProcess(FileStorageConfig folder, string queues, HandlerFactory handler)
         {
             AddFileProcess(folder, queues, m => m.DispatcherIsLambda(handler));
         }

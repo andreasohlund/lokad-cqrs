@@ -14,6 +14,8 @@ namespace Lokad.Cqrs
         public DirectoryInfo Folder { get; private set; }
         public string AccountName { get; private set; }
 
+        public string FullPath { get { return Folder.FullName; } }
+
         public FileStorageConfig(DirectoryInfo folder, string accountName)
         {
             Folder = folder;
@@ -28,6 +30,11 @@ namespace Lokad.Cqrs
         public void EnsureDirectory()
         {
             Folder.Create();
+        }
+        public void Reset()
+        {
+            Wipe();
+            EnsureDirectory();
         }
     }
 }

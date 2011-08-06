@@ -65,7 +65,7 @@ namespace Lokad.Cqrs.Build.Engine
         }
 
 
-        public void AddAzureProcess(IAzureStorageConfig config, string firstQueue, Func<Container,Action<ImmutableEnvelope>> handler)
+        public void AddAzureProcess(IAzureStorageConfig config, string firstQueue, HandlerFactory handler)
         {
             AddAzureProcess(config, new[] { firstQueue}, m => m.DispatcherIsLambda(handler));
         }
