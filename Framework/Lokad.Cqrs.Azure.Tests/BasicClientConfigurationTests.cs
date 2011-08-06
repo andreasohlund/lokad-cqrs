@@ -31,7 +31,7 @@ namespace Lokad.Cqrs
 
             var events = new Subject<ISystemEvent>();
             var b = new CqrsEngineBuilder();
-            b.Azure(c => c.AddAzureProcess(dev, "test-publish",container => { }));
+            b.Azure(c => c.AddAzureProcess(dev, "test-publish",HandlerComposer.Empty));
             b.Advanced.RegisterObserver(events);
             var engine = b.Build();
             var source = new CancellationTokenSource();
