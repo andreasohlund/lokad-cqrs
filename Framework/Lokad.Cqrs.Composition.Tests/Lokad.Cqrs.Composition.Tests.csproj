@@ -63,7 +63,6 @@
     <Compile Include="Synthetic\Given_Basic_Scenarios_When_Composite_Memory.cs" />
     <Compile Include="Given_MessageContext_Omitted.cs" />
     <Compile Include="Given_MessageContext_Specified.cs" />
-    <Compile Include="Scenarios\002-Multiverse\MultiverseTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lokad.Cqrs.Composition\Lokad.Cqrs.Composition.csproj">
