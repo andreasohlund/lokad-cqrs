@@ -125,6 +125,8 @@ namespace Lokad.Cqrs.Build.Engine
             configure(_storage);
         }
 
+        readonly EngineSetup _setup = new EngineSetup();
+
 
         /// <summary>
         /// Builds this <see cref="CqrsEngineHost"/>.
@@ -135,15 +137,15 @@ namespace Lokad.Cqrs.Build.Engine
             // nonconditional registrations
             // System presets
             var container = new Container();
-            var core = new EngineSetup();
-            container.Register(core);
+        
+            container.Register(_setup);
             container.Register(new MemoryAccount());
             var system = new SystemObserver(_observers.ToArray());
             container.Register<ISystemObserver>(system);
             Configure(container);
             _moduleEnlistments(container);
             
-            var host = new CqrsEngineHost(container, system, core.GetProcesses());
+            var host = new CqrsEngineHost(container, system, _setup.GetProcesses());
             host.Initialize();
             return host;
         }

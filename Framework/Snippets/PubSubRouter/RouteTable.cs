@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Linq;
 
-namespace Snippets.PubSub
+namespace Snippets.PubSubRouter
 {
     [DataContract]
     public sealed class RouteTable

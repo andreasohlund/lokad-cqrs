@@ -19,7 +19,7 @@ using Lokad.Cqrs.Feature.AtomicStorage;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
-namespace Snippets.PubSub
+namespace Snippets.PubSubRouter
 {
     [TestFixture, Explicit]
     public sealed class PubSub_Usage
@@ -44,6 +44,11 @@ namespace Snippets.PubSub
             // only message contracts within this class
             builder.Messages(m => m.WhereMessages(t => t.DeclaringType == GetType()));
 
+            // configure in memory:
+            //                            -> sub 1 
+            //  inbox -> [PubSubRouter] <
+            //                            -> sub 2
+            //
             builder.Memory(m =>
                 {
                     m.AddMemorySender("inbox", x => x.IdGeneratorForTests());

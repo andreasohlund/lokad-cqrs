@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build\Client\IAdvancedClientBuilder.cs" />
+    <Compile Include="Build\Engine\EngineSetup.cs" />
     <Compile Include="Build\MessageLookupModule.cs" />
     <Compile Include="Build\Engine\AtomicRegistrationSource.cs" />
     <Compile Include="Build\Client\FileClientModule.cs" />

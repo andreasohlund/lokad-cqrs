@@ -30,6 +30,11 @@ namespace Lokad.Cqrs
             _optionalTxProvider = optionalTxProvider;
         }
 
+        public HandlerComposer()
+        {
+            
+        }
+
         public void Add<TMessage>(Action<TMessage> add)
         {
             _handler.Add(typeof(TMessage), (container, o) => add((TMessage)o));

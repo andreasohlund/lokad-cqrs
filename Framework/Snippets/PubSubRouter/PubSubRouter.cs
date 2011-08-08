@@ -15,11 +15,46 @@ using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.AtomicStorage;
 
-namespace Snippets.PubSub
+namespace Snippets.PubSubRouter
 {
-    /// <summary>
-    /// This is a sample snippet of a router acting as a configurable
-    /// pub/sub endpoint. See ReadMe in this folder for more information.
+    /// <summary> 
+    /// Snippet: Configurable PubSub Router
+    /// ===================================
+    /// 
+    /// > This code is supposed to be used in small to medium projects in the 
+    /// > beginning of their lifecycle. As project matures it is recommended 
+    /// > to switch to something more robust like AMQP server for the routing 
+    /// > and pub/sub.
+    /// 
+    /// This router does 3 things:
+    /// 
+    /// 1. Maintains routing (publish/subscribe) map
+    /// 2. Routes event to subscribers using this map
+    /// 3. It routes commands to a single queue (hardcoded)
+    /// 
+    /// 
+    /// This snippet could be expanded to support command partitioning (entity 
+    /// partitioning) or topic-based subscriptions in a similar manner.
+    /// 
+    /// Routing map is persisted in the atomic storage (using whatever storage system
+    /// is configured for it). Routing map can be managed remotely via the control
+    /// messages which come in the form of envelopes without the content but with
+    /// special attributes:
+    /// 
+    /// **To subscribe**:
+    /// 
+    /// key: router-subscribe-QUEUE-NAME
+    /// value: REGEX
+    /// 
+    /// **To unsubscribe**:
+    /// 
+    /// key router-unsubscribe-QUEUE-NAME
+    /// value: REGEX
+    /// 
+    /// Where REGEX matches against the full name of the message event type. In your
+    /// scenario match could be implemented differently. 
+    /// 
+    /// See the code for more details and comments. Unit test shows some sample usage
     /// </summary>
     class PubSubRouter : ISingleThreadMessageDispatcher
     {
@@ -113,7 +148,7 @@ To unsubscribe:
                 _routing.Add(Tuple.Create(regex, (ICollection<string>) item.QueueNames));
             }
         }
-            
+
         readonly IList<Tuple<Regex, ICollection<string>>> _routing = new List<Tuple<Regex, ICollection<string>>>();
         readonly IQueueWriterFactory _queueFactory;
 
@@ -129,7 +164,7 @@ To unsubscribe:
             if (1 != e.Items.Length)
             {
                 throw new InvalidOperationException(
-@"Events that go through the router can't be batched! If you are publishing
+                    @"Events that go through the router can't be batched! If you are publishing
 event sourcing messages, break them into the separate envelopes.");
             }
             // usual approach is to route based on the 'topic' field, which is
@@ -148,7 +183,6 @@ event sourcing messages, break them into the separate envelopes.");
             {
                 queue.PutMessage(e);
             }
-
         }
 
         public void Init()
