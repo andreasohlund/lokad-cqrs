@@ -21,12 +21,13 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 {
     public abstract class Given_Atomic_Scenarios
     {
-        protected abstract void Wire_in_the_partition(CqrsEngineBuilder builder);
-
-        [DataContract]
-        public sealed class AtomicMessage : Define.Command {}
-        [DataContract]
-        public sealed class NuclearMessage : Define.Command { }
+        protected static Action<ImmutableEnvelope> Bootstrap(Container container)
+        {
+            var handling = new HandlerComposer();
+            handling.Add<AtomicMessage, IMessageSender, IAtomicSingletonWriter<int>>(HandleAtomic);
+            handling.Add<NuclearMessage, IMessageSender, NuclearStorage>(HandleNuclear);
+            return handling.BuildHandler(container);
+        }
 
         [Test]
         public void Then_typed_singleton_should_be_accessable_from_handler()
@@ -34,7 +35,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             var builder = new CqrsEngineBuilder();
             
             using (var source = new CancellationTokenSource())
-            using (Cancel_when_ok(source, builder))
+            using (Cancel_when_ok_received(source, builder))
             {
                 Wire_in_the_partition(builder);
                 using (var engine = builder.Build())
@@ -47,7 +48,34 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             }
         }
 
-        static IDisposable Cancel_when_ok(CancellationTokenSource source, CqrsEngineBuilder builder)
+        [Test]
+        public void Then_nuclear_storage_should_be_available()
+        {
+            var builder = new CqrsEngineBuilder();
+
+            using (var source = new CancellationTokenSource())
+            using (Cancel_when_ok_received(source, builder))
+            {
+                Wire_in_the_partition(builder);
+                using (var engine = builder.Build())
+                {
+                    engine.Resolve<IMessageSender>().SendOne(new NuclearMessage());
+                    var task = engine.Start(source.Token);
+                    task.Wait(TestSpeed);
+                    Assert.IsTrue(source.IsCancellationRequested);
+                }
+            }
+        }
+
+        protected abstract void Wire_in_the_partition(CqrsEngineBuilder builder);
+
+        [DataContract]
+        public sealed class AtomicMessage : Define.Command {}
+
+        [DataContract]
+        public sealed class NuclearMessage : Define.Command { }
+
+        static IDisposable Cancel_when_ok_received(CancellationTokenSource source, CqrsEngineBuilder builder)
         {
             return builder
                 .TestOfType<EnvelopeSent>()
@@ -65,9 +93,9 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             }
             sender.SendOne(new AtomicMessage());
         }
+
         protected static void HandleNuclear(NuclearMessage msg, IMessageSender sender, NuclearStorage storage)
         {
-
             var count = storage.AddOrUpdateSingleton(() => 1, i => i + 1);
             if (count >= 2)
             {
@@ -75,33 +103,6 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                 return;
             }
             sender.SendOne(new NuclearMessage());
-        }
-
-        protected static Action<ImmutableEnvelope> Bootstrap(Container container)
-        {
-            var handling = new HandlerComposer();
-            handling.Add<AtomicMessage, IMessageSender, IAtomicSingletonWriter<int>>(HandleAtomic);
-            handling.Add<NuclearMessage, IMessageSender, NuclearStorage>(HandleNuclear);
-            return handling.BuildHandler(container);
-        }
-
-        [Test]
-        public void Then_nuclear_storage_should_be_available()
-        {
-            var builder = new CqrsEngineBuilder();
-
-            using (var source = new CancellationTokenSource())
-            using (Cancel_when_ok(source, builder))
-            {
-                Wire_in_the_partition(builder);
-                using (var engine = builder.Build())
-                {
-                    engine.Resolve<IMessageSender>().SendOne(new NuclearMessage());
-                    var task = engine.Start(source.Token);
-                    task.Wait(TestSpeed);
-                    Assert.IsTrue(source.IsCancellationRequested);
-                }
-            }
         }
 
         protected int TestSpeed = 2000;
