@@ -1,20 +1,18 @@
-﻿#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Concurrency;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch.Events;
-using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.MemoryPartition;
 using NUnit.Framework;
 
@@ -26,6 +24,7 @@ namespace Lokad.Cqrs
         // ReSharper disable InconsistentNaming
 
         #region Domain
+
         [DataContract]
         public sealed class Message1 : Define.Command
         {
@@ -55,30 +54,24 @@ namespace Lokad.Cqrs
             }
         }
 
-        
-
         #endregion
 
         static void TestConfiguration(Action<CqrsEngineBuilder> config)
         {
-            var events = new Subject<ISystemEvent>(Scheduler.TaskPool);
             var builder = new CqrsEngineBuilder();
-            builder.Advanced.RegisterObserver(events);
-
             config(builder);
-
-            using (var engine = builder.Build())
             using (var t = new CancellationTokenSource())
-            using (events
-                .OfType<EnvelopeAcked>()
-                .Where(ea => ea.QueueName == "do")
+            using (builder.TestOfType<EnvelopeAcked>().Where(ea => ea.QueueName == "do")
                 .Skip(5)
                 .Subscribe(c => t.Cancel()))
+            using (var engine = builder.Build())
             {
                 engine.Start(t.Token);
                 engine.Resolve<IMessageSender>().SendOne(new Message1(0));
-                t.Token.WaitHandle.WaitOne(5000);
-
+                if (!t.Token.WaitHandle.WaitOne(5000))
+                {
+                    t.Cancel();
+                }
                 Assert.IsTrue(t.IsCancellationRequested);
             }
         }
@@ -105,7 +98,8 @@ namespace Lokad.Cqrs
         {
             TestConfiguration(x =>
                 {
-                    x.Advanced.RegisterQueueWriterFactory(c => new MemoryQueueWriterFactory(c.Resolve<MemoryAccount>(), "custom"));
+                    x.Advanced.RegisterQueueWriterFactory(
+                        c => new MemoryQueueWriterFactory(c.Resolve<MemoryAccount>(), "custom"));
                     x.Memory(m =>
                         {
                             m.AddMemorySender("in", module => module.IdGeneratorForTests());
@@ -132,8 +126,8 @@ namespace Lokad.Cqrs
                 {
                     m.AddMemorySender("in");
                     m.AddMemoryRouter("in",
-                        me => (((Message1) me.Items[0].Content).Block%2) == 0 ? "memory:do1" : "memory:do2");
-                    m.AddMemoryRouter(new[]{"do1", "do2"}, me => "memory:do");
+                        me => (((Message1) me.Items[0].Content).Block % 2) == 0 ? "memory:do1" : "memory:do2");
+                    m.AddMemoryRouter(new[] {"do1", "do2"}, me => "memory:do");
                     m.AddMemoryProcess("do", Resend);
                 }));
         }
