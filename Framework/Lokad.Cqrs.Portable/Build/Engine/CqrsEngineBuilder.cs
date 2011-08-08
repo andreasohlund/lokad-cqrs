@@ -45,7 +45,7 @@ namespace Lokad.Cqrs.Build.Engine
             config(mlm);
             _serializationTypes.AddRange(mlm.LookupMessages());
         }
-
+        
         public void Messages(IEnumerable<Type> messageTypes)
         {
             _serializationTypes.AddRange(messageTypes);

@@ -7,7 +7,7 @@ using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
 
 namespace Lokad.Cqrs.Build
 {
-    public sealed class MessageLookupModule
+    public sealed class MessageLookupModule : HideObjectMembersFromIntelliSense
     {
         readonly List<Assembly> _assemblies;
         readonly IList<Predicate<Type>> _constraints;
