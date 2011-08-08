@@ -109,6 +109,11 @@ namespace Lokad.Cqrs.Core.Dispatch
 
                 processed = true;
             }
+            catch (ThreadAbortException)
+            {
+                // we are shutting down. Stop immediately
+                return;
+            }
             catch (Exception dispatchEx)
             {
                 // if the code below fails, it will just cause everything to be reprocessed later,

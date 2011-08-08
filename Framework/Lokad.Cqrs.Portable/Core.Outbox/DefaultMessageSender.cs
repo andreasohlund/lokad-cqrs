@@ -53,6 +53,11 @@ namespace Lokad.Cqrs.Core.Outbox
             InnerSendBatch(builder, content);
         }
 
+        public void SendControl(Action<EnvelopeBuilder> builder)
+        {
+            InnerSendBatch(builder, new object[0]);
+        }
+
 
         readonly Random _random = new Random();
 
