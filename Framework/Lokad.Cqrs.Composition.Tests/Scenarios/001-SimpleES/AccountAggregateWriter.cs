@@ -18,7 +18,7 @@ namespace Lokad.Cqrs.Scenarios.SimpleES
 
         public void Apply(IAccountEvent e)
         {
-            RedirectToWhen<AccountAggregateReader>.Invoke(this, e);
+            RedirectToWhen.InvokeOptional(this, e);
             _observer.OnNext(e);
         }
 
