@@ -44,19 +44,25 @@
   <ItemGroup>
     <Compile Include="PubSubRouter\PubSubRouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PubSubRouter\PubSub_Usage.cs" />
+    <Compile Include="PubSubRouter\_Usage.cs" />
     <Compile Include="PubSubRouter\RouteTable.cs" />
     <Compile Include="SimpleEventSourcing\AccountAggregateState.cs" />
     <Compile Include="SimpleEventSourcing\AccountAggregate.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\AccountChargeAdded.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\AccountChargeCanceled.cs" />
     <Compile Include="SimpleEventSourcing\Contracts\AccountCreated.cs" />
-    <Compile Include="SimpleEventSourcing\Contracts\AddLogin.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\AccountPaymentAdded.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\AccountPaymentCanceled.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\AddAccountCharge.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\AddAccountPayment.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\CancelAccountTransaction.cs" />
     <Compile Include="SimpleEventSourcing\Contracts\CreateAccount.cs" />
-    <Compile Include="SimpleEventSourcing\Contracts\LoginAdded.cs" />
     <Compile Include="SimpleEventSourcing\Definitions\ISesCommand.cs" />
     <Compile Include="SimpleEventSourcing\Definitions\ISesEvent.cs" />
     <Compile Include="SimpleEventSourcing\Definitions\ISesMessage.cs" />
+    <Compile Include="SimpleEventSourcing\EventSourcingMagic.cs" />
     <Compile Include="SimpleEventSourcing\RedirectToWhen.cs" />
-    <Compile Include="SimpleEventSourcing\SimpleESTests.cs" />
+    <Compile Include="SimpleEventSourcing\_Usage.cs" />
     <Compile Include="SimpleTimerService\SecondPassed.cs" />
     <Compile Include="SimpleTimerService\SimpleTimerService.cs" />
     <Compile Include="SimpleTimerService\SimpleTimerService_Usage.cs" />
@@ -66,6 +72,12 @@
       <Project>{4E2E749C-4D6F-4EF8-8E9D-96D467306997}</Project>
       <Name>Lokad.Cqrs.Portable</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PubSubRouter\ReadMe.markdown" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleEventSourcing\ReadMe.markdown" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

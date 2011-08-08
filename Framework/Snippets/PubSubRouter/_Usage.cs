@@ -21,22 +21,12 @@ using NUnit.Framework;
 // ReSharper disable InconsistentNaming
 namespace Snippets.PubSubRouter
 {
+    /// <summary>
+    /// See ReadMe.markdown for details
+    /// </summary>
     [TestFixture, Explicit]
-    public sealed class PubSub_Usage
+    public sealed class _Usage
     {
-        // ReSharper disable InconsistentNaming
-
-        [DataContract]
-        public sealed class SomethingHappened : Define.Event
-        {
-            
-        }
-        [DataContract]
-        public sealed class OtherHappened : Define.Event
-        {
-            
-        }
-
         [Test]
         public void Test()
         {
@@ -78,10 +68,10 @@ namespace Snippets.PubSubRouter
 
                 // unsubscribe all
                 sender.SendControl(eb =>
-                {
-                    eb.AddString("router-unsubscribe:sub1", ".*");
-                    eb.AddString("router-unsubscribe:sub2", "SomethingHappened");
-                });
+                    {
+                        eb.AddString("router-unsubscribe:sub1", ".*");
+                        eb.AddString("router-unsubscribe:sub2", "SomethingHappened");
+                    });
                 sender.SendOne(new SomethingHappened());
                 sender.SendOne(new OtherHappened());
 
@@ -90,6 +80,18 @@ namespace Snippets.PubSubRouter
                 task.Wait(5000);
 
             }
+        }
+
+        [DataContract]
+        public sealed class SomethingHappened : Define.Event
+        {
+            
+        }
+
+        [DataContract]
+        public sealed class OtherHappened : Define.Event
+        {
+            
         }
 
         static ISingleThreadMessageDispatcher ConfigureDispatcher(Container arg)

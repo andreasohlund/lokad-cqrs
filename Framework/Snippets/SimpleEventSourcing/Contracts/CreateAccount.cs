@@ -7,7 +7,7 @@
 #endregion
 
 using System.Runtime.Serialization;
-using Lokad.Cqrs.Scenarios.SimpleES.Definitions;
+using Snippets.SimpleEventSourcing.Definitions;
 
 namespace Snippets.SimpleEventSourcing.Contracts
 {

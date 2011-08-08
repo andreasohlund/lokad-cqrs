@@ -1,8 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
+
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
+// This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
+
+#endregion
+
+using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Lokad.Cqrs;
@@ -23,15 +28,9 @@ namespace Snippets.SimpleTimerService
             _lastChecked = DateTime.UtcNow;
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {}
 
-        }
-
-        public void Initialize()
-        {
-
-        }
+        public void Initialize() {}
 
         DateTime _lastChecked;
 

@@ -1,4 +1,4 @@
-namespace Lokad.Cqrs.Scenarios.SimpleES.Definitions
+namespace Snippets.SimpleEventSourcing.Definitions
 {
     public interface ISesCommand : ISesMessage
     {
