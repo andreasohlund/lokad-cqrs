@@ -67,6 +67,8 @@
     <Compile Include="SimpleEventSourcing\EventSourcingMagic.cs" />
     <Compile Include="MailQuarantine\MailQuarantine.cs" />
     <Compile Include="SimpleEventSourcing\RedirectToWhen.cs" />
+    <Compile Include="SimpleEventSourcing\Testing\AccountAggregateTests.cs" />
+    <Compile Include="SimpleEventSourcing\Testing\TestSyntax.cs" />
     <Compile Include="SimpleEventSourcing\_Usage.cs" />
     <Compile Include="SimpleTimerService\SecondPassed.cs" />
     <Compile Include="SimpleTimerService\SimpleTimerService.cs" />

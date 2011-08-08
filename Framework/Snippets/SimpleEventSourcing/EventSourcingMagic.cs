@@ -88,4 +88,9 @@ namespace Snippets.SimpleEventSourcing
             }
         }
     }
+
+    public interface IAggregate
+    {
+        void Execute(ISesCommand c);
+    }
 }

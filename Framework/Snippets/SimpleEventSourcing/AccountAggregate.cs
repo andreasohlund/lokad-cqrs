@@ -4,7 +4,7 @@ using Snippets.SimpleEventSourcing.Definitions;
 
 namespace Snippets.SimpleEventSourcing
 {
-    public sealed class AccountAggregate
+    public sealed class AccountAggregate : IAggregate
     {
         readonly Action<ISesEvent> _observer;
         readonly AccountAggregateState _state;
