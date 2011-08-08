@@ -1,15 +1,14 @@
 ﻿using System.Runtime.Serialization;
 using Lokad.Cqrs.Scenarios.SimpleES.Definitions;
 
-namespace Lokad.Cqrs.Scenarios.SimpleES.Contracts
+namespace Snippets.SimpleEventSourcing.Contracts
 {
     [DataContract]
-    public sealed class CreateAccount : IAccountCommand
+    public sealed class AccountCreated : ISesEvent
     {
-        [DataMember]
         public readonly string Name;
 
-        public CreateAccount(string name)
+        public AccountCreated(string name)
         {
             Name = name;
         }

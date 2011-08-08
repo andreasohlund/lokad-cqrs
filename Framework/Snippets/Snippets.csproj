@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Reactive, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
@@ -45,6 +46,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PubSubRouter\PubSub_Usage.cs" />
     <Compile Include="PubSubRouter\RouteTable.cs" />
+    <Compile Include="SimpleEventSourcing\AccountAggregateState.cs" />
+    <Compile Include="SimpleEventSourcing\AccountAggregate.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\AccountCreated.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\AddLogin.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\CreateAccount.cs" />
+    <Compile Include="SimpleEventSourcing\Contracts\LoginAdded.cs" />
+    <Compile Include="SimpleEventSourcing\Definitions\ISesCommand.cs" />
+    <Compile Include="SimpleEventSourcing\Definitions\ISesEvent.cs" />
+    <Compile Include="SimpleEventSourcing\Definitions\ISesMessage.cs" />
+    <Compile Include="SimpleEventSourcing\RedirectToWhen.cs" />
+    <Compile Include="SimpleEventSourcing\SimpleESTests.cs" />
     <Compile Include="SimpleTimerService\SecondPassed.cs" />
     <Compile Include="SimpleTimerService\SimpleTimerService.cs" />
     <Compile Include="SimpleTimerService\SimpleTimerService_Usage.cs" />

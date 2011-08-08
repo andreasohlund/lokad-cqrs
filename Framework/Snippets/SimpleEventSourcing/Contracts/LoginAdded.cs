@@ -1,19 +1,19 @@
 ﻿using System.Runtime.Serialization;
 using Lokad.Cqrs.Scenarios.SimpleES.Definitions;
 
-namespace Lokad.Cqrs.Scenarios.SimpleES.Contracts
+namespace Snippets.SimpleEventSourcing.Contracts
 {
     [DataContract]
-    public sealed class AddLogin : IAccountCommand
+    public sealed class LoginAdded : ISesEvent
     {
         [DataMember]
-        public readonly string Username;
+        public readonly string Login;
         [DataMember]
         public readonly string Password;
 
-        public AddLogin(string username, string password)
+        public LoginAdded(string login, string password)
         {
-            Username = username;
+            Login = login;
             Password = password;
         }
     }

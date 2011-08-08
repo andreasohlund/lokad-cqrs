@@ -63,21 +63,6 @@
     <Compile Include="Synthetic\Given_Basic_Scenarios_When_Composite_Memory.cs" />
     <Compile Include="Given_MessageContext_Omitted.cs" />
     <Compile Include="Given_MessageContext_Specified.cs" />
-    <Compile Include="Scenarios\001-SimpleES\AccountAggregateReader.cs" />
-    <Compile Include="Scenarios\001-SimpleES\AccountAggregateRepository.cs" />
-    <Compile Include="Scenarios\001-SimpleES\AccountAggregateWriter.cs" />
-    <Compile Include="Scenarios\001-SimpleES\AccountHandler.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\AccountCreated.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\AddLogin.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\CreateAccount.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\LoginAdded.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Contracts\LoginIndex.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Definitions\Define.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Definitions\IAccountCommand.cs" />
-    <Compile Include="Scenarios\001-SimpleES\Definitions\IAccountEvent.cs" />
-    <Compile Include="Scenarios\001-SimpleES\InMemoryEventStreamer.cs" />
-    <Compile Include="Scenarios\001-SimpleES\RedirectToWhen.cs" />
-    <Compile Include="Scenarios\001-SimpleES\SimpleESTests.cs" />
     <Compile Include="Scenarios\002-Multiverse\MultiverseTests.cs" />
   </ItemGroup>
   <ItemGroup>

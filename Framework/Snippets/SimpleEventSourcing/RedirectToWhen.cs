@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Lokad.Cqrs.Scenarios.SimpleES
+namespace Snippets.SimpleEventSourcing
 {
     public static class RedirectToWhen
     {

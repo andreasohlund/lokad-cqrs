@@ -45,6 +45,12 @@ namespace Lokad.Cqrs.Build
             _constraintsDirty = true;
         }
 
+        public void WhereMessagesAre<TBaseMessage>()
+        {
+            _constraints.Add(t => typeof(TBaseMessage).IsAssignableFrom(t));
+            _constraintsDirty = true;
+        }
+
         public IEnumerable<Type> LookupMessages()
         {
             if (_assemblies.Count == 0)
