@@ -33,23 +33,18 @@ namespace Lokad.Cqrs
             var b = new CqrsEngineBuilder();
             b.Azure(c => c.AddAzureProcess(dev, "test-publish",HandlerComposer.Empty));
             b.Advanced.RegisterObserver(events);
-            var engine = b.Build();
-            var source = new CancellationTokenSource();
-            engine.Start(source.Token);
-
-
-
-
-            var builder = new CqrsClientBuilder();
-            builder.Azure(c => c.AddAzureSender(dev, "test-publish"));
-            var client = builder.Build();
-
-
-            client.Sender.SendOne(new Message());
-
-            using (engine)
+            using (var engine = b.Build())
+            using  (var source = new CancellationTokenSource())
             using (events.OfType<EnvelopeAcked>().Subscribe(e => source.Cancel()))
             {
+                var task = engine.Start(source.Token);
+
+                var builder = new CqrsClientBuilder();
+                builder.Azure(c => c.AddAzureSender(dev, "test-publish"));
+                var client = builder.Build();
+
+
+                client.Sender.SendOne(new Message());
                 source.Token.WaitHandle.WaitOne(5000);
                 source.Cancel();
             }

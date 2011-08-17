@@ -65,9 +65,14 @@ namespace Lokad.Cqrs.Synthetic
                 sender.SendBatch(new[] {new Act(), new Act(), new Act {Fail = true}});
                 sender.SendBatch(new[] {new Act(), new Act(), new Act()});
 
+
+
                 var task = engine.Start(source.Token);
-                task.Wait(TestSpeed);
-                Assert.IsTrue(source.IsCancellationRequested);
+                if (!task.Wait(TestSpeed))
+                {
+                    source.Cancel();
+                    Assert.Fail("System should be stopped by now");
+                }
 
                 var count = engine.Resolve<NuclearStorage>().GetSingletonOrNew<int>();
                 Assert.AreEqual(3, count, "Three acts are expected");

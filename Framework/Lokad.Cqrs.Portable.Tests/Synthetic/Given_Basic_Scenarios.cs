@@ -40,7 +40,7 @@ namespace Lokad.Cqrs.Synthetic
             var status = storage.GetSingletonOrNew<int>();
             if (status < message.FailXTimes)
             {
-                storage.AddOrUpdateSingleton<int>(() => 1, i => i+1);
+                storage.AddOrUpdateSingleton(() => 1, i => i+1);
                 throw new InvalidOperationException("Failure requested");
             }
         }
@@ -65,8 +65,12 @@ namespace Lokad.Cqrs.Synthetic
                         FailXTimes = 50
                     });
                 var task = engine.Start(source.Token);
-                task.Wait(TestSpeed);
-                Assert.IsTrue(source.IsCancellationRequested);
+                
+                if (!task.Wait(TestSpeed))
+                {
+                    source.Cancel();
+                    Assert.Fail("System should be stopped by now");
+                }
             }
         }
 
@@ -86,8 +90,11 @@ namespace Lokad.Cqrs.Synthetic
                         FailXTimes = 1
                     });
                 var task = engine.Start(source.Token);
-                task.Wait(2000);
-                Assert.IsTrue(source.IsCancellationRequested);
+                if (!task.Wait(TestSpeed))
+                {
+                    source.Cancel();
+                    Assert.Fail("System should be stopped by now");
+                }
             }
         }
     }
