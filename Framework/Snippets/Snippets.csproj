@@ -50,9 +50,14 @@
     <Reference Include="System.Reactive, Version=1.0.2856.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpEndpoint\FileResourceHttpRequestHandler.cs" />
+    <Compile Include="HttpEndpoint\MouseEventsRequestHandler.cs" />
+    <Compile Include="HttpEndpoint\MouseMoved.cs" />
+    <Compile Include="HttpEndpoint\MouseStatsRequestHandler.cs" />
     <Compile Include="HttpEndpoint\MyAnonymousCommandSender.cs" />
     <Compile Include="HttpEndpoint\MyJsonSerializer.cs" />
     <Compile Include="MailQuarantine\SmtpHandlerCore.cs" />
@@ -105,7 +110,26 @@
     <None Include="ReadMe.markdown" />
     <None Include="SimpleEventSourcing\ReadMe.markdown" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="HttpEndpoint\images\lokad-cqrs-logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HttpEndpoint\images\lokad_cqrs_logo_header.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HttpEndpoint\index.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HttpEndpoint\scripts\jquery-1.6.2.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HttpEndpoint\scripts\rx.html.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HttpEndpoint\scripts\rx.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

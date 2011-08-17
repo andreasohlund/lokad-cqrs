@@ -1,0 +1,109 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Lokad.CQRS.Http sample</title>
+    <script src="scripts/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="scripts/rx.js" type="text/javascript"></script>
+    <script src="scripts/rx.html.js" type="text/javascript"></script>
+    <style type="text/css">
+        html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+        .header { height: 130px; width: 100%; background-color: #f6f6f6; padding-top: 30px; border-top: #58595B 6px solid; border-bottom: #e1e1e1 1px solid; }
+        .page_container { width: 1000px; margin: 0 auto; }
+        .page_container .inner { padding: 0 30px; }
+        .right { float: right; text-align: right; }
+        
+        .description { width: 480px; font-family: Sans-Serif; }
+        .description span { font-style: italic; font-size: 10pt; }
+        
+        #gamePlace { float: left; width: 100%; height: 100%; background-color: #fff; }
+        #tile { background: url(images/lokad-cqrs-logo.png) no-repeat; width: 107px; height: 107px; position: absolute; left: 400px; top: 300px; }
+        #result { float: right; padding: 5px; border: green 2px solid; width: 200px; height: 100px; margin: 5px; }
+                
+        span.tooltip { display: inline; position: absolute; margin-left: 90px; margin-top: 90px; background: #ffffff; border: 1px solid #cccccc; color: #6c6c6c; }
+        #tile:hover span { display: none; }
+    </style>
+</head>
+<body>
+    <div id="gamePlace">
+        <div class="header">
+            <div class="page_container">
+                <div class="inner">
+                    <div class="right description">
+                        <span>Lokad.CQRS is a .NET framework and a set of guidance materials for building distributed
+                            and scalable applications to be run on-premises or in the cloud. This project helps
+                            to design and develop decoupled systems locally and bring them to the distributed
+                            environments later. </span>
+                    </div>
+                    <div>
+                        <a href="http://lokad.github.com/lokad-cqrs">
+                            <img src="images/lokad_cqrs_logo_header.png" alt="Lokad.CQRS logo" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tile">
+            <span class="tooltip">Draggable.</span>
+        </div>
+        <div id="result">
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var mouserDragMe = $("#tile").context;
+
+            var mouseMove = Rx.Observable.FromHtmlEvent(mouserDragMe, "mousemove");
+            var mouseUp = Rx.Observable.FromHtmlEvent(mouserDragMe, "mouseup");
+            var mouseDown = Rx.Observable.FromHtmlEvent(mouserDragMe, "mousedown");
+
+            var mouseMoves = mouseMove
+                .Skip(1)
+                .Zip(mouseMove, function (left, right) {
+                    return { x1: left.clientX,
+                        y1: left.clientY,
+                        x2: right.clientX,
+                        y2: right.clientY
+                    };
+                });
+
+            var mouseDrags = mouseDown.SelectMany(function () {
+                return mouseMoves.TakeUntil(mouseUp);
+            });
+
+            mouseDrags.Subscribe(function (mouseEvents) {
+
+                $("#tile").css("left", mouseEvents.x2 - 50);
+                $("#tile").css("top", mouseEvents.y2 - 50);
+
+                $.get('/mouseevents/MouseMoved', encodeURI(JSON.stringify(mouseEvents)));
+            });
+
+
+            function mouseStats() {
+                $.getJSON('/mousestats' + '?rand=' + new Date().getTime(), '', function (data) {
+                    $('#result').css("border", "green 2px solid");
+                    $("#result").html("Distance: " + data.Distance + "<br/>"
+                                      + "Messages count: " + data.MessagesCount + "<br/>"
+                                      + "Messages /sec: " + data.MessagesPerSecond + "<br/>");
+                });
+            }
+
+            setInterval(mouseStats, 1000);
+
+            // disable annoying selection
+            function disableSelection(target) {
+                target.onselectstart = function () { return false; };
+            }
+
+            disableSelection(document);
+
+            // notification on ajax arrors.
+            $('#result').ajaxError(function () {
+                $('#result').css("border", "red 2px solid");
+                $('#result').html("Http engine is not accessible!");
+            });
+        });
+    </script>
+</body>
+</html>

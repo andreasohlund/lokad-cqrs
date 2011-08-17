@@ -8,39 +8,32 @@
 
 using System;
 using System.Net;
+using System.Web;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Core.Envelope;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.Http;
 using Lokad.Cqrs.Feature.Http.Handlers;
+using ServiceStack.Text;
 
 namespace Snippets.HttpEndpoint
 {
-    public sealed class MyAnonymousCommandSender : AbstractHttpRequestHandler
+    public sealed class MouseEventsRequestHandler : AbstractHttpRequestHandler
     {
-        readonly IQueueWriter _writer;
-        readonly IDataSerializer _serializer;
-        public MyAnonymousCommandSender(IQueueWriter writer, IDataSerializer serializer)
+        private readonly IQueueWriter _writer;
+        private readonly IDataSerializer _serializer;
+
+        public MouseEventsRequestHandler(IQueueWriter writer, IDataSerializer serializer)
         {
             _writer = writer;
             _serializer = serializer;
         }
 
-        public override string UrlPattern
-        {
-            get { return "^/send/[\\w\\.-]+$"; }
-        }
-
-        public override string[] SupportedVerbs
-        {
-            get { return new[] { "POST", "GET"}; }
-        }
-
         public override void Handle(IHttpContext context)
         {
-            var msg = new EnvelopeBuilder(Guid.NewGuid().ToString());
+            var envelopeBuilder = new EnvelopeBuilder("mouse-move - " + DateTime.Now.Ticks.ToString());
 
-            var contract = context.GetRequestUrl().Remove(0,"/send/".Length);
+            var contract = context.GetRequestUrl().Remove(0, "/mouseevents/".Length);
             Type contractType;
             if (!_serializer.TryGetContractTypeByName(contract, out contractType))
             {
@@ -49,13 +42,23 @@ namespace Snippets.HttpEndpoint
                 return;
             }
 
-            _writer.PutMessage(msg.Build());
-            context.WriteString(string.Format(@"
-Normally this should be a JSON POST, containing serialized data for {0}
-but let's pretend that you successfully sent a message. Or routed it", contractType));
+            var decodedData = HttpUtility.UrlDecode(context.Request.QueryString.ToString());
+            var mouseMove =  JsonSerializer.DeserializeFromString<MouseMoved>(decodedData);
 
+            envelopeBuilder.AddItem(mouseMove);
+            _writer.PutMessage(envelopeBuilder.Build());
 
             context.SetStatusTo(HttpStatusCode.OK);
+        }
+
+        public override string UrlPattern
+        {
+            get { return "^/mouseevents/[\\w\\.-]+$"; }
+        }
+
+        public override string[] SupportedVerbs
+        {
+            get { return new[] { "GET" }; }
         }
     }
 }

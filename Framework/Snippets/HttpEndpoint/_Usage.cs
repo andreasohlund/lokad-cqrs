@@ -7,7 +7,6 @@
 #endregion
 
 using System;
-using System.Runtime.Serialization;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
@@ -26,35 +25,68 @@ namespace Snippets.HttpEndpoint
         [Test]
         public void Test()
         {
-            var builder = new CqrsEngineBuilder();
+                        var builder = new CqrsEngineBuilder();
 
-            var environment = new HttpEnvironment
-                {
-                    Port = 8082
-                };
+            var environment = new HttpEnvironment { Port = 8082 };
 
-            builder.Messages(new [] {typeof(UserVisited)});
+            var stats = new GameStats();
+
+            builder.Messages(new[] { typeof(MouseMoved) });
+            builder.Advanced.CustomDataSerializer(s => new MyJsonSerializer(s));
             
-            builder.Advanced.CustomDataSerializer(t => new MyJsonSerializer(t));
+
             builder.HttpServer(environment,
-                c => new FaviconHttpRequestHandler(),
-                c => EmbeddedResourceHttpRequestHandler.ServeFilesFromScope(this),
-                ConfigureMyAnonymousCommandSender);
-            builder.Memory(x => x.AddMemoryProcess("inbox", container => (envelope => Console.WriteLine("Hit!")) ));
+                c => new EmbeddedResourceHttpRequestHandler(typeof(MouseMoved).Assembly, "Snippets.HttpEndpoint"),
+                c => new FileResourceHttpRequestHandler(),
+                c => new MouseStatsRequestHandler(stats),
+                ConfigureMyCommandSender);
+
+            builder.Memory(x => x.AddMemoryProcess("inbox", container => (envelope => MouseStatHandler(envelope, stats))));
+
             builder.Build().RunForever();
         }
 
-        static IHttpRequestHandler ConfigureMyAnonymousCommandSender(Container c)
+        private static void MouseStatHandler(ImmutableEnvelope envelope, GameStats stats)
+        {
+            var mouseMovedEvent = (MouseMoved)envelope.Items[0].Content;
+
+            var now = DateTime.Now;
+            if ((now - stats.Tick).Seconds > 1)
+            {
+                stats.MessagesPerSecond = 0;
+                stats.Tick = now;
+            }
+
+            stats.MessagesPerSecond++;
+            stats.MessagesCount++;
+
+            stats.Distance += (long)Math.Sqrt(Math.Pow(mouseMovedEvent.x1 - mouseMovedEvent.x2, 2)
+                                  + Math.Pow(mouseMovedEvent.y1 - mouseMovedEvent.y2, 2));
+        }
+
+        private static IHttpRequestHandler ConfigureMyCommandSender(Container c)
         {
             var writer = c.Resolve<QueueWriterRegistry>().GetOrThrow("memory").GetWriteQueue("inbox");
-            return new MyAnonymousCommandSender(writer, c.Resolve<IDataSerializer>());
+            return new MouseEventsRequestHandler(writer, c.Resolve<IDataSerializer>());
         }
     }
 
-    
-    [DataContract(Name = "user-visited")]
-    public sealed class UserVisited
-    {
-        
+    public class GameStats
+    {        
+        public DateTime Tick { get; set; }
+
+        public int MessagesCount { get; set; }
+        public int MessagesPerSecond { get; set; }
+        public long Distance { get; set; }
+
+        public void ReCalculate()
+        {
+            var now = DateTime.Now;
+            if ((now - Tick).Seconds > 1)
+            {
+                MessagesPerSecond = 0;
+                Tick = now;
+            }
+        }
     }
 }
