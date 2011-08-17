@@ -172,7 +172,7 @@ Once we have decoupled our system between Decide-Act-Report roles with the help 
 
 While speaking about performance scaling, we have 3 options.
 
-![] (https://github.com/Lokad/lokad.github.com/raw/master/cqrs/chapter-05-content/figure-05-01.png)
+![] (chapter-05-content/figure-05-01.png)
  
  
 * Scaling out the client (Decide) by load balancing - distributing the load between multiple machines, that will still read from views and push command messages.
@@ -198,7 +198,7 @@ Identities can be natural (like customer SSN) or artificial (like integral ID or
 
 When command message is sent to an entity, it is automatically routed to the correct partition, based on this rule.
  
-![] (https://github.com/Lokad/lokad.github.com/raw/master/cqrs/chapter-05-content/figure-05-02.png)
+![] (chapter-05-content/figure-05-02.png)
 
 Notion of partition is an important concept in building distributed systems, especially within cloud environments. Partition borders determine the outer limit for the bounded contexts and consistency boundaries. Transaction serializability is not supposed to cross them.
 
