@@ -47,7 +47,7 @@ Lokad.Hub is an internal platform unifying metered pay-as-you-go forecasting sub
 
 Lokad.CQRS is the key to transition a pre-cloud business app toward a decoupled and efficient design. It provides additional reliability and allows much faster development iterations. 
 
-![] (https://github.com/Lokad/lokad.github.com/raw/master/cqrs/chapter-02-content/figure-02-02.png)
+![] (chapter-02-content/figure-02-02.png)
 
 **Features:**
 
