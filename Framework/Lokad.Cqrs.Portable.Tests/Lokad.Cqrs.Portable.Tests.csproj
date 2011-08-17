@@ -63,12 +63,10 @@
     <Compile Include="ExtendOptional.cs" />
     <Compile Include="Feature.AtomicStorage\Engine_scenario_for_custom_view_domain.cs" />
     <Compile Include="Feature.AtomicStorage\Given_Atomic_Scenarios_When_Memory.cs" />
-    <Compile Include="Feature.StreamingStorage\Engine_scenario_for_streaming_storage.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\When_listing_items_in.cs" />
     <Compile Include="Feature.TapeStorage\FileTapeStorageTests.cs" />
     <Compile Include="Feature.TapeStorage\MemoryTapeStorageTests.cs" />
     <Compile Include="Feature.TapeStorage\TapeStorageTests.cs" />
-    <Compile Include="FiniteEngineScenario.cs" />
     <Compile Include="Feature.AtomicStorage\Given_Atomic_Scenarios.cs" />
     <Compile Include="Feature.StreamingStorage\Run_all_StreamingStorage_scenarios_for_Files.cs" />
     <Compile Include="Feature.StreamingStorage\Scenarios\ITestStorage.cs" />

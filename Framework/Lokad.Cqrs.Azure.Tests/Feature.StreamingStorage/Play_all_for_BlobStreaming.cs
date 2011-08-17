@@ -112,21 +112,5 @@ namespace Lokad.Cqrs.Feature.StreamingStorage
                 WriteOptions |= StreamingWriteOptions.CompressIfPossible;
             }
         }
-
-        [TestFixture]
-        public sealed class When_configured_in_engine
-        {
-            [Test]
-            public void Test()
-            {
-                new Engine_scenario_for_streaming_storage().TestConfiguration(cb =>
-                {
-                    var account = AzureStorage.CreateConfigurationForDev();
-                    WipeAzureAccount.Fast(s => s.StartsWith("test-"), account);
-                    cb.Storage(m => m.StreamingIsInAzure(account));
-                });
-            }
-        }
-
     }
 }

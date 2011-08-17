@@ -73,32 +73,5 @@ namespace Lokad.Cqrs.Feature.StreamingStorage
             : When_checking_item_in<Run_all_StreamingStorage_scenarios_for_Files>
         {
         }
-        [TestFixture]
-        public sealed class When_configured_in_engine
-        {
-            readonly DirectoryInfo _path = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), "test"));
-
-
-            [SetUp]
-            public void SetUp()
-            {
-                if (_path.Exists)
-                    _path.Delete(true);
-                _path.Create();
-            }
-            [Test]
-            public void Test()
-            {
-                new Engine_scenario_for_streaming_storage().TestConfiguration(cb => cb.Storage(m => m.StreamingIsInFiles(_path.FullName)));
-            }
-
-            [TestFixtureTearDown]
-            public void FixtureTearDown()
-            {
-                _path.Delete(true);
-            }
-
-
-        }
     }
 }

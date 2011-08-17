@@ -61,8 +61,6 @@
     <Compile Include="Core.Directory\When_there_are_no_catch_all_handlers.cs" />
     <Compile Include="Synthetic\Given_Tx_Scenarios_When_Composite_Memory.cs" />
     <Compile Include="Synthetic\Given_Basic_Scenarios_When_Composite_Memory.cs" />
-    <Compile Include="Given_MessageContext_Omitted.cs" />
-    <Compile Include="Given_MessageContext_Specified.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lokad.Cqrs.Composition\Lokad.Cqrs.Composition.csproj">
