@@ -9,21 +9,21 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 {
     public static class ExtendAtomicSingletonReader
     {
-        public static TView GetOrNew<TView>(this IAtomicSingletonReader<TView> reader)
+        public static TView GetOrNew<TView>(this IAtomicEntityReader<unit,TView> reader)
             where TView : new()
         {
             TView view;
-            if (reader.TryGet(out view))
+            if (reader.TryGet(unit.it,out view))
             {
                 return view;
             }
             return new TView();
         }
 
-        public static Optional<TSingleton> Get<TSingleton>(this IAtomicSingletonReader<TSingleton> reader)
+        public static Optional<TSingleton> Get<TSingleton>(this IAtomicEntityReader<unit,TSingleton> reader)
         {
             TSingleton singleton;
-            if (reader.TryGet(out singleton))
+            if (reader.TryGet(unit.it,out singleton))
             {
                 return singleton;
             }

@@ -18,10 +18,10 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
     {
         public sealed class AtomicHandler : Define.Handle<AtomicMessage>
         {
-            readonly IAtomicSingletonWriter<int> _writer;
+            readonly IAtomicEntityWriter<unit,int> _writer;
             readonly IMessageSender _sender;
 
-            public AtomicHandler(IMessageSender sender, IAtomicSingletonWriter<int> writer)
+            public AtomicHandler(IMessageSender sender, IAtomicEntityWriter<unit, int> writer)
             {
                 _sender = sender;
                 _writer = writer;

@@ -25,16 +25,6 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             return new AzureAtomicEntityReader<TKey, TEntity>(_storage, _strategy);
         }
 
-        public IAtomicSingletonReader<TSingleton> GetSingletonReader<TSingleton>()
-        {
-            return new AzureAtomicSingletonReader<TSingleton>(_storage, _strategy);
-        }
-
-        public IAtomicSingletonWriter<TSingleton> GetSingletonWriter<TSingleton>()
-        {
-            return new AzureAtomicSingletonWriter<TSingleton>(_storage, _strategy);
-        }
-
         readonly object _initializationLock = new object();
         bool _initialized;
         

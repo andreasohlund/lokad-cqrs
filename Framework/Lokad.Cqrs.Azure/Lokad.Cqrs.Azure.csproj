@@ -71,9 +71,7 @@
     <Compile Include="Build\Engine\CqrsEngineRole.cs" />
     <Compile Include="Core.Envelope\EnvelopeSerializerWithProtoBuf.cs" />
     <Compile Include="Feature.AtomicStorage\AzureAtomicEntityWriter.cs" />
-    <Compile Include="Feature.AtomicStorage\AzureAtomicSingletonReader.cs" />
     <Compile Include="Feature.AtomicStorage\AzureAtomicEntityReader.cs" />
-    <Compile Include="Feature.AtomicStorage\AzureAtomicSingletonWriter.cs" />
     <Compile Include="Feature.AtomicStorage\AzureAtomicStorageFactory.cs" />
     <Compile Include="Build\AzureStorageConfigurationBuilder.cs" />
     <Compile Include="Feature.AzurePartition\Inbox\AzurePartitionInbox.cs" />

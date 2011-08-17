@@ -24,20 +24,7 @@ namespace Lokad.Cqrs.Build.Engine
             var definition = serviceType.GetGenericTypeDefinition();
             var arguments = serviceType.GetGenericArguments();
             
-            if (definition == typeof(IAtomicSingletonReader<>))
-            {
-                return typeof(IAtomicStorageFactory)
-                    .GetMethod("GetSingletonReader")
-                    .MakeGenericMethod(arguments)
-                    .Invoke(factory, null);
-            }
-            if (definition == typeof(IAtomicSingletonWriter<>))
-            {
-                return typeof(IAtomicStorageFactory)
-                    .GetMethod("GetSingletonWriter")
-                    .MakeGenericMethod(arguments)
-                    .Invoke(factory, null);
-            }
+            
             if (definition == typeof(IAtomicEntityReader<,>))
             {
                 return typeof(IAtomicStorageFactory)

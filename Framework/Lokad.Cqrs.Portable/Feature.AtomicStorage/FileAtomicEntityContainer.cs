@@ -7,11 +7,13 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
     {
         readonly IAtomicStorageStrategy _strategy;
         readonly string _folderPath;
+        readonly string _singletonPath;
 
         public FileAtomicEntityContainer(string directoryPath, IAtomicStorageStrategy strategy)
         {
             _strategy = strategy;
             _folderPath = Path.Combine(directoryPath, _strategy.GetFolderForEntity(typeof (TEntity)));
+            _singletonPath = Path.Combine(directoryPath, _strategy.GetFolderForSingleton());
         }
 
         public bool TryGet(TKey key, out TEntity view)
@@ -38,7 +40,8 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         string GetName(TKey key)
         {
-            return Path.Combine(_folderPath, _strategy.GetNameForEntity(typeof (TEntity), key));
+            var folderPath = typeof(TKey) == typeof(unit) ? _singletonPath : _folderPath;
+            return Path.Combine(folderPath, _strategy.GetNameForEntity(typeof (TEntity), key));
         }
 
         public TEntity AddOrUpdate(TKey key, Func<TEntity> addFactory, Func<TEntity, TEntity> update, AddOrUpdateHint hint)

@@ -19,15 +19,16 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
         IAtomicEntityWriter<TKey, TEntity>
         //where TEntity : IAtomicEntity<TKey>
     {
-        readonly CloudBlobContainer _container;
+        readonly CloudBlobContainer _entityContainer;
+        readonly CloudBlobContainer _singletonContainer;
         readonly IAtomicStorageStrategy _strategy;
 
         public AzureAtomicEntityWriter(IAzureStorageConfig storage, IAtomicStorageStrategy strategy)
         {
             _strategy = strategy;
-            var containerName = strategy.GetFolderForEntity(typeof (TEntity));
-            _container = storage.CreateBlobClient().GetContainerReference(containerName);
-            
+            var client = storage.CreateBlobClient();
+            _entityContainer = client.GetContainerReference(strategy.GetFolderForEntity(typeof (TEntity)));
+            _singletonContainer = client.GetContainerReference(strategy.GetFolderForSingleton());
         }
 
         public TEntity AddOrUpdate(TKey key, Func<TEntity> addViewFactory, Func<TEntity,TEntity> updateViewFactory, AddOrUpdateHint hint)
@@ -78,8 +79,8 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         CloudBlob GetBlobReference(TKey key)
         {
-            var name =  _strategy.GetNameForEntity(typeof(TEntity), key);
-            return _container.GetBlobReference(name);
+            var container = typeof(TKey) == typeof(unit) ? _singletonContainer : _entityContainer;
+            return container.GetBlobReference(_strategy.GetNameForEntity(typeof(TEntity), key));
         }
     }
 }

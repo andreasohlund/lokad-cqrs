@@ -26,16 +26,6 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             return new FileAtomicEntityContainer<TKey, TEntity>(_folderPath, _strategy);
         }
 
-        public IAtomicSingletonReader<TSingleton> GetSingletonReader<TSingleton>()
-        {
-            return new FileAtomicSingletonContainer<TSingleton>(_folderPath, _strategy);
-        }
-
-        public IAtomicSingletonWriter<TSingleton> GetSingletonWriter<TSingleton>()
-        {
-            return new FileAtomicSingletonContainer<TSingleton>(_folderPath, _strategy);
-        }
-
         readonly object _initializationLock = new object();
         bool _initialized;
 

@@ -18,24 +18,27 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
         IAtomicEntityReader<TKey, TEntity>
         //where TEntity : IAtomicEntity<TKey>
     {
-        readonly CloudBlobContainer _container;
+        readonly CloudBlobContainer _entityContainer;
         readonly IAtomicStorageStrategy _strategy;
-
-        string ComposeName(TKey key)
-        {
-            return _strategy.GetNameForEntity(typeof (TEntity), key);
-        }
+        readonly CloudBlobContainer _singletonContainer;
 
         public AzureAtomicEntityReader(IAzureStorageConfig storage, IAtomicStorageStrategy strategy)
         {
             _strategy = strategy;
-            var containerName = strategy.GetFolderForEntity(typeof (TEntity));
-            _container = storage.CreateBlobClient().GetContainerReference(containerName);
+            var client = storage.CreateBlobClient();
+            _entityContainer = client.GetContainerReference(strategy.GetFolderForEntity(typeof (TEntity)));
+            _singletonContainer = client.GetContainerReference(strategy.GetFolderForSingleton());
+        }
+
+        CloudBlob GetBlobReference(TKey key)
+        {
+            var container = typeof(TKey) == typeof(unit) ? _singletonContainer : _entityContainer;
+            return container.GetBlobReference(_strategy.GetNameForEntity(typeof(TEntity), key));
         }
 
         public bool TryGet(TKey key, out TEntity entity)
         {
-            var blob = _container.GetBlobReference(ComposeName(key));
+            var blob = GetBlobReference(key);
             try
             {
                 // blob request options are cloned from the config

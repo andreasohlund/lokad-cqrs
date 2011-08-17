@@ -30,7 +30,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         public bool TryDeleteSingleton<TEntity>()
         {
-            return Factory.GetSingletonWriter<TEntity>().TryDelete();
+            return Factory.GetEntityWriter<unit,TEntity>().TryDelete(unit.it);
         }
 
         public TEntity UpdateEntity<TEntity>(object key, Action<TEntity> update)
@@ -41,7 +41,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         public TSingleton UpdateSingletonOrThrow<TSingleton>(Action<TSingleton> update)
         {
-            return Factory.GetSingletonWriter<TSingleton>().UpdateOrThrow(update);
+            return Factory.GetEntityWriter<unit,TSingleton>().UpdateOrThrow(unit.it, update);
         }
 
 
@@ -77,28 +77,28 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         public TSingleton AddOrUpdateSingleton<TSingleton>(Func<TSingleton> addFactory, Action<TSingleton> update)
         {
-            return Factory.GetSingletonWriter<TSingleton>().AddOrUpdate(addFactory, update);
+            return Factory.GetEntityWriter<unit,TSingleton>().AddOrUpdate(unit.it, addFactory, update);
         }
 
         public TSingleton AddOrUpdateSingleton<TSingleton>(Func<TSingleton> addFactory,
             Func<TSingleton, TSingleton> update)
         {
-            return Factory.GetSingletonWriter<TSingleton>().AddOrUpdate(addFactory, update);
+            return Factory.GetEntityWriter<unit,TSingleton>().AddOrUpdate(unit.it, addFactory, update);
         }
 
         public TSingleton UpdateSingletonEnforcingNew<TSingleton>(Action<TSingleton> update) where TSingleton : new()
         {
-            return Factory.GetSingletonWriter<TSingleton>().UpdateEnforcingNew(update);
+            return Factory.GetEntityWriter<unit, TSingleton>().UpdateEnforcingNew(unit.it, update);
         }
 
         public TSingleton GetSingletonOrNew<TSingleton>() where TSingleton : new()
         {
-            return Factory.GetSingletonReader<TSingleton>().GetOrNew();
+            return Factory.GetEntityReader<unit,TSingleton>().GetOrNew();
         }
 
         public Optional<TSingleton> GetSingleton<TSingleton>()
         {
-            return Factory.GetSingletonReader<TSingleton>().Get();
+            return Factory.GetEntityReader<unit,TSingleton>().Get();
         }
     }
 }

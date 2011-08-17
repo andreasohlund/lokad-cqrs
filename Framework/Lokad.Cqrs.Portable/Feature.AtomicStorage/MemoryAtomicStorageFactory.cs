@@ -33,16 +33,6 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             return new MemoryAtomicEntityContainer<TKey, TEntity>(_store,_strategy);
         }
 
-        public IAtomicSingletonReader<TSingleton> GetSingletonReader<TSingleton>()
-        {
-            return new MemoryAtomicSingletonContainer<TSingleton>(_store,_strategy);
-        }
-
-        public IAtomicSingletonWriter<TSingleton> GetSingletonWriter<TSingleton>()
-        {
-            return new MemoryAtomicSingletonContainer<TSingleton>(_store,_strategy);
-        }
-
         public IEnumerable<string> Initialize()
         {
             return Enumerable.Empty<string>();
