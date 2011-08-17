@@ -40,8 +40,19 @@ namespace Lokad.Cqrs.Feature.TapeStorage
 
         protected override void TearDownEnvironment()
         {
-            if (Directory.Exists(_path))
-                Directory.Delete(_path, true);
+            int i = 0;
+            while (Directory.Exists(_path) && i < 3)
+            {
+                try
+                {
+                    Directory.Delete(_path, true);
+                }
+                catch (IOException)
+                {
+                    i += 1;
+                }
+            }
+                
         }
 
         [Test]
