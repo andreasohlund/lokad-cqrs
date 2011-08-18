@@ -14,7 +14,7 @@ Salescast is a cloud integration engine for massive inventory optimization. It i
 
 Lokad.CQRS significantly simplifies the development while preserving cloud scalability. It allows achieving less than one hour interval between committing code and reliably deploying latest changes into production on Windows Azure.
 
-![] (https://github.com/Lokad/lokad.github.com/raw/master/cqrs/chapter-02-content/figure-02-00.png)
+![] (chapter-02-content/figure-02-00.png)
 
 Features:
 
@@ -31,7 +31,7 @@ Callcalc is an email-based forecasting client for call centers. You send an Exce
 
 Lokad.CQRS provides simple and reliable foundation for a heavily verticalized solution that tailors our raw Forecasting API for the very specific needs of call centers.
 
-![] (https://github.com/Lokad/lokad.github.com/raw/master/cqrs/chapter-02-content/figure-02-01.png)
+![] (chapter-02-content/figure-02-01.png)
 
 **Features:**
 

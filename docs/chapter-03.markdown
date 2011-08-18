@@ -52,4 +52,4 @@ Lokad.CQRS consists of the following important elements:
 
 Let's go over these elements.
 
-![] (https://github.com/Lokad/lokad.github.com/raw/master/cqrs/chapter-03-content/figure-03-00.png)
+![] (chapter-03-content/figure-03-00.png)

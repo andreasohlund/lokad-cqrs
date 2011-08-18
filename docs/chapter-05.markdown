@@ -138,7 +138,7 @@ Obviously, the entire iterative process of decide-act-report takes some time. It
 
 In short, this structure - works. Now, take a look at the image below.
 
-![] (https://github.com/Lokad/lokad.github.com/raw/master/cqrs/chapter-05-content/figure-05-00.png) 
+![] (chapter-05-content/figure-05-00.png) 
 
 This image is a representation of distributed architecture model commonly associated with CQRS-inspired software designs. It is just overplayed with the Decide-Act-Report (DAR) analogy from the real world.
 
