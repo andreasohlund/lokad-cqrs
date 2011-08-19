@@ -21,14 +21,6 @@ body {
   *font-size: small;  
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-size: 100%;
-}
-
-h1 {
-  margin-bottom: 1em;
-}
-
 p {
   margin: 1em 0;
 }
@@ -49,6 +41,16 @@ table {
   font-size: inherit;
   font: 100%;
 }
+
+h1, h2, h3, h4, h5, h6 {
+ margin-top: 20px;
+}
+
+h1 { font-size: 3.8em; color: #F46B35; margin-bottom: 3px; }
+h1 .small { font-size: 0.4em; }
+h1 a { text-decoration: none }
+h2 { font-size: 1.5em; color: #F46B35; }
+h3 { text-align: center; color: #F46B35; }
 
 /*****************************************************************************/
 /*
@@ -140,7 +142,10 @@ ul.posts {
   #post pre {
     border: 1px solid #ddd;
     background-color: #eef;
-    padding: 0 .4em;
+    float: left;
+    width: 910px;
+	margin-left: -300px;
+    padding: 10px 0 10px 10px;
   }
 
   #post ul,
@@ -183,12 +188,6 @@ ul.posts {
 .page_container .inner {padding: 0 30px;}
 
 div {display: block;}
-
-h1 { font-size: 30pt; color: #F46B35; margin-bottom: 3px;font-family: Georgia; }
-h1 .small { font-size: 0.4em; font-family: Georgia;}
-h1 a { text-decoration: none font-family: Georgia;}
-h2 { font-size: 1.5em; color: #F46B35; font-family: Georgia;}
-h3 { text-align: center; color: #F46B35; font-family: Georgia;}
 
 header { height: 180px; background: url(/lokad-cqrs/images/header_bg.png) repeat-x; padding-top: 30px; }
 
