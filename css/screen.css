@@ -46,7 +46,7 @@ h1, h2, h3, h4, h5, h6 {
  margin-top: 20px;
 }
 
-h1 { font-size: 3.8em; color: #F46B35; margin-bottom: 3px; }
+h1 { font-size: 30pt; color: #F46B35; margin-bottom: 3px; }
 h1 .small { font-size: 0.4em; }
 h1 a { text-decoration: none }
 h2 { font-size: 1.5em; color: #F46B35; }
@@ -145,6 +145,7 @@ ul.posts {
     float: left;
     width: 910px;
 	margin-left: -300px;
+	margin-bottom: 20px;
     padding: 10px 0 10px 10px;
   }
 
