@@ -36,16 +36,15 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             {
                 foreach (var tuple in pairs)
                 {
-                    var message = tuple.Item2;
-                    var handlerType = tuple.Item1;
-
                     using (var inner = outer.BeginLifetimeScope(DispatchLifetimeScopeTags.MessageItemScopeTag))
                     {
+                        var handlerType = tuple.Item1;
                         var instance = inner.Resolve(handlerType);
+                        var message = tuple.Item2;
                         var consume = _hint(handlerType, message.MappedType);
+                        _context.SetContext(envelope, message);
                         try
                         {
-                            _context.SetContext(envelope, message);
                             consume.Invoke(instance, new[] { message.Content });
                         }
                         catch (TargetInvocationException e)
