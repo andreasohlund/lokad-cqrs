@@ -24,7 +24,7 @@ namespace Lokad.Cqrs.Core
 		/// </summary>
 		public void OwnedBy(Owner owner)
 		{
-			this.Owner = owner;
+			Owner = owner;
 		}
 
 		/// <summary>
@@ -33,7 +33,7 @@ namespace Lokad.Cqrs.Core
 		/// </summary>
 		public IOwned ReusedWithin(ReuseScope scope)
 		{
-			this.Reuse = scope;
+			Reuse = scope;
 			return this;
 		}
 	}

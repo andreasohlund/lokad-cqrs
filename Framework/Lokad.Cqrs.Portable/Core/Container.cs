@@ -13,12 +13,13 @@ namespace Lokad.Cqrs.Core
 	    readonly Stack<WeakReference> _disposables = new Stack<WeakReference>();
 		// We always hold a strong reference to child containers.
 	    readonly Stack<Container> _childContainers = new Stack<Container>();
-		Container _parent;
+	    readonly Container _parent;
 
 		/// <include file='Container.xdoc' path='docs/doc[@for="Container.ctor"]/*'/>
-		public Container()
+		public Container(Container parent)
 		{
-			_services[new ServiceKey(typeof(Func<Container, Container>), null)] =
+		    _parent = parent;
+		    _services[new ServiceKey(typeof(Func<Container, Container>), null)] =
 				new ServiceEntry<Container, Func<Container, Container>>((Func<Container, Container>)(c => c))
 				{
 					Container = this,
@@ -28,7 +29,7 @@ namespace Lokad.Cqrs.Core
 				};
 		}
 
-		/// <include file='Container.xdoc' path='docs/doc[@for="Container.DefaultOwner"]/*'/>
+	    /// <include file='Container.xdoc' path='docs/doc[@for="Container.DefaultOwner"]/*'/>
 		public Owner DefaultOwner { get; set; }
 
 		/// <include file='Container.xdoc' path='docs/doc[@for="Container.DefaultReuse"]/*'/>
@@ -229,8 +230,8 @@ namespace Lokad.Cqrs.Core
 		private ServiceEntry<TService, TFunc> GetEntry<TService, TFunc>(string serviceName, bool throwIfMissing)
 		{
 			var key = new ServiceKey(typeof(TFunc), serviceName);
-			ServiceEntry entry = null;
-			Container container = this;
+			ServiceEntry entry;
+			var container = this;
 
 			// Go up the hierarchy always for registrations.
 			while (!container._services.TryGetValue(key, out entry) && container._parent != null)

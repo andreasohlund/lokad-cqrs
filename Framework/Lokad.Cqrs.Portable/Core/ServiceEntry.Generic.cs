@@ -6,7 +6,7 @@ namespace Lokad.Cqrs.Core
 	{
 		public ServiceEntry(TFunc factory)
 		{
-			this.Factory = factory;
+			Factory = factory;
 		}
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace Lokad.Cqrs.Core
 
 		public IReusedOwned InitializedBy(Action<Container, TService> initializer)
 		{
-			this.Initializer = initializer;
+			Initializer = initializer;
 			return this;
 		}
 

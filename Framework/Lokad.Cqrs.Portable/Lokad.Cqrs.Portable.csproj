@@ -68,6 +68,7 @@
     <Compile Include="Core\Container.cs" />
     <Compile Include="Core\Container.Overloads.cs" />
     <Compile Include="Core\IFunqlet.cs" />
+    <Compile Include="Core\IRegistrationSource.cs" />
     <Compile Include="Core\Owner.cs" />
     <Compile Include="Core\ResolutionException.cs" />
     <Compile Include="Core\ReuseScope.cs" />

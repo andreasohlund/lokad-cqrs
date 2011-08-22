@@ -6,12 +6,16 @@
 
 #endregion
 
-using System.Collections.Generic;
+using System;
 
 namespace Lokad.Cqrs.Core
 {
-    public partial class Container
+    /// <summary>
+    /// Allow delegation of dependencies to other IOC's
+    /// </summary>
+    public interface IRegistrationSource
     {
-        public readonly Stack<IRegistrationSource> Sources = new Stack<IRegistrationSource>();
+        bool Supports(Type type);
+        Func<Container, object> GetProvider(Type type);
     }
 }

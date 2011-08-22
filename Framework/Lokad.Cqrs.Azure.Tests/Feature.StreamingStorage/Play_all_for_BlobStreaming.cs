@@ -6,12 +6,10 @@
 #endregion
 
 using System.IO;
-using Lokad.Cqrs.Build;
 using Lokad.Cqrs.Feature.StreamingStorage.Scenarios;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
 using NUnit.Framework;
-using Lokad.Cqrs.Build.Engine;
 
 // ReSharper disable InconsistentNaming
 
@@ -19,8 +17,6 @@ namespace Lokad.Cqrs.Feature.StreamingStorage
 {
     public sealed class Play_all_for_BlobStreaming : ITestStorage
     {
-        
-
         static CloudBlobClient CreateCloudBlobClient()
         {
             
