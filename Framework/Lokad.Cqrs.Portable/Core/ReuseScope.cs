@@ -7,12 +7,6 @@ namespace Lokad.Cqrs.Core
 	public enum ReuseScope
 	{
 		/// <summary>
-		/// Instances are reused within a container hierarchy. Instances 
-		/// are created (if necessary) in the container where the registration
-		/// was performed, and are reused by all descendent containers.
-		/// </summary>
-		Hierarchy, 
-		/// <summary>
 		/// Instances are reused only at the given container. Descendent 
 		/// containers do not reuse parent container instances and get  
 		/// a new instance at their level.
@@ -23,9 +17,5 @@ namespace Lokad.Cqrs.Core
 		/// instance being returned.
 		/// </summary>
 		None,
-		/// <summary>
-		/// Default scope, which equals <see cref="Hierarchy"/>.
-		/// </summary>
-		Default = Hierarchy,
 	}
 }

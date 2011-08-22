@@ -11,14 +11,10 @@ namespace Lokad.Cqrs.Core
 		// Disposable components include factory-scoped instances that we don't keep 
 		// a strong reference to. 
 	    readonly Stack<WeakReference> _disposables = new Stack<WeakReference>();
-		// We always hold a strong reference to child containers.
-	    readonly Stack<Container> _childContainers = new Stack<Container>();
-	    readonly Container _parent;
 
 		/// <include file='Container.xdoc' path='docs/doc[@for="Container.ctor"]/*'/>
-		public Container(Container parent)
+		public Container()
 		{
-		    _parent = parent;
 		    _services[new ServiceKey(typeof(Func<Container, Container>), null)] =
 				new ServiceEntry<Container, Func<Container, Container>>((Func<Container, Container>)(c => c))
 				{
@@ -45,10 +41,6 @@ namespace Lokad.Cqrs.Core
 				if (wr.IsAlive)
 					disposable.Dispose();
 			}
-			while (_childContainers.Count > 0)
-			{
-				_childContainers.Pop().Dispose();
-			}
 		}
 
 		/// <include file='Container.xdoc' path='docs/doc[@for="Container.Register(instance)"]/*'/>
@@ -63,7 +55,7 @@ namespace Lokad.Cqrs.Core
 			var entry = RegisterImpl<TService, Func<Container, TService>>(name, null);
 			
 			// Set sensible defaults for instance registration.
-			entry.ReusedWithin(ReuseScope.Hierarchy).OwnedBy(Owner.External);
+			entry.ReusedWithin(ReuseScope.Container).OwnedBy(Owner.External);
 			entry.InitializeInstance(instance);
 		}
 
@@ -231,13 +223,8 @@ namespace Lokad.Cqrs.Core
 		{
 			var key = new ServiceKey(typeof(TFunc), serviceName);
 			ServiceEntry entry;
-			var container = this;
 
-			// Go up the hierarchy always for registrations.
-			while (!container._services.TryGetValue(key, out entry) && container._parent != null)
-			{
-				container = container._parent;
-			}
+		    _services.TryGetValue(key, out entry);
 
 			if (entry != null)
 			{
