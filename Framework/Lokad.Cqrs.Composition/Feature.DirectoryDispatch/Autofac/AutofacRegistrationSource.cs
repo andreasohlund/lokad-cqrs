@@ -6,12 +6,12 @@ using Autofac.Core.Lifetime;
 using Autofac.Core.Registration;
 using Container = Lokad.Cqrs.Core.Container;
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch
+namespace Lokad.Cqrs.Feature.DirectoryDispatch.Autofac
 {
-    public sealed class FunqRegistrationSource : Autofac.Core.IRegistrationSource
+    public sealed class AutofacRegistrationSource : IRegistrationSource
     {
         readonly Container _container;
-        public FunqRegistrationSource(Container container)
+        public AutofacRegistrationSource(Container container)
         {
             _container = container;
         }
@@ -24,10 +24,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             {
                 yield break;
             }
-            //type.ServiceType
-
-            // we'll need to slow down
-
+            
             var result = typeof(Container)
                 .GetMethod("TryResolve", new Type[0])
                 .MakeGenericMethod(type.ServiceType)

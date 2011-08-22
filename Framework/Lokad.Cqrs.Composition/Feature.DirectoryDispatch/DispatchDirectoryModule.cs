@@ -12,8 +12,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Transactions;
-using Autofac;
 using Lokad.Cqrs.Core;
+using Lokad.Cqrs.Feature.DirectoryDispatch.Autofac;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
 
 // ReSharper disable UnusedMember.Global
@@ -28,6 +28,8 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
         readonly DomainAssemblyScanner _scanner = new DomainAssemblyScanner();
         IMethodContextManager _contextManager;
         MethodInvokerHint _hint;
+
+        readonly Func<Container, Type[], INestedContainer> _nestedResolver; 
         
 
         /// <summary>
@@ -38,6 +40,8 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             HandlerSample<IConsume<IMessage>>(a => a.Consume(null));
             ContextFactory(
                 (envelope, message) => new MessageContext(envelope.EnvelopeId, message.Index, envelope.CreatedOnUtc));
+
+            _nestedResolver = AutofacContainerProvider.Build;
         }
 
 
@@ -94,7 +98,6 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             _scanner.WhereMessages(t => typeof(T).IsAssignableFrom(t));
         }
 
-
         public void Configure(Container container, Action<IEnumerable<Type>> serializationVisitor)
         {
             _scanner.Constrain(_hint);
@@ -120,21 +123,13 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
                 .Distinct()
                 .ToArray();
 
-            var autofacBuilder = new ContainerBuilder();
-            foreach (var consumer in consumers)
-            {
-                autofacBuilder.RegisterType(consumer);
-            }
-            autofacBuilder.RegisterSource(new FunqRegistrationSource(container));
-
-            var autofacContainer = autofacBuilder.Build();
+            var nesting = _nestedResolver(container, consumers);
 
             var tx = Factory(TransactionScopeOption.RequiresNew);
-            var nesting = new NestedContainer(autofacContainer);
+            
             var strategy = new DispatchStrategy(nesting, tx, _hint.Lookup, _contextManager);
 
             container.Register(strategy);
-
             container.Register(builder);
         }
 

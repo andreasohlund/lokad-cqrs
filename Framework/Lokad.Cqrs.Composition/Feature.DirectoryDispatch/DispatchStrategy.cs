@@ -10,49 +10,28 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Transactions;
-using Autofac;
 using Lokad.Cqrs.Evil;
 
 namespace Lokad.Cqrs.Feature.DirectoryDispatch
 {
-    public interface INestedResolver : IDisposable
+    public enum ContainerScopeLevel
     {
-        INestedResolver GetChildContainer(object tag);
-        object Resolve(Type type);
+        Envelope,Item
     }
-    public sealed class NestedContainer : INestedResolver
+    public interface INestedContainer : IDisposable
     {
-        readonly ILifetimeScope _scope;
-
-        public NestedContainer(ILifetimeScope scope)
-        {
-            _scope = scope;
-        }
-
-        public INestedResolver GetChildContainer(object tag)
-        {
-            return new NestedContainer(_scope.BeginLifetimeScope(tag));
-        }
-
-        public object Resolve(Type serviceType)
-        {
-            return _scope.Resolve(serviceType);
-        }
-
-        public void Dispose()
-        {
-            _scope.Dispose();
-        }
+        INestedContainer GetChildContainer(ContainerScopeLevel level);
+        object Resolve(Type type);
     }
 
     public sealed class DispatchStrategy
     {
-        readonly INestedResolver _scope;
+        readonly INestedContainer _scope;
         readonly Func<TransactionScope> _scopeFactory;
         readonly Func<Type, Type, MethodInfo> _hint;
         readonly IMethodContextManager _context;
 
-        public DispatchStrategy(INestedResolver scope, Func<TransactionScope> scopeFactory,
+        public DispatchStrategy(INestedContainer scope, Func<TransactionScope> scopeFactory,
             Func<Type, Type, MethodInfo> hint, IMethodContextManager context)
         {
             _scope = scope;
@@ -64,11 +43,11 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
         public void Dispatch(ImmutableEnvelope envelope, IEnumerable<Tuple<Type, ImmutableMessage>> pairs)
         {
             using (var tx = _scopeFactory())
-            using (var outer = _scope.GetChildContainer(DispatchLifetimeScopeTags.MessageEnvelopeScopeTag))
+            using (var outer = _scope.GetChildContainer(ContainerScopeLevel.Envelope))
             {
                 foreach (var tuple in pairs)
                 {
-                    using (var inner = outer.GetChildContainer(DispatchLifetimeScopeTags.MessageItemScopeTag))
+                    using (var inner = outer.GetChildContainer(ContainerScopeLevel.Item))
                     {
                         var handlerType = tuple.Item1;
                         var instance = inner.Resolve(handlerType);

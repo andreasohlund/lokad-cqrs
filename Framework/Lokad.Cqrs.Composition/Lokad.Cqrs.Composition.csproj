@@ -37,22 +37,18 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacContainerScope.cs" />
+    <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacContainerProvider.cs" />
     <Compile Include="Feature.DirectoryDispatch\DispatchStrategy.cs" />
     <Compile Include="Feature.DirectoryDispatch\DirectoryDispatchFactory.cs" />
     <Compile Include="Feature.DirectoryDispatch\DispatchCommandBatch.cs" />
     <Compile Include="Feature.DirectoryDispatch\DispatchDirectoryModule.cs" />
-    <Compile Include="Feature.DirectoryDispatch\DispatchLifetimeScopeTags.cs" />
     <Compile Include="Feature.DirectoryDispatch\DispatchOneEvent.cs" />
     <Compile Include="Feature.DirectoryDispatch\DomainAssemblyScanner.cs" />
     <Compile Include="ExtendCqrsEngineBuilder.cs" />
-    <Compile Include="Feature.DirectoryDispatch\FunqRegistrationSource.cs" />
+    <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacRegistrationSource.cs" />
     <Compile Include="Feature.DirectoryDispatch\IMethodContextManager.cs" />
     <Compile Include="Feature.DirectoryDispatch\MessageActivationInfo.cs" />
     <Compile Include="Feature.DirectoryDispatch\MessageDirectoryBuilder.cs" />
