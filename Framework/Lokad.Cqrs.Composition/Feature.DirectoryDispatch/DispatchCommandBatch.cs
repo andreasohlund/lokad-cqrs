@@ -20,9 +20,9 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
     {
         readonly IDictionary<Type, Type> _messageConsumers = new Dictionary<Type, Type>();
         readonly MessageActivationInfo[] _messageDirectory;
-        readonly AutofacDispatchStrategy _strategy;
+        readonly DispatchStrategy _strategy;
 
-        public DispatchCommandBatch(MessageActivationInfo[] messageDirectory, AutofacDispatchStrategy strategy)
+        public DispatchCommandBatch(MessageActivationInfo[] messageDirectory, DispatchStrategy strategy)
         {
             _messageDirectory = messageDirectory;
             _strategy = strategy;

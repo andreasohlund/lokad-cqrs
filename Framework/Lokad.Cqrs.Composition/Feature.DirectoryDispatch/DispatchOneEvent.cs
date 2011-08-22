@@ -24,12 +24,12 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
         readonly ISystemObserver _observer;
 
 
-        readonly AutofacDispatchStrategy _strategy;
+        readonly DispatchStrategy _strategy;
 
         public DispatchOneEvent(
             MessageActivationInfo[] directory,
             ISystemObserver observer,
-            AutofacDispatchStrategy strategy)
+            DispatchStrategy strategy)
         {
             _observer = observer;
             _directory = directory;

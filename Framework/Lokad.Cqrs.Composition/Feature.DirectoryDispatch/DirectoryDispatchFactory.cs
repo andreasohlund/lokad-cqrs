@@ -14,7 +14,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             
             var map = builder.BuildActivationMap(filter.DoesPassFilter);
 
-            var strategy = ctx.Resolve<AutofacDispatchStrategy>();
+            var strategy = ctx.Resolve<DispatchStrategy>();
             return new DispatchCommandBatch(map, strategy);
         }
         public static ISingleThreadMessageDispatcher OneEvent(Container ctx, Action<MessageDirectoryFilter> optionalFilter)
@@ -25,7 +25,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
 
             var map = builder.BuildActivationMap(filter.DoesPassFilter);
 
-            var strategy = ctx.Resolve<AutofacDispatchStrategy>();
+            var strategy = ctx.Resolve<DispatchStrategy>();
             var observer = ctx.Resolve<ISystemObserver>();
             return new DispatchOneEvent(map, observer, strategy);
         }

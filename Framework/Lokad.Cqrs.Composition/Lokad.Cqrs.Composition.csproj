@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Feature.DirectoryDispatch\AutofacDispatchStrategy.cs" />
+    <Compile Include="Feature.DirectoryDispatch\DispatchStrategy.cs" />
     <Compile Include="Feature.DirectoryDispatch\DirectoryDispatchFactory.cs" />
     <Compile Include="Feature.DirectoryDispatch\DispatchCommandBatch.cs" />
     <Compile Include="Feature.DirectoryDispatch\DispatchDirectoryModule.cs" />

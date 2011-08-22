@@ -7,6 +7,7 @@
 
 using System;
 using System.Threading;
+using Lokad.Cqrs.Core;
 
 namespace Lokad.Cqrs.Feature.DirectoryDispatch
 {
@@ -37,9 +38,9 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             _context.Value = null;
         }
 
-        public object GetContextProvider()
+        public void RegisterContextProvider(Container container)
         {
-            return new Func<TContext>(() =>
+            var id =  new Func<TContext>(() =>
                 {
                     if (_context.Value == null)
                     {
@@ -47,7 +48,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
                     }
                     return _context.Value;
                 });
+            container.Register(id);
         }
-
     }
 }

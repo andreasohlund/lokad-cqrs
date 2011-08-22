@@ -5,12 +5,14 @@
 
 #endregion
 
+using Lokad.Cqrs.Core;
+
 namespace Lokad.Cqrs.Feature.DirectoryDispatch
 {
     public interface IMethodContextManager
     {
         void SetContext(ImmutableEnvelope envelope, ImmutableMessage message);
         void ClearContext();
-        object GetContextProvider();
+        void RegisterContextProvider(Container container);
     }
 }

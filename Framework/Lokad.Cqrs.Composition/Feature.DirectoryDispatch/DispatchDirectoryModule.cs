@@ -1,7 +1,8 @@
-#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
@@ -12,10 +13,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Transactions;
 using Autofac;
-using Lokad.Cqrs.Core.Serialization;
-using Lokad.Cqrs.Evil;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
-using Container = Lokad.Cqrs.Core.Container;
 
 // ReSharper disable UnusedMember.Global
 
@@ -29,6 +28,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
         readonly DomainAssemblyScanner _scanner = new DomainAssemblyScanner();
         IMethodContextManager _contextManager;
         MethodInvokerHint _hint;
+        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DispatchDirectoryModule"/> class.
@@ -112,7 +112,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
 
             var builder = new MessageDirectoryBuilder(mappings);
 
-            var provider = _contextManager.GetContextProvider();
+            _contextManager.RegisterContextProvider(container);
 
             var consumers = mappings
                 .Select(x => x.Consumer)
@@ -125,21 +125,21 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             {
                 autofacBuilder.RegisterType(consumer);
             }
-            autofacBuilder.RegisterInstance(provider).AsSelf();
-            autofacBuilder.RegisterInstance(container);
             autofacBuilder.RegisterSource(new FunqRegistrationSource(container));
 
             var autofacContainer = autofacBuilder.Build();
 
             var tx = Factory(TransactionScopeOption.RequiresNew);
-            var strategy = new AutofacDispatchStrategy(autofacContainer, tx, _hint.Lookup, _contextManager);
-            
+            var nesting = new NestedContainer(autofacContainer);
+            var strategy = new DispatchStrategy(nesting, tx, _hint.Lookup, _contextManager);
+
             container.Register(strategy);
 
             container.Register(builder);
         }
 
-        static Func<TransactionScope> Factory(TransactionScopeOption option, IsolationLevel level = IsolationLevel.Serializable, TimeSpan timeout = default(TimeSpan))
+        static Func<TransactionScope> Factory(TransactionScopeOption option,
+            IsolationLevel level = IsolationLevel.Serializable, TimeSpan timeout = default(TimeSpan))
         {
             if (timeout == (default(TimeSpan)))
             {
