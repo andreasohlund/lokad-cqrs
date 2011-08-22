@@ -30,11 +30,19 @@ namespace Lokad.Cqrs.Core.Outbox
             _queueNames.Add(queueName);
         }
 
+        /// <summary>
+        /// Provides customer identity generator.
+        /// </summary>
+        /// <param name="generator">The generator.</param>
         public void IdGenerator(Func<string> generator)
         {
             _keyGenerator = generator;
         }
 
+        /// <summary>
+        /// Allows to specify additional queues to use for random load balancing of a message
+        /// </summary>
+        /// <param name="queueNames">The queue names.</param>
         public void MoreRandomQueues(params string[] queueNames)
         {
             foreach (var name in queueNames)
@@ -43,13 +51,22 @@ namespace Lokad.Cqrs.Core.Outbox
             }
         }
 
+        static int _counter = 0;
+        static int Domain = DateTime.Now.TimeOfDay.Minutes;
+
+        /// <summary>
+        /// Uses Id generator designed for the testing
+        /// </summary>
         public void IdGeneratorForTests()
         {
             long id = 0;
+            var counter = _counter++;
+            var prefix = Domain.ToString("00") + "-" + counter.ToString("00") + "-";
+
             IdGenerator(() =>
                 {
                     Interlocked.Increment(ref id);
-                    return id.ToString("0000");
+                    return prefix + id.ToString("0000");
                 });
         }
 
