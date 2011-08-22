@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Dispatch.Events;
+using System.Linq;
 
 namespace Lokad.Cqrs.Feature.DirectoryDispatch
 {
@@ -65,14 +66,8 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
                 return;
             }
 
-            using (var scope = _strategy.BeginEnvelopeScope())
-            {
-                foreach (var consumerType in consumerTypes)
-                {
-                    scope.Dispatch(consumerType, envelope, item);
-                }
-                scope.Complete();
-            }
+            var directions = consumerTypes.Select(t => Tuple.Create(t, item));
+            _strategy.Dispatch(envelope, directions);
         }
     }
 }

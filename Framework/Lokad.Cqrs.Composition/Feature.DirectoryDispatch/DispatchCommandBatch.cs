@@ -43,15 +43,8 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
                 }
             }
 
-            using (var scope = _strategy.BeginEnvelopeScope())
-            {
-                foreach (var item in message.Items)
-                {
-                    var consumerType = _messageConsumers[item.MappedType];
-                    scope.Dispatch(consumerType, message, item);
-                }
-                scope.Complete();
-            }
+            var directions = message.Items.Select(i => Tuple.Create(_messageConsumers[i.MappedType], i));
+            _strategy.Dispatch(message, directions);
         }
 
         public void Init()
