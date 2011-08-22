@@ -51,7 +51,7 @@ namespace Lokad.Cqrs.Core.Outbox
             }
         }
 
-        static int _counter = 0;
+        static int _counter;
         static int Domain = DateTime.Now.TimeOfDay.Minutes;
 
         /// <summary>
