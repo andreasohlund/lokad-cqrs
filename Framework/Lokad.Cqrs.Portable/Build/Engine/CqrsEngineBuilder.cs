@@ -39,9 +39,9 @@ namespace Lokad.Cqrs.Build.Engine
             _activators.Add(context => new MemoryQueueWriterFactory(context.Resolve<MemoryAccount>()));
         }
 
-        public void Messages(Action<MessageLookupModule> config)
+        public void Messages(Action<MessageContractLookupSyntax> config)
         {
-            var mlm = new MessageLookupModule();
+            var mlm = new MessageContractLookupSyntax();
             config(mlm);
             _serializationTypes.AddRange(mlm.LookupMessages());
         }

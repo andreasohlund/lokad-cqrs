@@ -20,7 +20,7 @@ namespace Lokad.Cqrs.Build.Client
 {
     public class CqrsClientBuilder : HideObjectMembersFromIntelliSense, IAdvancedClientBuilder
     {
-        readonly MessageLookupModule _domain = new MessageLookupModule();
+        readonly MessageContractLookupSyntax _domain = new MessageContractLookupSyntax();
         readonly StorageModule _storageModule = new StorageModule();
 
         Action<Container> _enlistments = container => { };
@@ -80,7 +80,7 @@ namespace Lokad.Cqrs.Build.Client
         /// </summary>
         /// <param name="config">configuration syntax.</param>
         /// <returns>same builder for inline multiple configuration statements</returns>
-        public void Domain(Action<MessageLookupModule> config)
+        public void Domain(Action<MessageContractLookupSyntax> config)
         {
             config(_domain);
         }

@@ -7,14 +7,17 @@ using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
 
 namespace Lokad.Cqrs.Build
 {
-    public sealed class MessageLookupModule : HideObjectMembersFromIntelliSense
+    /// <summary>
+    /// Allows to specify message contract loading rules
+    /// </summary>
+    public sealed class MessageContractLookupSyntax : HideObjectMembersFromIntelliSense
     {
         readonly List<Assembly> _assemblies;
         readonly IList<Predicate<Type>> _constraints;
 
 
         bool _constraintsDirty;
-        public MessageLookupModule()
+        public MessageContractLookupSyntax()
         {
             _constraints = new List<Predicate<Type>>
                 {
