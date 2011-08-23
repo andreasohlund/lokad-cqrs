@@ -220,3 +220,17 @@ footer .inner {margin-left: 70px;}
 .right {float: right; text-align: right;}
 
 #crumbs { text-align: right; position: relative; float: left; margin-left: -220px; color: #f36f34; width: 200px;}
+
+/*****************************************************************************/
+/*
+/* Index
+/*
+/*****************************************************************************/
+
+#container { margin: 0 auto;width: 700px;}
+  
+#container .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+#container .download { float: right; }
+#container pre { background: #58595B; color: #FFFFFF; padding: 15px;}
+#container hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+#container .footer { text-align:center; padding-top:30px; font-style: italic; }
