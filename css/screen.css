@@ -206,6 +206,7 @@ header table {margin-top: 10px;}
 
 footer { clear: both; background: #58595b url(/lokad-cqrs/images/footer_bg.png) repeat-x; width: 100%; height: 185px; padding-top: 20px;  }
 footer a {color: #7090cf; font-size: 10pt; font-weight: normal; }
+footer a:visited {color: #7090cf;}
 footer .header { color: #e3e3e3; font-size: 14pt;}
 footer .logo {float: left; width: 250px; font-size: 8pt; font-family: sans-serif; color: #e3e3e3;}
 footer .inner {margin-left: 70px;}
