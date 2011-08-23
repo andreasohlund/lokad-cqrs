@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
-using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
+using Lokad.Cqrs.Feature.HandlerClasses;
 using NUnit.Framework;
 
 namespace Lokad.Cqrs

@@ -8,8 +8,8 @@
     <ProjectGuid>{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lokad.Cqrs.Composition</RootNamespace>
-    <AssemblyName>Lokad.Cqrs.Composition.Tests</AssemblyName>
+    <RootNamespace>Lokad.Cqrs</RootNamespace>
+    <AssemblyName>Lokad.Cqrs.Autofac.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -47,25 +47,15 @@
       <HintPath>..\Library\Reactive\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core.Directory\MessageDirectoryFixture.cs" />
-    <Compile Include="Core.Directory\Method_Invoker_tests.cs" />
-    <Compile Include="Core.Directory\When_activations_constrained_to_handler_type_with_interface.cs" />
-    <Compile Include="Core.Directory\When_activations_constrained_to_handler_type_with_type.cs" />
-    <Compile Include="Core.Directory\When_activations_constrained_to_message_interface.cs" />
-    <Compile Include="Core.Directory\When_activation_map_constrained_to_catch_all_consumer.cs" />
-    <Compile Include="Core.Directory\When_builder_is_available.cs" />
-    <Compile Include="Core.Directory\When_there_are_no_catch_all_handlers.cs" />
-    <Compile Include="Synthetic\Given_Tx_Scenarios_When_Composite_Memory.cs" />
-    <Compile Include="Synthetic\Given_Basic_Scenarios_When_Composite_Memory.cs" />
+    <Compile Include="Given_Tx_Scenarios_When_Autofac_Memory.cs" />
+    <Compile Include="Given_Basic_Scenarios_When_Autofac_Memory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lokad.Cqrs.Composition\Lokad.Cqrs.Composition.csproj">
+    <ProjectReference Include="..\Lokad.Cqrs.Autofac\Lokad.Cqrs.Autofac.csproj">
       <Project>{F60E517D-CEE9-4F8B-9166-075FE6AA677A}</Project>
-      <Name>Lokad.Cqrs.Composition</Name>
+      <Name>Lokad.Cqrs.Autofac</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lokad.Cqrs.Portable.Tests\Lokad.Cqrs.Portable.Tests.csproj">
       <Project>{96E3B247-C04C-4138-A042-7969562B4B0F}</Project>

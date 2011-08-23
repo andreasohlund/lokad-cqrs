@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lokad.Cqrs</RootNamespace>
-    <AssemblyName>Lokad.Cqrs.Composition</AssemblyName>
+    <AssemblyName>Lokad.Cqrs.Autofac</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,14 +35,12 @@
       <HintPath>..\Library\Autofac\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacContainerScope.cs" />
-    <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacContainerProvider.cs" />
+    <Compile Include="Feature.HandlerClasses\AutofacContainerForHandlerClasses.cs" />
+    <Compile Include="Feature.HandlerClasses\AutofacContainerProvider.cs" />
     <Compile Include="ExtendCqrsEngineBuilder.cs" />
-    <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacRegistrationSource.cs" />
+    <Compile Include="Feature.HandlerClasses\FunqAdapterForAutofac.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lokad.Cqrs.Portable\Lokad.Cqrs.Portable.csproj">

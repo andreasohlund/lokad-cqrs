@@ -6,14 +6,11 @@
 #endregion
 
 using System;
-using Lokad.Cqrs.Feature.DirectoryDispatch;
-using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
-using Lokad.Cqrs.Feature.HandlerClasses;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Lokad.Cqrs.Composition.Core.Directory
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     [TestFixture]
     public sealed class Method_Invoker_tests
@@ -57,7 +54,7 @@ namespace Lokad.Cqrs.Composition.Core.Directory
         [Test]
         public void Default_definition_is_accepted()
         {
-            MethodInvokerHint.FromConsumerSample<IConsume<Feature.DirectoryDispatch.Default.IMessage>>(c => c.Consume(null));
+            MethodInvokerHint.FromConsumerSample<IHandle<HandlerClasses.IMessage>>(c => c.Handle(null));
         }
     }
 }

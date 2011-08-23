@@ -10,21 +10,22 @@ using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Feature.AtomicStorage;
 using NUnit.Framework;
 
+// ReSharper disable InconsistentNaming
 namespace Lokad.Cqrs.Synthetic
 {
     [TestFixture]
     public sealed class Given_Tx_Scenarios_When_Composite_Azure : Given_Tx_Scenarios
     {
-        public sealed class Handle : Define.Handle<Act>
+        public sealed class Handler : Define.Handle<Act>
         {
             readonly NuclearStorage _storage;
 
-            public Handle(NuclearStorage storage)
+            public Handler(NuclearStorage storage)
             {
                 _storage = storage;
             }
 
-            public void Consume(Act message)
+            public void Handle(Act message)
             {
                 Given_Tx_Scenarios.Consume(message, _storage);
             }
@@ -38,7 +39,7 @@ namespace Lokad.Cqrs.Synthetic
 
             var dev = AzureStorage.CreateConfigurationForDev();
             WipeAzureAccount.Fast(s => s.StartsWith("test-"), dev);
-            config.Domain(d => d.WhereMessages(t => typeof(Act) == t));
+            config.MessagesWithHandlersFromAutofac(d => d.WhereMessages(t => typeof(Act) == t));
             config.Azure(m =>
                 {
                     m.AddAzureProcess(dev, new[] {"test-incoming"}, c =>

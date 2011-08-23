@@ -1,28 +1,10 @@
 using System;
-using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch;
-using Lokad.Cqrs.Feature.DirectoryDispatch;
-using Lokad.Cqrs.Feature.DirectoryDispatch.Autofac;
 using Lokad.Cqrs.Feature.HandlerClasses;
 
 namespace Lokad.Cqrs
 {
-    public static class ExtendCqrsEngineBuilder
-    {
-        /// <summary>
-        /// Configures the message domain for the instance of <see cref="CqrsEngineHost"/>.
-        /// </summary>
-        /// <param name="builder">configuration syntax.</param>
-        /// <param name="config">The config.</param>
-        public static void Domain(this CqrsEngineBuilder builder,  Action<MessagesWithHandlersConfigurationSyntax> config)
-        {
-            var module = new MessagesWithHandlersConfigurationSyntax(AutofacContainerProvider.Build);
-            config(module);
-            builder.Advanced.ConfigureContainer(c => module.Configure(c, builder.Messages));
-        }
-    }
-
-    public static class ExtendIWireDispatcher
+    public static class ExtendIAdvancedDispatchBuilder
     {
         /// <summary>
         /// <para>Wires <see cref="DispatchOneEvent"/> implementation of <see cref="ISingleThreadMessageDispatcher"/> 
@@ -33,7 +15,6 @@ namespace Lokad.Cqrs
         {
             var action = optionalFilter ?? (x => { });
             builder.DispatcherIs(ctx => HandlerDispatchFactory.OneEvent(ctx, action));
-            
         }
 
         /// <summary>

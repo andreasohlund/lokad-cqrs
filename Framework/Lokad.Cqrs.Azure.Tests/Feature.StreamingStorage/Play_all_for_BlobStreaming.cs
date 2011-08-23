@@ -15,6 +15,7 @@ using NUnit.Framework;
 
 namespace Lokad.Cqrs.Feature.StreamingStorage
 {
+    [TestFixture]
     public sealed class Play_all_for_BlobStreaming : ITestStorage
     {
         static CloudBlobClient CreateCloudBlobClient()

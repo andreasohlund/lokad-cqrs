@@ -6,15 +6,15 @@ using Autofac.Core.Lifetime;
 using Autofac.Core.Registration;
 using Container = Lokad.Cqrs.Core.Container;
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch.Autofac
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     /// <summary>
     /// Resolves Autofac dependencies from the provided Funq <see cref="Container"/>
     /// </summary>
-    public sealed class AutofacRegistrationSource : IRegistrationSource
+    public sealed class FunqAdapterForAutofac : IRegistrationSource
     {
         readonly Container _container;
-        public AutofacRegistrationSource(Container container)
+        public FunqAdapterForAutofac(Container container)
         {
             _container = container;
         }

@@ -5,16 +5,16 @@
 
 #endregion
 
-using Lokad.Cqrs.Feature.DirectoryDispatch;
-using Lokad.Cqrs.Feature.HandlerClasses;
+using Lokad.Cqrs.Composition.Core.Directory;
 using NUnit.Framework;
 
-namespace Lokad.Cqrs.Composition.Core.Directory
+// ReSharper disable InconsistentNaming
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     [TestFixture]
     public sealed class When_there_are_no_catch_all_handlers : MessageDirectoryFixture
     {
-        // ReSharper disable InconsistentNaming
+        
         MessageActivationInfo[] Map { get; set; }
 
         [TestFixtureSetUp]

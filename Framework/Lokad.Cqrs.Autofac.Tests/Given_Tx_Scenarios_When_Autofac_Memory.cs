@@ -13,21 +13,21 @@ using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
 
-namespace Lokad.Cqrs.Composition.Synthetic
+namespace Lokad.Cqrs
 {
     [TestFixture]
-    public sealed class Given_Tx_Scenarios_When_Composite_Memory : Given_Tx_Scenarios
+    public sealed class Given_Tx_Scenarios_When_Autofac_Memory : Given_Tx_Scenarios
     {
-        public sealed class Handle : Define.Handle<Act>
+        public sealed class Handler : Define.Handle<Act>
         {
             readonly NuclearStorage _storage;
 
-            public Handle(NuclearStorage storage)
+            public Handler(NuclearStorage storage)
             {
                 _storage = storage;
             }
 
-            public void Consume(Act message)
+            public void Handle(Act message)
             {
                 Given_Tx_Scenarios.Consume(message, _storage);
             }
@@ -35,7 +35,7 @@ namespace Lokad.Cqrs.Composition.Synthetic
 
         protected override void Wire_partition_to_handler(CqrsEngineBuilder config)
         {
-            config.Domain(d => d.WhereMessagesAre<Act>());
+            config.MessagesWithHandlersFromAutofac(d => d.WhereMessagesAre<Act>());
             config.Memory(m =>
                 {
                     m.AddMemorySender("do");

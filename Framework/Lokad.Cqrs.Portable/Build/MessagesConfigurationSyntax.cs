@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Lokad.Cqrs.Evil;
-using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
+using Lokad.Cqrs.Feature.HandlerClasses;
 
 namespace Lokad.Cqrs.Build
 {

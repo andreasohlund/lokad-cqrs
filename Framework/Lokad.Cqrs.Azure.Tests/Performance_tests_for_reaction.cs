@@ -116,7 +116,7 @@ namespace Lokad.Cqrs
                 _sender = sender;
             }
 
-            public void Consume(UsualMessage message)
+            public void Handle(UsualMessage message)
             {
                 _sender.SendOne(message);
             }

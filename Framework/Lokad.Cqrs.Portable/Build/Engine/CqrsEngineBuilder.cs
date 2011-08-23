@@ -14,7 +14,6 @@ using Lokad.Cqrs.Core.Envelope;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Core.Serialization;
-using Lokad.Cqrs.Feature.DirectoryDispatch;
 using Lokad.Cqrs.Feature.HandlerClasses;
 using Lokad.Cqrs.Feature.MemoryPartition;
 

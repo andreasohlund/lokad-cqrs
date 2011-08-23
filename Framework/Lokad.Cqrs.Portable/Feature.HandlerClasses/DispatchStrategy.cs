@@ -16,7 +16,9 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     public enum ContainerScopeLevel
     {
-        Envelope,Item
+        Root,
+        Envelope,
+        Item
     }
 
     public sealed class DispatchStrategy
@@ -38,20 +40,31 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
         public void Dispatch(ImmutableEnvelope envelope, IEnumerable<Tuple<Type, ImmutableMessage>> pairs)
         {
             using (var tx = _scopeFactory())
-            using (var outer = _scope.GetChildContainer(ContainerScopeLevel.Envelope))
+            using (var envelopeScope = _scope.GetChildContainer(ContainerScopeLevel.Envelope))
             {
                 foreach (var tuple in pairs)
                 {
-                    using (var inner = outer.GetChildContainer(ContainerScopeLevel.Item))
+                    using (var itemScope = envelopeScope.GetChildContainer(ContainerScopeLevel.Item))
                     {
                         var handlerType = tuple.Item1;
-                        var instance = inner.Resolve(handlerType);
-                        var message = tuple.Item2;
-                        var consume = _hint(handlerType, message.MappedType);
-                        _context.SetContext(envelope, message);
+                        object handlerInstance;
                         try
                         {
-                            consume.Invoke(instance, new[] {message.Content});
+                            handlerInstance = itemScope.ResolveHandlerByServiceType(handlerType);
+                        }
+                        catch(Exception ex)
+                        {
+                            var msg = string.Format("Failed to resolve handler {0} from {1}. ", handlerType,
+                                itemScope.GetType().Name);
+                            throw new InvalidOperationException(msg, ex);
+                        }
+                        
+                        var messageItem = tuple.Item2;
+                        var consume = _hint(handlerType, messageItem.MappedType);
+                        _context.SetContext(envelope, messageItem);
+                        try
+                        {
+                            consume.Invoke(handlerInstance, new[] {messageItem.Content});
                         }
                         catch (TargetInvocationException e)
                         {

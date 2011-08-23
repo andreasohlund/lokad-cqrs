@@ -26,7 +26,7 @@ namespace Lokad.Cqrs.Synthetic
                 _storage = storage;
             }
 
-            public void Consume(FailingMessage message)
+            public void Handle(FailingMessage message)
             {
                 SmartFailing(message, _storage);
             }
@@ -41,7 +41,7 @@ namespace Lokad.Cqrs.Synthetic
             var dev = AzureStorage.CreateConfigurationForDev();
             WipeAzureAccount.Fast(s => s.StartsWith("test-"), dev);
 
-            config.Domain(ddd => ddd.WhereMessages(t => t.BaseType == GetType()));
+            config.MessagesWithHandlersFromAutofac(ddd => ddd.WhereMessages(t => t.BaseType == GetType()));
             config.Azure(m =>
                 {
                     m.AddAzureProcess(dev, new[] {"test-incoming"}, c =>

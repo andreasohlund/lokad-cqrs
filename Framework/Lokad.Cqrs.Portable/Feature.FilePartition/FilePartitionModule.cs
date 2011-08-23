@@ -14,7 +14,6 @@ using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Evil;
-using Lokad.Cqrs.Feature.DirectoryDispatch;
 
 namespace Lokad.Cqrs.Feature.FilePartition
 {

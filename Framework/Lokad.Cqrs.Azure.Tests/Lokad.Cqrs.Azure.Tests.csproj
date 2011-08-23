@@ -76,13 +76,13 @@
     <Compile Include="Synthetic\Given_Tx_Scenarios_When_Composite_Azure.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lokad.Cqrs.Autofac\Lokad.Cqrs.Autofac.csproj">
+      <Project>{F60E517D-CEE9-4F8B-9166-075FE6AA677A}</Project>
+      <Name>Lokad.Cqrs.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lokad.Cqrs.Azure\Lokad.Cqrs.Azure.csproj">
       <Project>{AEE2B47D-591D-42B5-8EDC-CC676A661F9D}</Project>
       <Name>Lokad.Cqrs.Azure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lokad.Cqrs.Composition\Lokad.Cqrs.Composition.csproj">
-      <Project>{F60E517D-CEE9-4F8B-9166-075FE6AA677A}</Project>
-      <Name>Lokad.Cqrs.Composition</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lokad.Cqrs.Portable.Tests\Lokad.Cqrs.Portable.Tests.csproj">
       <Project>{96E3B247-C04C-4138-A042-7969562B4B0F}</Project>

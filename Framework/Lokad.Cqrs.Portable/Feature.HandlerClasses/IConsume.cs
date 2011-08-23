@@ -5,7 +5,7 @@
 
 #endregion
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch.Default
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     /// <summary>
     /// <para>Default CQRS interface for interface-base domain setup of message consumers. By default Lokad.CQRS 
@@ -15,13 +15,13 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch.Default
     /// as shown in the samples.</para>
     /// </summary>
     /// <remarks>Look in the samples for more details on the usage</remarks>
-    public interface IConsume<in TMessage> : IConsumeMessage
+    public interface IHandle<in TMessage> : IHandleMessage
         where TMessage : IMessage
     {
         /// <summary>
         /// Consumes the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        void Consume(TMessage message);
+        void Handle(TMessage message);
     }
 }

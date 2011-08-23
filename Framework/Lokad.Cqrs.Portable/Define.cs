@@ -1,6 +1,6 @@
 ﻿using Lokad.Cqrs.Build.Client;
 using Lokad.Cqrs.Build.Engine;
-using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
+using Lokad.Cqrs.Feature.HandlerClasses;
 
 namespace Lokad.Cqrs
 {
@@ -18,12 +18,12 @@ namespace Lokad.Cqrs
 
         }
 
-        public interface Subscribe<TEvent> : IConsume<TEvent> where TEvent : Event
+        public interface Subscribe<TEvent> : IHandle<TEvent> where TEvent : Event
         {
             
         }
 
-        public interface Handle<TCommand> : IConsume<TCommand> where TCommand : Command
+        public interface Handle<TCommand> : IHandle<TCommand> where TCommand : Command
         {
             
         }

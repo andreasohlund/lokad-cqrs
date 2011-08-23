@@ -27,7 +27,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                 _writer = writer;
             }
 
-            public void Consume(AtomicMessage message)
+            public void Handle(AtomicMessage message)
             {
                 HandleAtomic(message, _sender, _writer);
             }
@@ -44,7 +44,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                 _storage = storage;
             }
 
-            public void Consume(NuclearMessage message)
+            public void Handle(NuclearMessage message)
             {
                 HandleNuclear(message, _sender, _storage);
             }
@@ -56,7 +56,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             WipeAzureAccount.Fast(s => s.StartsWith("test-"), account);
             TestSpeed = 10000;
 
-            builder.Domain(d => d.WhereMessages(t => t.DeclaringType == GetType()));
+            builder.MessagesWithHandlersFromAutofac(d => d.WhereMessages(t => t.DeclaringType == GetType()));
             builder.Azure(m =>
                 {
                     m.AddAzureProcess(account, new[] {"test-incoming"}, c =>

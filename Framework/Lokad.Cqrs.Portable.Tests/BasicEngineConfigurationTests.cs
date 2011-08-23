@@ -45,7 +45,7 @@ namespace Lokad.Cqrs
                 _sender = sender;
             }
 
-            public void Consume(Message1 message)
+            public void Handle(Message1 message)
             {
                 if (message.Block < 5)
                 {

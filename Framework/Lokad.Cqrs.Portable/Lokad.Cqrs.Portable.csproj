@@ -47,9 +47,9 @@
     <Compile Include="Build\Engine\FileModule.cs" />
     <Compile Include="Core.Dispatch\IAdvancedDispatchBuilder.cs" />
     <Compile Include="Build\Engine\IAdvancedEngineBuilder.cs" />
-    <Compile Include="Core.Dispatch\Default\IConsume.cs" />
-    <Compile Include="Core.Dispatch\Default\IConsumeMessage.cs" />
-    <Compile Include="Core.Dispatch\Default\IMessage.cs" />
+    <Compile Include="Feature.HandlerClasses\IConsume.cs" />
+    <Compile Include="Feature.HandlerClasses\IConsumeMessage.cs" />
+    <Compile Include="Feature.HandlerClasses\IMessage.cs" />
     <Compile Include="Core.Serialization\ContractEvil.cs" />
     <Compile Include="Core.Dispatch\ActionDispatcher.cs" />
     <Compile Include="Core.Dispatch\Events\DispatchRecoveryFailed.cs" />
@@ -78,6 +78,7 @@
     <Compile Include="Core\Syntax.cs" />
     <Compile Include="Define.cs" />
     <Compile Include="Evil\DecayEvil.cs" />
+    <Compile Include="ExtendIAdvancedDispatchBuilder.cs" />
     <Compile Include="Feature.AtomicStorage\AddOrUpdateHint.cs" />
     <Compile Include="Feature.AtomicStorage\AtomicStorageInitialized.cs" />
     <Compile Include="Feature.AtomicStorage\AtomicStorageSerializerWithDataContracts.cs" />

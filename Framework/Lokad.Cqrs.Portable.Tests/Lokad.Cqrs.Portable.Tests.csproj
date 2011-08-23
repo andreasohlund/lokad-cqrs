@@ -51,6 +51,14 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Feature.HandlerClasses\MessageDirectoryFixture.cs" />
+    <Compile Include="Feature.HandlerClasses\Method_Invoker_tests.cs" />
+    <Compile Include="Feature.HandlerClasses\When_activations_constrained_to_handler_type_with_interface.cs" />
+    <Compile Include="Feature.HandlerClasses\When_activations_constrained_to_handler_type_with_type.cs" />
+    <Compile Include="Feature.HandlerClasses\When_activations_constrained_to_message_interface.cs" />
+    <Compile Include="Feature.HandlerClasses\When_activation_map_constrained_to_catch_all_consumer.cs" />
+    <Compile Include="Feature.HandlerClasses\When_builder_is_available.cs" />
+    <Compile Include="Feature.HandlerClasses\When_there_are_no_catch_all_handlers.cs" />
     <Compile Include="Documentation_sample.cs" />
     <Compile Include="Feature.AtomicStorage\Given_Atomic_Scenarios_When_Files.cs" />
     <Compile Include="Feature.AtomicStorage\Syntax_verification.cs" />

@@ -9,11 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Azure", "Lokad.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Azure.Tests", "Lokad.Cqrs.Azure.Tests\Lokad.Cqrs.Azure.Tests.csproj", "{24DA9150-1C7E-45B3-8A75-EA529081237F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Composition", "Lokad.Cqrs.Composition\Lokad.Cqrs.Composition.csproj", "{F60E517D-CEE9-4F8B-9166-075FE6AA677A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Composition.Tests", "Lokad.Cqrs.Composition.Tests\Lokad.Cqrs.Composition.Tests.csproj", "{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snippets", "Snippets\Snippets.csproj", "{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Autofac", "Lokad.Cqrs.Autofac\Lokad.Cqrs.Autofac.csproj", "{F60E517D-CEE9-4F8B-9166-075FE6AA677A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lokad.Cqrs.Autofac.Tests", "Lokad.Cqrs.Autofac.Tests\Lokad.Cqrs.Autofac.Tests.csproj", "{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{54CFCF76-B05B-45F6-8F1F-0EE088E1C77F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,16 @@ Global
 		{24DA9150-1C7E-45B3-8A75-EA529081237F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{24DA9150-1C7E-45B3-8A75-EA529081237F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{24DA9150-1C7E-45B3-8A75-EA529081237F}.Release|x86.ActiveCfg = Release|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|x86.ActiveCfg = Release|Any CPU
 		{F60E517D-CEE9-4F8B-9166-075FE6AA677A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F60E517D-CEE9-4F8B-9166-075FE6AA677A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F60E517D-CEE9-4F8B-9166-075FE6AA677A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -85,18 +97,12 @@ Global
 		{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C}.Release|x86.ActiveCfg = Release|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{81FE0373-6BCA-4CF6-8238-AABE4D9D3E4F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F60E517D-CEE9-4F8B-9166-075FE6AA677A} = {54CFCF76-B05B-45F6-8F1F-0EE088E1C77F}
+		{0B98C38E-6C9C-4B9E-A1A7-7F38296FF39C} = {54CFCF76-B05B-45F6-8F1F-0EE088E1C77F}
 	EndGlobalSection
 EndGlobal

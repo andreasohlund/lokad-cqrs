@@ -13,7 +13,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Transactions;
 using Lokad.Cqrs.Core;
-using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
 
 // ReSharper disable UnusedMember.Global
 
@@ -35,7 +34,7 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
         /// </summary>
         public MessagesWithHandlersConfigurationSyntax(BuildsContainerForMessageHandlerClasses factory)
         {
-            HandlerSample<IConsume<IMessage>>(a => a.Consume(null));
+            HandlerSample<IHandle<IMessage>>(a => a.Handle(null));
             ContextFactory(
                 (envelope, message) => new MessageContext(envelope.EnvelopeId, message.Index, envelope.CreatedOnUtc));
 

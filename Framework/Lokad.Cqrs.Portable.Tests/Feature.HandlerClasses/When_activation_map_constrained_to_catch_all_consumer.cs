@@ -5,22 +5,18 @@
 
 #endregion
 
-using Lokad.Cqrs.Feature.DirectoryDispatch;
-using Lokad.Cqrs.Feature.HandlerClasses;
+using Lokad.Cqrs.Composition.Core.Directory;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Lokad.Cqrs.Composition.Core.Directory
+// ReSharper disable InconsistentNaming
+
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     [TestFixture]
     public sealed class When_activation_map_constrained_to_catch_all_consumer : MessageDirectoryFixture
     {
-        // ReSharper disable InconsistentNaming
-
-
         MessageActivationInfo[] Map { get; set; }
-
-        
 
         [TestFixtureSetUp]
         public void FixtureSetUp()
