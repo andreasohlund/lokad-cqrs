@@ -11,7 +11,7 @@ title: Chapter 01 - Introduction
 * **Homepage**: <https://github.com/Lokad/lokad-cqrs>
 * **Community**: <https://groups.google.com/group/lokad>
 * **Author**: [Rinat Abdullin] (http://abdullin.com/about-me)
-* **Contributors**: [Joannes Vermorel] (http://vermorel.com/about-me/), [Vsevolod Parfenov] (http://twitter.com/vsevolod) and all [git contributors] (https://github.com/abdullin/abdullin.github.com/contributors)
+* **Contributors**: [Joannes Vermorel] (http://vermorel.com/about-me/), [Vsevolod Parfenov] (http://twitter.com/vsevolod) and all [git contributors] (https://github.com/lokad/lokad-cqrs/contributors)
 
 
 ## Document Audience
