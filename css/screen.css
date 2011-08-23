@@ -227,10 +227,11 @@ footer .inner {margin-left: 70px;}
 /*
 /*****************************************************************************/
 
-#container { margin: 0 auto;width: 700px;}
+#container { width: 700px; margin-left: -200px;}
   
-#container .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+#container .desc { color: #4B4B4D; font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
 #container .download { float: right; }
 #container pre { background: #58595B; color: #FFFFFF; padding: 15px;}
 #container hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
 #container .footer { text-align:center; padding-top:30px; font-style: italic; }
+#container ul {margin-left: 35px;}
