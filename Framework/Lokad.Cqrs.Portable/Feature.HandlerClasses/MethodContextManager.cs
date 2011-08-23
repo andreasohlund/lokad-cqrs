@@ -9,7 +9,7 @@ using System;
 using System.Threading;
 using Lokad.Cqrs.Core;
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     /// <summary>
     /// Default implementation of the Lazy thread-safe context manager. It wires optional

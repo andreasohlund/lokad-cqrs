@@ -11,7 +11,7 @@ using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Dispatch.Events;
 using System.Linq;
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     ///<summary>
     /// Dispatcher that sends a single event to multiple consumers within this worker.

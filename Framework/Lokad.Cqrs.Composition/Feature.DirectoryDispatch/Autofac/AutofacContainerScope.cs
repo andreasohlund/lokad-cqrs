@@ -1,5 +1,6 @@
 using System;
 using Autofac;
+using Lokad.Cqrs.Feature.HandlerClasses;
 
 namespace Lokad.Cqrs.Feature.DirectoryDispatch.Autofac
 {

@@ -6,6 +6,7 @@
 #endregion
 
 using Lokad.Cqrs.Feature.DirectoryDispatch;
+using Lokad.Cqrs.Feature.HandlerClasses;
 using NUnit.Framework;
 using System.Linq;
 

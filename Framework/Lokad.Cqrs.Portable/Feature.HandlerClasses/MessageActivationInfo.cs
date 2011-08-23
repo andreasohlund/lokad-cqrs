@@ -8,7 +8,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     [DebuggerDisplay("{MessageType.Name}")]
     public sealed class MessageActivationInfo

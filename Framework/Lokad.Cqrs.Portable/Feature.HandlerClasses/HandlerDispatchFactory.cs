@@ -2,9 +2,9 @@ using System;
 using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
-    public static class DirectoryDispatchFactory
+    public static class HandlerDispatchFactory
     {
         public static ISingleThreadMessageDispatcher CommandBatch(Container ctx, Action<MessageDirectoryFilter> optionalFilter)
         {

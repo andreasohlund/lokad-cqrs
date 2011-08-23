@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Transactions;
 using Lokad.Cqrs.Evil;
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     public enum ContainerScopeLevel
     {

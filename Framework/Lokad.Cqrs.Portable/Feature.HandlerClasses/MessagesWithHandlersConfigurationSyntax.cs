@@ -8,35 +8,32 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Transactions;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
-using Container = Lokad.Cqrs.Core.Container;
 
 // ReSharper disable UnusedMember.Global
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     /// <summary>
     /// Module for building CQRS domains.
     /// </summary>
-    public class DispatchDirectoryModule : HideObjectMembersFromIntelliSense
+    public class MessagesWithHandlersConfigurationSyntax : HideObjectMembersFromIntelliSense
     {
         readonly DomainAssemblyScanner _scanner = new DomainAssemblyScanner();
         IMethodContextManager _contextManager;
         MethodInvokerHint _hint;
 
-        readonly ContainerFactory _nestedResolver;
-
-        public delegate IContainerForHandlerClasses ContainerFactory(Container funq, Type[] handlerClasses);
+        readonly BuildsContainerForMessageHandlerClasses _nestedResolver;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DispatchDirectoryModule"/> class.
+        /// Initializes a new instance of the <see cref="MessagesWithHandlersConfigurationSyntax"/> class.
         /// </summary>
-        public DispatchDirectoryModule(ContainerFactory factory)
+        public MessagesWithHandlersConfigurationSyntax(BuildsContainerForMessageHandlerClasses factory)
         {
             HandlerSample<IConsume<IMessage>>(a => a.Consume(null));
             ContextFactory(
@@ -127,7 +124,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
             var nesting = _nestedResolver(container, consumers);
 
             var tx = Factory(TransactionScopeOption.RequiresNew);
-            
+
             var strategy = new DispatchStrategy(nesting, tx, _hint.Lookup, _contextManager);
 
             container.Register(strategy);

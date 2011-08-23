@@ -10,14 +10,14 @@ namespace Lokad.Cqrs.Build
     /// <summary>
     /// Allows to specify message contract loading rules
     /// </summary>
-    public sealed class MessageContractLookupSyntax : HideObjectMembersFromIntelliSense
+    public sealed class MessagesConfigurationSyntax : HideObjectMembersFromIntelliSense
     {
         readonly List<Assembly> _assemblies;
         readonly IList<Predicate<Type>> _constraints;
 
 
         bool _constraintsDirty;
-        public MessageContractLookupSyntax()
+        public MessagesConfigurationSyntax()
         {
             _constraints = new List<Predicate<Type>>
                 {

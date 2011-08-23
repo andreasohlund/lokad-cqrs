@@ -7,7 +7,7 @@
 
 using Lokad.Cqrs.Core;
 
-namespace Lokad.Cqrs.Feature.DirectoryDispatch
+namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     public interface IMethodContextManager
     {

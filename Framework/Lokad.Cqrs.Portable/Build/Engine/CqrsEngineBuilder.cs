@@ -1,21 +1,22 @@
-#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
 using System;
 using System.Collections.Generic;
+using Lokad.Cqrs.Core;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Core.Envelope;
-using Lokad.Cqrs.Core.Inbox;
 using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Core.Serialization;
-using Lokad.Cqrs.Core;
+using Lokad.Cqrs.Feature.DirectoryDispatch;
+using Lokad.Cqrs.Feature.HandlerClasses;
 using Lokad.Cqrs.Feature.MemoryPartition;
-using System.Linq;
 
 // ReSharper disable UnusedMethodReturnValue.Global
 
@@ -30,28 +31,47 @@ namespace Lokad.Cqrs.Build.Engine
         Func<Type[], IDataSerializer> _dataSerializer = types => new DataSerializerWithDataContracts(types);
         readonly StorageModule _storage = new StorageModule();
 
-        //readonly MessageLookupModule _messages = new MessageLookupModule();
-        
-
-
         public CqrsEngineBuilder()
         {
             _activators.Add(context => new MemoryQueueWriterFactory(context.Resolve<MemoryAccount>()));
         }
 
-        public void Messages(Action<MessageContractLookupSyntax> config)
+        /// <summary>
+        /// Lightweight message configuration that wires in message contract classes.
+        /// </summary>
+        /// <param name="config">The config.</param>
+        public void Messages(Action<MessagesConfigurationSyntax> config)
         {
-            var mlm = new MessageContractLookupSyntax();
+            var mlm = new MessagesConfigurationSyntax();
             config(mlm);
             _serializationTypes.AddRange(mlm.LookupMessages());
         }
-        
+
+        /// <summary>
+        /// Lightweight message configuration that wires in message contract classes.
+        /// </summary>
+        /// <param name="messageTypes">The message types.</param>
         public void Messages(IEnumerable<Type> messageTypes)
         {
             _serializationTypes.AddRange(messageTypes);
         }
 
-        readonly IList<Func<Container, IQueueWriterFactory>> _activators = new List<Func<Container, IQueueWriterFactory>>();
+        /// <summary>
+        /// Heavy-weight configuration that discovers and wires in both message contracts 
+        /// and messages handlers in an enterprise service bus style. Use <em>Messages</em>
+        /// overload, if you want to use just lean and fast lambda delegates.
+        /// </summary>
+        /// <param name="factory">The factory that will add in a your favorite container.</param>
+        /// <param name="config">The configuration for dispatch directory module.</param>
+        public void MessagesWithHandlers(BuildsContainerForMessageHandlerClasses factory, Action<MessagesWithHandlersConfigurationSyntax> config)
+        {
+            var module = new MessagesWithHandlersConfigurationSyntax(factory);
+            config(module);
+            Advanced.ConfigureContainer(c => module.Configure(c, t => _serializationTypes.AddRange(t)));
+        }
+
+        readonly IList<Func<Container, IQueueWriterFactory>> _activators =
+            new List<Func<Container, IQueueWriterFactory>>();
 
         readonly List<IObserver<ISystemEvent>> _observers = new List<IObserver<ISystemEvent>>
             {
@@ -69,7 +89,7 @@ namespace Lokad.Cqrs.Build.Engine
             _envelopeSerializer = serializer;
         }
 
-        void IAdvancedEngineBuilder.RegisterQueueWriterFactory(Func<Container,IQueueWriterFactory> activator)
+        void IAdvancedEngineBuilder.RegisterQueueWriterFactory(Func<Container, IQueueWriterFactory> activator)
         {
             _activators.Add(activator);
         }
@@ -81,9 +101,6 @@ namespace Lokad.Cqrs.Build.Engine
         {
             _moduleEnlistments += module.Configure;
         }
-
-        
-        
 
 
         void IAdvancedEngineBuilder.ConfigureContainer(Action<Container> build)
@@ -137,22 +154,22 @@ namespace Lokad.Cqrs.Build.Engine
             // nonconditional registrations
             // System presets
             var container = new Container();
-        
+
             container.Register(_setup);
             container.Register(new MemoryAccount());
             var system = new SystemObserver(_observers.ToArray());
             container.Register<ISystemObserver>(system);
             Configure(container);
             _moduleEnlistments(container);
-            
+
             var host = new CqrsEngineHost(container, system, _setup.GetProcesses());
             host.Initialize();
             return host;
         }
 
-        readonly List<Type> _serializationTypes = new List<Type>(); 
+        readonly List<Type> _serializationTypes = new List<Type>();
 
-        void Configure(Container reg) 
+        void Configure(Container reg)
         {
             // domain should go before serialization
             _storage.Configure(reg);
@@ -163,20 +180,20 @@ namespace Lokad.Cqrs.Build.Engine
                 Messages(m => { });
             }
 
-            
+
             var dataSerializer = _dataSerializer(_serializationTypes.ToArray());
             var streamer = new EnvelopeStreamer(_envelopeSerializer, dataSerializer);
-            
+
             reg.Register(BuildRegistry);
             reg.Register(dataSerializer);
             reg.Register<IEnvelopeStreamer>(c => streamer);
             reg.Register(new MessageDuplicationManager());
         }
 
-        QueueWriterRegistry BuildRegistry(Container c) 
+        QueueWriterRegistry BuildRegistry(Container c)
         {
             var r = new QueueWriterRegistry();
-                    
+
             foreach (var activator in _activators)
             {
                 var factory = activator(c);

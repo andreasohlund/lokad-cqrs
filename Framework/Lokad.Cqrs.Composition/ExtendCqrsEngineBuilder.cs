@@ -3,6 +3,7 @@ using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Feature.DirectoryDispatch;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Autofac;
+using Lokad.Cqrs.Feature.HandlerClasses;
 
 namespace Lokad.Cqrs
 {
@@ -13,9 +14,9 @@ namespace Lokad.Cqrs
         /// </summary>
         /// <param name="builder">configuration syntax.</param>
         /// <param name="config">The config.</param>
-        public static void Domain(this CqrsEngineBuilder builder,  Action<DispatchDirectoryModule> config)
+        public static void Domain(this CqrsEngineBuilder builder,  Action<MessagesWithHandlersConfigurationSyntax> config)
         {
-            var module = new DispatchDirectoryModule(AutofacContainerProvider.Build);
+            var module = new MessagesWithHandlersConfigurationSyntax(AutofacContainerProvider.Build);
             config(module);
             builder.Advanced.ConfigureContainer(c => module.Configure(c, builder.Messages));
         }
@@ -31,7 +32,7 @@ namespace Lokad.Cqrs
         public static void DispatchAsEvents(this IAdvancedDispatchBuilder builder, Action<MessageDirectoryFilter> optionalFilter = null)
         {
             var action = optionalFilter ?? (x => { });
-            builder.DispatcherIs(ctx => DirectoryDispatchFactory.OneEvent(ctx, action));
+            builder.DispatcherIs(ctx => HandlerDispatchFactory.OneEvent(ctx, action));
             
         }
 
@@ -43,7 +44,7 @@ namespace Lokad.Cqrs
         public static void DispatchAsCommandBatch(this IAdvancedDispatchBuilder builder, Action<MessageDirectoryFilter> optionalFilter = null)
         {
             var action = optionalFilter ?? (x => { });
-            builder.DispatcherIs(ctx => DirectoryDispatchFactory.CommandBatch(ctx, action));
+            builder.DispatcherIs(ctx => HandlerDispatchFactory.CommandBatch(ctx, action));
         }
     }
 }

@@ -8,6 +8,7 @@
 using System;
 using Lokad.Cqrs.Feature.DirectoryDispatch;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
+using Lokad.Cqrs.Feature.HandlerClasses;
 using NUnit.Framework;
 
 // ReSharper disable InconsistentNaming
