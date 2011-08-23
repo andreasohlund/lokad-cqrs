@@ -3,7 +3,10 @@ using Autofac;
 
 namespace Lokad.Cqrs.Feature.DirectoryDispatch.Autofac
 {
-    public sealed class AutofacContainerScope : INestedContainer
+    /// <summary>
+    /// Nested scope adapter for Autofac
+    /// </summary>
+    public sealed class AutofacContainerScope : IContainerForHandlerClasses
     {
         readonly ILifetimeScope _scope;
 
@@ -12,7 +15,7 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch.Autofac
             _scope = scope;
         }
 
-        public INestedContainer GetChildContainer(ContainerScopeLevel level)
+        public IContainerForHandlerClasses GetChildContainer(ContainerScopeLevel level)
         {
             return new AutofacContainerScope(_scope.BeginLifetimeScope(level));
         }

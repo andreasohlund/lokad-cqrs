@@ -2,6 +2,7 @@ using System;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core.Dispatch;
 using Lokad.Cqrs.Feature.DirectoryDispatch;
+using Lokad.Cqrs.Feature.DirectoryDispatch.Autofac;
 
 namespace Lokad.Cqrs
 {
@@ -10,11 +11,11 @@ namespace Lokad.Cqrs
         /// <summary>
         /// Configures the message domain for the instance of <see cref="CqrsEngineHost"/>.
         /// </summary>
-        /// <param name="config">configuration syntax.</param>
-        /// <returns>same builder for inline multiple configuration statements</returns>
-        public static void Domain(this CqrsEngineBuilder builder, Action<DispatchDirectoryModule> config)
+        /// <param name="builder">configuration syntax.</param>
+        /// <param name="config">The config.</param>
+        public static void Domain(this CqrsEngineBuilder builder,  Action<DispatchDirectoryModule> config)
         {
-            var module = new DispatchDirectoryModule();
+            var module = new DispatchDirectoryModule(AutofacContainerProvider.Build);
             config(module);
             builder.Advanced.ConfigureContainer(c => module.Configure(c, builder.Messages));
         }

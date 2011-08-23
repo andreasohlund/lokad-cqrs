@@ -41,21 +41,8 @@
   <ItemGroup>
     <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacContainerScope.cs" />
     <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacContainerProvider.cs" />
-    <Compile Include="Feature.DirectoryDispatch\DispatchStrategy.cs" />
-    <Compile Include="Feature.DirectoryDispatch\DirectoryDispatchFactory.cs" />
-    <Compile Include="Feature.DirectoryDispatch\DispatchCommandBatch.cs" />
-    <Compile Include="Feature.DirectoryDispatch\DispatchDirectoryModule.cs" />
-    <Compile Include="Feature.DirectoryDispatch\DispatchOneEvent.cs" />
-    <Compile Include="Feature.DirectoryDispatch\DomainAssemblyScanner.cs" />
     <Compile Include="ExtendCqrsEngineBuilder.cs" />
     <Compile Include="Feature.DirectoryDispatch\Autofac\AutofacRegistrationSource.cs" />
-    <Compile Include="Feature.DirectoryDispatch\IMethodContextManager.cs" />
-    <Compile Include="Feature.DirectoryDispatch\MessageActivationInfo.cs" />
-    <Compile Include="Feature.DirectoryDispatch\MessageDirectoryBuilder.cs" />
-    <Compile Include="Feature.DirectoryDispatch\MessageDirectoryFilter.cs" />
-    <Compile Include="Feature.DirectoryDispatch\MessageMapping.cs" />
-    <Compile Include="Feature.DirectoryDispatch\MethodContextManager.cs" />
-    <Compile Include="Feature.DirectoryDispatch\MethodInvokerHint.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lokad.Cqrs.Portable\Lokad.Cqrs.Portable.csproj">

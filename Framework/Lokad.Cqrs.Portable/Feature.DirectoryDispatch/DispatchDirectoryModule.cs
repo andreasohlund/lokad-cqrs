@@ -8,13 +8,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Transactions;
-using Lokad.Cqrs.Core;
-using Lokad.Cqrs.Feature.DirectoryDispatch.Autofac;
 using Lokad.Cqrs.Feature.DirectoryDispatch.Default;
+using Container = Lokad.Cqrs.Core.Container;
 
 // ReSharper disable UnusedMember.Global
 
@@ -29,19 +29,20 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
         IMethodContextManager _contextManager;
         MethodInvokerHint _hint;
 
-        readonly Func<Container, Type[], INestedContainer> _nestedResolver; 
-        
+        readonly ContainerFactory _nestedResolver;
+
+        public delegate IContainerForHandlerClasses ContainerFactory(Container funq, Type[] handlerClasses);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DispatchDirectoryModule"/> class.
         /// </summary>
-        public DispatchDirectoryModule()
+        public DispatchDirectoryModule(ContainerFactory factory)
         {
             HandlerSample<IConsume<IMessage>>(a => a.Consume(null));
             ContextFactory(
                 (envelope, message) => new MessageContext(envelope.EnvelopeId, message.Index, envelope.CreatedOnUtc));
 
-            _nestedResolver = AutofacContainerProvider.Build;
+            _nestedResolver = factory;
         }
 
 

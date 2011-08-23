@@ -8,6 +8,9 @@ using Container = Lokad.Cqrs.Core.Container;
 
 namespace Lokad.Cqrs.Feature.DirectoryDispatch.Autofac
 {
+    /// <summary>
+    /// Resolves Autofac dependencies from the provided Funq <see cref="Container"/>
+    /// </summary>
     public sealed class AutofacRegistrationSource : IRegistrationSource
     {
         readonly Container _container;
@@ -16,6 +19,15 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch.Autofac
             _container = container;
         }
 
+        /// <summary>
+        /// Retrieve registrations for an unregistered service, to be used
+        /// by the container.
+        /// </summary>
+        /// <param name="service">The service that was requested.</param>
+        /// <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
+        /// <returns>
+        /// Registrations providing the service.
+        /// </returns>
         public IEnumerable<IComponentRegistration> RegistrationsFor(Service service, Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor)
         {
             var type = service as TypedService;
@@ -36,6 +48,10 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch.Autofac
             yield return new ComponentRegistration(Guid.NewGuid(), new ProvidedInstanceActivator(result),new RootScopeLifetime(), InstanceSharing.Shared, InstanceOwnership.ExternallyOwned, new[] {service}, new Dictionary<string,object>());
         }
 
+        /// <summary>
+        /// Gets whether the registrations provided by this source are 1:1 adapters on top
+        /// of other components (I.e. like Meta, Func or Owned.)
+        /// </summary>
         public bool IsAdapterForIndividualComponents
         {
             get { return false; }

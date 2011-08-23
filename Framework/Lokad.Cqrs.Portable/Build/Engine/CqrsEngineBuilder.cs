@@ -150,7 +150,7 @@ namespace Lokad.Cqrs.Build.Engine
             return host;
         }
 
-        List<Type> _serializationTypes = new List<Type>(); 
+        readonly List<Type> _serializationTypes = new List<Type>(); 
 
         void Configure(Container reg) 
         {

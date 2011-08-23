@@ -18,20 +18,15 @@ namespace Lokad.Cqrs.Feature.DirectoryDispatch
     {
         Envelope,Item
     }
-    public interface INestedContainer : IDisposable
-    {
-        INestedContainer GetChildContainer(ContainerScopeLevel level);
-        object Resolve(Type type);
-    }
 
     public sealed class DispatchStrategy
     {
-        readonly INestedContainer _scope;
+        readonly IContainerForHandlerClasses _scope;
         readonly Func<TransactionScope> _scopeFactory;
         readonly Func<Type, Type, MethodInfo> _hint;
         readonly IMethodContextManager _context;
 
-        public DispatchStrategy(INestedContainer scope, Func<TransactionScope> scopeFactory,
+        public DispatchStrategy(IContainerForHandlerClasses scope, Func<TransactionScope> scopeFactory,
             Func<Type, Type, MethodInfo> hint, IMethodContextManager context)
         {
             _scope = scope;
