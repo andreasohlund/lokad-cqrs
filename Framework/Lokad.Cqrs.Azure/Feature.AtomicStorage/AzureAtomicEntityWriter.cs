@@ -63,9 +63,12 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
                 }
             }
-            using (var mem = blob.OpenWrite())
+            // atomic entities should be small, so we can use the simple method
+            // http://toolheaven.net/post/Azure-and-blob-write-performance.aspx
+            using (var memory = new MemoryStream())
             {
-                _strategy.Serialize(view, mem);
+                _strategy.Serialize(view, memory);
+                blob.UploadByteArray(memory.ToArray());
             }
             return view;
         }
