@@ -17,8 +17,9 @@ html, body {
 
 body {
   background-color: white;
-  font: 13.34px helvetica, arial, clean, sans-serif;
+  font: 12pt Times New Roman;
   *font-size: small;  
+  color: #4B4B4D;
 }
 
 p {
@@ -43,10 +44,11 @@ table {
 }
 
 h1, h2, h3, h4, h5, h6 {
- margin-top: 20px;
+	margin-top: 20px;
+	font-family: Georgia, Times New Roman; 
 }
 
-h1 { color: #F46B35; margin-bottom: 3px; }
+h1 { color: #F46B35; margin-bottom: 3px; font-size: 30pt; }
 h1 .small { font-size: 0.4em; }
 h1 a { text-decoration: none }
 h2 { font-size: 1.5em; color: #F46B35; }
@@ -134,6 +136,8 @@ ul.posts {
 /*****************************************************************************/
 
 #post {
+	margin-left: 200px;
+	width: 620px;
 
 }
 
@@ -197,12 +201,10 @@ div {display: block;}
 header { height: 180px; background: url(/lokad-cqrs/images/header_bg.png) repeat-x; padding-top: 30px; }
 
 header a {font-size: 10pt;}
-header table {margin-top: 10px;}
+header table {margin-top: 5px;}
 
 #menu a { margin-left: 20px; color: #f36b34;}
 #menu .inactive {color: #c9c9c9;}
-
-#main_container {width: 620px; margin-left: 120px; padding: 10px; }
 
 .description {width: 480px; font-family: Sans-Serif; }
 .description span {font-style: italic; font-size: 10pt;}
@@ -212,21 +214,21 @@ footer a {color: #7090cf; font-size: 10pt; font-weight: normal; }
 footer a:visited {color: #7090cf;}
 footer a:hover {color: #7090cf;}
 footer .header { color: #e3e3e3; font-size: 14pt;}
-footer .logo {float: left; width: 250px; font-size: 8pt; font-family: sans-serif; color: #e3e3e3;}
+footer .logo {float: left; width: 250px; font-size: 8pt; font-family: sans-serif; color: #e3e3e3; text-align: center;}
 footer .inner {margin-left: 70px;}
 
 .contact {float: left; width: 180px; line-height: 18pt; font-family: Georgia, 'Times New Roman', Times, serif;}
 
 .right {float: right; text-align: right;}
 
-#crumbs { text-align: right; position: relative; float: left; margin-left: -220px; color: #f36f34; width: 200px;}
+#crumbs { text-align: right; position: relative; float: left; margin-left: -230px; color: #f36f34; width: 200px; font-family: Tahoma; font-size: 8pt;}
 
 /*****************************************************************************/
 /*
 /* Index
 /*
 /*****************************************************************************/
- 
+#container { margin-left: 200px;width: 620px;}
 #container .desc { color: #4B4B4D; font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
 #container .download { float: right; }
 #container pre { background: #58595B; color: #FFFFFF; padding: 15px;}
