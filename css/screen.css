@@ -138,6 +138,7 @@ ul.posts {
 #post {
 	margin-left: 200px;
 	width: 620px;
+
 }
 
   /* standard */
@@ -227,7 +228,7 @@ footer .inner {margin-left: 70px;}
 /* Index
 /*
 /*****************************************************************************/
- 
+#container { margin-left: 200px;width: 620px;}
 #container .desc { color: #4B4B4D; font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
 #container .download { float: right; }
 #container pre { background: #58595B; color: #FFFFFF; padding: 15px;}
