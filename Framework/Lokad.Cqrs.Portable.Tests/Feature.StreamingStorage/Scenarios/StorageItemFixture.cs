@@ -7,7 +7,6 @@
 
 using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 
 namespace Lokad.Cqrs.Feature.StreamingStorage.Scenarios
 {
