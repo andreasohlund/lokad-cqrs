@@ -221,7 +221,7 @@ footer .inner {margin-left: 70px;}
 
 .right {float: right; text-align: right;}
 
-#crumbs { text-align: right; position: relative; float: left; margin-left: -220px; color: #f36f34; width: 200px;}
+#crumbs { text-align: right; position: relative; float: left; margin-left: -220px; color: #f36f34; width: 200px; font-family: Tahoma; font-size: 8pt;}
 
 /*****************************************************************************/
 /*
