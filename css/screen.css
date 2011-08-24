@@ -17,8 +17,9 @@ html, body {
 
 body {
   background-color: white;
-  font: 13.34px helvetica, arial, clean, sans-serif;
+  font: 12pt Times New Roman;
   *font-size: small;  
+  color: #4B4B4D;
 }
 
 p {
@@ -43,10 +44,11 @@ table {
 }
 
 h1, h2, h3, h4, h5, h6 {
- margin-top: 20px;
+	margin-top: 20px;
+	font-family: Georgia, Times New Roman; 
 }
 
-h1 { color: #F46B35; margin-bottom: 3px; }
+h1 { color: #F46B35; margin-bottom: 3px; font-size: 30pt; }
 h1 .small { font-size: 0.4em; }
 h1 a { text-decoration: none }
 h2 { font-size: 1.5em; color: #F46B35; }
@@ -202,7 +204,7 @@ header table {margin-top: 10px;}
 #menu a { margin-left: 20px; color: #f36b34;}
 #menu .inactive {color: #c9c9c9;}
 
-#main_container {width: 620px; margin-left: 120px; padding: 10px; }
+#main_container {width: 620px; margin-left: 120px; }
 
 .description {width: 480px; font-family: Sans-Serif; }
 .description span {font-style: italic; font-size: 10pt;}
