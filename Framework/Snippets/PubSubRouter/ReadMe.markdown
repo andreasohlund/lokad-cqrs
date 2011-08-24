@@ -33,4 +33,4 @@ special attributes:
 Where REGEX matches against the full name of the message event type. In your
 scenario match could be implemented differently. 
 
-See the code for more details and comments. [Unit test](_Usage.cs) shows some sample usage
+See the code for more details and comments. _Usage.cs_ shows some sample usage
