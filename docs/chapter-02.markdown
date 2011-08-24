@@ -68,7 +68,7 @@ There already are a few brave souls that have tried to apply Lokad.CQRS for Wind
 **Chris Martin** (<http://twitter.com/#!/cmartinbot>):
 > I can't thank Lokad enough for the work you guys have put in. You have literally saved our startup thousands of man-hours!
 
-<div class='sidenote'>
+<div class="sidenote">
 If you want to tell us a story, use case or share a success, please, don't hesitate to drop us a line to <contact@lokad.com>.
 </div>
 
