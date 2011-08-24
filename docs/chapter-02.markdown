@@ -63,12 +63,13 @@ There already are a few brave souls that have tried to apply Lokad.CQRS for Wind
 
 **David Pfeffer** (<http://twitter.com/#!/bytenik>)
 
-> fivepm technolgy, inc. uses Lokad.Cqrs to drive its entire flagship Treadmarks product. We rely on the service bus to reliably deliver messages across our cloud application, and we use the view persistence helpers to store any view data. We initially investigated rolling our own framework or using NServiceBus, but the maturity of Lokad.Cqrs on the Azure platform made it an easy winner over the other possibilities.
+_fivepm technolgy, inc. uses Lokad.Cqrs to drive its entire flagship Treadmarks product. We rely on the service bus to reliably deliver messages across our cloud application, and we use the view persistence helpers to store any view data. We initially investigated rolling our own framework or using NServiceBus, but the maturity of Lokad.Cqrs on the Azure platform made it an easy winner over the other possibilities._
 
 **Chris Martin** (<http://twitter.com/#!/cmartinbot>):
-> I can't thank Lokad enough for the work you guys have put in. You have literally saved our startup thousands of man-hours!
+_I can't thank Lokad enough for the work you guys have put in. You have literally saved our startup thousands of man-hours!_
 
-If you want to tell us a story, use case or share a success, please, don't hesitate to drop us a line to <contact@lokad.com>.
+> If you want to tell us a story, use case or share a success, please, don't hesitate to drop us a line to <contact@lokad.com>.
+
 
 
 
