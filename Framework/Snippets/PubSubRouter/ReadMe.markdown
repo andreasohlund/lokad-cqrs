@@ -12,7 +12,6 @@ This router does 3 things:
 2. Routes event to subscribers using this map
 3. It routes commands to a single queue (hardcoded)
 
-
 This snippet could be expanded to support command partitioning (entity 
 partitioning) or topic-based subscriptions in a similar manner.
 
@@ -23,15 +22,15 @@ special attributes:
 
 **To subscribe**:
 
-key: router-subscribe-QUEUE-NAME
-value: REGEX
+    key: router-subscribe-QUEUE-NAME
+    value: REGEX
 
 **To unsubscribe**:
 
-key router-unsubscribe-QUEUE-NAME
-value: REGEX
+    key router-unsubscribe-QUEUE-NAME
+    value: REGEX
 
 Where REGEX matches against the full name of the message event type. In your
 scenario match could be implemented differently. 
 
-See the code for more details and comments. Unit test shows some sample usage
+See the code for more details and comments. [Unit test](_Usage.cs) shows some sample usage
