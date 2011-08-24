@@ -201,7 +201,7 @@ div {display: block;}
 header { height: 180px; background: url(/lokad-cqrs/images/header_bg.png) repeat-x; padding-top: 30px; }
 
 header a {font-size: 10pt;}
-header table {margin-top: 10px;}
+header table {margin-top: 5px;}
 
 #menu a { margin-left: 20px; color: #f36b34;}
 #menu .inactive {color: #c9c9c9;}
