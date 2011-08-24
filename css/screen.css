@@ -166,7 +166,7 @@ ul.posts {
       border: none;
     }
 
-    #post .sidenote {float: left; width: 200px; margin-left: -220px; text-align: right; line-height: 1.5em;}
+    #post blockquote {float: left; width: 200px; margin-left: -220px; text-align: right; line-height: 1.5em;}
 
   /* terminal */
 
