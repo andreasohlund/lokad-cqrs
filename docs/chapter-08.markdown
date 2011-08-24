@@ -157,8 +157,9 @@ You can use following dispatcher classes (from Lokad.CQRS sources) as a sample f
 * DispatchMessagesToRoute
 
 ## Portability Scenarios
+
+> You can already run Lokad.CQRS Application Engine (and systems built with it) locally without Windows Azure SDK.  However this requires use of in-memory queues, which are not persistent across the system restarts.
+
 At the moment of writing, Lokad.CQRS allows running the same application code with minimal modifications both in Windows Azure and under local development environment outside of Azure Compute Emulator (formerly known as Dev Fabric). Windows Azure Storage Emulator has to be running.
 
 After we introduce support for non-Azure persistent queuing, you will be able to develop and run applications locally, without Azure SDK, but still deploy then to the Windows Azure cloud afterwards.
-
-**You can already run Lokad.CQRS Application Engine (and systems built with it) locally without Windows Azure SDK.  However this requires use of in-memory queues, which are not persistent across the system restarts.**
