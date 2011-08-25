@@ -12,10 +12,9 @@ namespace Lokad.Cqrs.Build.Engine
             _processes.Add(process);
         }
 
-        public ICollection<IEngineProcess> GetProcesses()
+        public IEnumerable<IEngineProcess> GetProcesses()
         {
             return _processes.AsReadOnly();
-            ;
         }
 
         public EngineSetup()

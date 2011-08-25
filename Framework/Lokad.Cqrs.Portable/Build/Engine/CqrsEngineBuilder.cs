@@ -55,6 +55,10 @@ namespace Lokad.Cqrs.Build.Engine
             _serializationTypes.AddRange(messageTypes);
         }
 
+
+        
+        
+
         /// <summary>
         /// Heavy-weight configuration that discovers and wires in both message contracts 
         /// and messages handlers in an enterprise service bus style. Use <em>Messages</em>
@@ -81,6 +85,18 @@ namespace Lokad.Cqrs.Build.Engine
         void IAdvancedEngineBuilder.CustomDataSerializer(Func<Type[], IDataSerializer> serializer)
         {
             _dataSerializer = serializer;
+        }
+
+        bool _discoverMessagesIfNotAvailable = true;
+
+        public void DisableAutoMessageDiscovery()
+        {
+            _discoverMessagesIfNotAvailable = false;
+        }
+
+        public EngineSetup Setup
+        {
+            get { return _setup; }
         }
 
         void IAdvancedEngineBuilder.CustomEnvelopeSerializer(IEnvelopeSerializer serializer)
@@ -173,7 +189,7 @@ namespace Lokad.Cqrs.Build.Engine
             // domain should go before serialization
             _storage.Configure(reg);
 
-            if (_serializationTypes.Count == 0)
+            if (_serializationTypes.Count == 0 && _discoverMessagesIfNotAvailable)
             {
                 // default scan if nothing specified
                 Messages(m => { });
