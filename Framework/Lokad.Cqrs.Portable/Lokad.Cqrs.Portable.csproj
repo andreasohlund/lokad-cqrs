@@ -48,6 +48,7 @@
     <Compile Include="Build\Engine\FileModule.cs" />
     <Compile Include="Core.Dispatch\IAdvancedDispatchBuilder.cs" />
     <Compile Include="Build\Engine\IAdvancedEngineBuilder.cs" />
+    <Compile Include="Core.Serialization\AbstractDataSerializer.cs" />
     <Compile Include="Feature.HandlerClasses\IConsume.cs" />
     <Compile Include="Feature.HandlerClasses\IConsumeMessage.cs" />
     <Compile Include="Feature.HandlerClasses\IMessage.cs" />

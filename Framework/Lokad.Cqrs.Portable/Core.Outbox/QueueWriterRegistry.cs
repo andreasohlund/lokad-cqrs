@@ -28,6 +28,20 @@ namespace Lokad.Cqrs.Core.Outbox
             return _dictionary.TryGetValue(endpoint, out factory);
         }
 
+        public IQueueWriterFactory GetOrThrow(string endpoint)
+        {
+            IQueueWriterFactory value;
+            if (_dictionary.TryGetValue(endpoint, out value))
+            {
+                return value;
+            }
+            throw new InvalidOperationException(@"Failed to locate queue factory for '{0}'. Please ensure registration.
+Normally Lokad.Cqrs tries to auto-register a factory, based on certain configs,
+however this is not always the case. So you might need to do something like:
+
+builder.Advanced.RegisterQueueWriterFactory()");
+        }
+
         public override string ToString()
         {
             return string.Format("{0}[{1}], x{2:X8}", this.GetType().Name, _dictionary.Count, GetHashCode());

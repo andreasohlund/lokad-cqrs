@@ -6,8 +6,12 @@
 
 #endregion
 
+using System;
+using System.Runtime.Serialization;
 using Lokad.Cqrs;
 using Lokad.Cqrs.Build.Engine;
+using Lokad.Cqrs.Core;
+using Lokad.Cqrs.Core.Outbox;
 using Lokad.Cqrs.Feature.Http;
 using Lokad.Cqrs.Feature.Http.Handlers;
 using NUnit.Framework;
@@ -28,10 +32,29 @@ namespace Snippets.HttpEndpoint
                 {
                     Port = 8082
                 };
+
+            builder.Messages(new [] {typeof(UserVisited)});
+            
+            builder.Advanced.CustomDataSerializer(t => new MyJsonSerializer(t));
             builder.HttpServer(environment,
                 c => new FaviconHttpRequestHandler(),
-                c => EmbeddedResourceHttpRequestHandler.FromScope(this));
+                c => EmbeddedResourceHttpRequestHandler.ServeFilesFromScope(this),
+                ConfigureMyAnonymousCommandSender);
+            builder.Memory(x => x.AddMemoryProcess("inbox", container => (envelope => Console.WriteLine("Hit!")) ));
             builder.Build().RunForever();
         }
+
+        static IHttpRequestHandler ConfigureMyAnonymousCommandSender(Container c)
+        {
+            var writer = c.Resolve<QueueWriterRegistry>().GetOrThrow("memory").GetWriteQueue("inbox");
+            return new MyAnonymousCommandSender(writer, c.Resolve<IDataSerializer>());
+        }
+    }
+
+    
+    [DataContract(Name = "user-visited")]
+    public sealed class UserVisited
+    {
+        
     }
 }

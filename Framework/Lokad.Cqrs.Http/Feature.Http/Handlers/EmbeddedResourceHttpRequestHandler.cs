@@ -8,8 +8,6 @@ namespace Lokad.Cqrs.Feature.Http.Handlers
     public sealed class EmbeddedResourceHttpRequestHandler : IHttpRequestHandler
     {
         readonly Assembly _resourceAssembly;
-
-
         readonly Dictionary<string,string> _set = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase); 
 
         public EmbeddedResourceHttpRequestHandler(Assembly resourceAssembly, string ns)
@@ -46,7 +44,7 @@ namespace Lokad.Cqrs.Feature.Http.Handlers
             }
         }
 
-        public static IHttpRequestHandler FromScope(object instance)
+        public static IHttpRequestHandler ServeFilesFromScope(object instance)
         {
             var callingAssembly = Assembly.GetCallingAssembly();
             return new EmbeddedResourceHttpRequestHandler(callingAssembly, instance.GetType().Namespace);

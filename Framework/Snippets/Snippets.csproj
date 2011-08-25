@@ -53,6 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpEndpoint\MyAnonymousCommandSender.cs" />
+    <Compile Include="HttpEndpoint\MyJsonSerializer.cs" />
     <Compile Include="MailQuarantine\SmtpHandlerCore.cs" />
     <Compile Include="PubSubRouter\PubSubRouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

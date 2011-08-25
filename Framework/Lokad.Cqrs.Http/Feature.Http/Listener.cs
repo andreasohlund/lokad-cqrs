@@ -128,7 +128,8 @@ namespace Lokad.Cqrs.Feature.Http
 <html>
     <body>
         <h1>Bad Request</h1>
-        <p>Mea culpa, Lokad.Cqrs.Http server does not know, how to handle this request.</p>
+        <p>Mea culpa, <a href='http://lokad.github.com/lokad-cqrs/'>Lokad.Cqrs</a> Http server 
+        does not know, how to handle this request.</p>
     </body>
 </html>
 ");
