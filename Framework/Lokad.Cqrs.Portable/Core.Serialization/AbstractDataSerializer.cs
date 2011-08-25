@@ -12,22 +12,90 @@ using System.IO;
 
 namespace Lokad.Cqrs.Core.Serialization
 {
-    /// <summary>
-    /// Base serializer class that helps with keeping a map of contract names and types
-    /// </summary>
     public abstract class AbstractDataSerializer : IDataSerializer
     {
-        public abstract void Serialize(object instance, Type type, Stream destinationStream);
-        public abstract object Deserialize(Stream sourceStream, Type type);
+        public delegate void SerializerDelegate(object instance, Stream stream);
+        public delegate object DeserializerDelegate(Stream stream);
+
+        protected ICollection<Type> KnownTypes { get; private set; }
+
+        protected abstract SerializerDelegate CreateSerializer(Type type);
+        protected abstract DeserializerDelegate CreateDeserializer(Type type);
+
+        readonly IDictionary<Type, SerializerDelegate> _type2Serializer = new Dictionary<Type, SerializerDelegate>();
+
+        readonly IDictionary<Type, DeserializerDelegate> _type2Deserializer =
+            new Dictionary<Type, DeserializerDelegate>();
 
         readonly IDictionary<string, Type> _contract2Type = new Dictionary<string, Type>();
-        protected ICollection<Type> KnownTypes { get; private set; }
         readonly IDictionary<Type, string> _type2Contract = new Dictionary<Type, string>();
 
         protected AbstractDataSerializer(ICollection<Type> knownTypes)
         {
             KnownTypes = knownTypes;
-            Initialize();
+            InitDelegate();
+        }
+
+        void InitDelegate()
+        {
+            foreach (var type in KnownTypes)
+            {
+                var reference = GetContractReference(type);
+                try
+                {
+                    _contract2Type.Add(reference, type);
+                }
+                catch (ArgumentException ex)
+                {
+                    var msg = string.Format("Duplicate contract '{0}' being added to {1}", reference, GetType().Name);
+                    throw new InvalidOperationException(msg, ex);
+                }
+                try
+                {
+                    _type2Contract.Add(type, reference);
+                }
+                catch (ArgumentException e)
+                {
+                    var msg = string.Format("Duplicate type '{0}' being added to {1}", type, GetType().Name);
+                    throw new InvalidOperationException(msg, e);
+                }
+                _type2Deserializer[type] = CreateDeserializer(type);
+                _type2Serializer[type] = CreateSerializer(type);
+            }
+        }
+
+        public object Deserialize(Stream sourceStream, Type type)
+        {
+            DeserializerDelegate value;
+            if (!_type2Deserializer.TryGetValue(type, out value))
+            {
+                var s =
+                    string.Format(
+                        "Can't find serializer for unknown object type '{0}'. Have you passed all known types to the constructor?",
+                        type);
+                throw new InvalidOperationException(s);
+            }
+            return value(sourceStream);
+        }
+
+        /// <summary>
+        /// Serializes the object to the specified stream
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="type">The type to use as a serialization reference.</param>
+        /// <param name="destinationStream">The destination stream.</param>
+        public void Serialize(object instance, Type type, Stream destinationStream)
+        {
+            SerializerDelegate formatter;
+            if (!_type2Serializer.TryGetValue(type, out formatter))
+            {
+                var s =
+                    string.Format(
+                        "Can't find serializer for unknown object type '{0}'. Have you passed all known types to the constructor?",
+                        instance.GetType());
+                throw new InvalidOperationException(s);
+            }
+            formatter(instance, destinationStream);
         }
 
         /// <summary>
@@ -58,31 +126,6 @@ namespace Lokad.Cqrs.Core.Serialization
             return _contract2Type.TryGetValue(contractName, out contractType);
         }
 
-        void Initialize()
-        {
-            foreach (var type in KnownTypes)
-            {
-                var reference = GetContractReference(type);
-                try
-                {
-                    _contract2Type.Add(reference, type);
-                }
-                catch (ArgumentException ex)
-                {
-                    var msg = string.Format("Duplicate contract '{0}' being added to {1}", reference, GetType().Name);
-                    throw new InvalidOperationException(msg, ex);
-                }
-                try
-                {
-                    _type2Contract.Add(type, reference);
-                }
-                catch (ArgumentException e)
-                {
-                    var msg = string.Format("Duplicate type '{0}' being added to {1}", type, GetType().Name);
-                    throw new InvalidOperationException(msg, e);
-                }
-            }
-        }
 
         protected virtual string GetContractReference(Type type)
         {

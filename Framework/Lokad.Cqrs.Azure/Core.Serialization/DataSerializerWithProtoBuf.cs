@@ -8,59 +8,29 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
 using ProtoBuf.Meta;
 
 namespace Lokad.Cqrs.Core.Serialization
 {
     public class DataSerializerWithProtoBuf : AbstractDataSerializer
     {
-        readonly IDictionary<Type, IFormatter> _type2Formatter = new Dictionary<Type, IFormatter>();
-
         public DataSerializerWithProtoBuf(ICollection<Type> knownTypes) : base(knownTypes)
         {
             if (knownTypes.Count == 0)
                 throw new InvalidOperationException(
                     "ProtoBuf requires some known types to serialize. Have you forgot to supply them?");
-            InitializeFormatters(knownTypes);
         }
 
-        void InitializeFormatters(IEnumerable<Type> knownTypes)
+        protected override SerializerDelegate CreateSerializer(Type type)
         {
-            foreach (var type in knownTypes)
-            {
-                var formatter = RuntimeTypeModel.Default.CreateFormatter(type);
-                _type2Formatter.Add(type, formatter);
-            }
+            var formatter = RuntimeTypeModel.Default.CreateFormatter(type);
+            return (instance, stream) => formatter.Serialize(stream, instance);
         }
 
-        public override void Serialize(object instance, Type type, Stream destination)
+        protected override DeserializerDelegate CreateDeserializer(Type type)
         {
-            IFormatter formatter;
-            if (!_type2Formatter.TryGetValue(type, out formatter))
-            {
-                var s =
-                    string.Format(
-                        "Can't find serializer for unknown object type '{0}'. Have you passed all known types to the constructor?",
-                        instance.GetType());
-                throw new InvalidOperationException(s);
-            }
-            formatter.Serialize(destination, instance);
-        }
-
-        public override object Deserialize(Stream source, Type type)
-        {
-            IFormatter value;
-            if (!_type2Formatter.TryGetValue(type, out value))
-            {
-                var s =
-                    string.Format(
-                        "Can't find serializer for unknown object type '{0}'. Have you passed all known types to the constructor?",
-                        type);
-                throw new InvalidOperationException(s);
-            }
-            return value.Deserialize(source);
+            var formatter = RuntimeTypeModel.Default.CreateFormatter(type);
+            return stream => formatter.Deserialize(stream);
         }
     }
 }

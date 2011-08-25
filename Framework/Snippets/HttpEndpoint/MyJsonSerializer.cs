@@ -1,6 +1,13 @@
+#region (c) 2010-2011 Lokad CQRS - New BSD License 
+
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
+// This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
+
+#endregion
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Lokad.Cqrs.Core.Serialization;
 using ServiceStack.Text;
 
@@ -8,15 +15,17 @@ namespace Snippets.HttpEndpoint
 {
     public sealed class MyJsonSerializer : AbstractDataSerializer
     {
-        public MyJsonSerializer(ICollection<Type> knownTypes) : base(knownTypes) { }
-        public override void Serialize(object instance, Type type, Stream destinationStream)
+        public MyJsonSerializer(ICollection<Type> knownTypes) : base(knownTypes) {}
+
+
+        protected override SerializerDelegate CreateSerializer(Type type)
         {
-            JsonSerializer.SerializeToStream(instance, type, destinationStream);
+            return (instance, stream) => JsonSerializer.SerializeToStream(instance, type, stream);
         }
 
-        public override object Deserialize(Stream sourceStream, Type type)
+        protected override DeserializerDelegate CreateDeserializer(Type type)
         {
-            return JsonSerializer.DeserializeFromStream(type, sourceStream);
+            return stream => JsonSerializer.DeserializeFromStream(type, stream);
         }
     }
 }

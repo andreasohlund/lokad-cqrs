@@ -1,13 +1,13 @@
-﻿#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -43,38 +43,28 @@ namespace Lokad.Cqrs.Core.Serialization
             }
         }
 
-
-        /// <summary>
-        /// Serializes the specified instance.
-        /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="destination">The destination.</param>
-        public override void Serialize(object instance, Type type, Stream destination)
+        protected override SerializerDelegate CreateSerializer(Type type)
         {
             var serializer = new DataContractSerializer(type, KnownTypes);
-
-            //using (var compressed = destination.Compress(true))
-            using (var writer = XmlDictionaryWriter.CreateBinaryWriter(destination, null, null, false))
-            {
-                serializer.WriteObject(writer, instance);
-            }
+            return (instance, stream) =>
+                {
+                    using (var writer = XmlDictionaryWriter.CreateBinaryWriter(stream, null, null, false))
+                    {
+                        serializer.WriteObject(writer, instance);
+                    }
+                };
         }
 
-        /// <summary>
-        /// Deserializes the object from specified source stream.
-        /// </summary>
-        /// <param name="sourceStream">The source stream.</param>
-        /// <param name="type">The type of the object to deserialize.</param>
-        /// <returns>deserialized object</returns>
-        public override object Deserialize(Stream sourceStream, Type type)
+        protected override DeserializerDelegate CreateDeserializer(Type type)
         {
             var serializer = new DataContractSerializer(type, KnownTypes);
-
-            using (var reader = XmlDictionaryReader.CreateBinaryReader(sourceStream, XmlDictionaryReaderQuotas.Max))
-            {
-                return serializer.ReadObject(reader);
-            }
+            return (stream) =>
+                {
+                    using (var reader = XmlDictionaryReader.CreateBinaryReader(stream, XmlDictionaryReaderQuotas.Max))
+                    {
+                        return serializer.ReadObject(reader);
+                    }
+                };
         }
     }
 }
