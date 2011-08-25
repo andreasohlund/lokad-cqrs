@@ -94,6 +94,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="HttpEndpoint\ReadMe.markdown" />
     <None Include="MailQuarantine\ReadMe.markdown" />
     <None Include="packages.config" />
     <None Include="PubSubRouter\ReadMe.markdown" />

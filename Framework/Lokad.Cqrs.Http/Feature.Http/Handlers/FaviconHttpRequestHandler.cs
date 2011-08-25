@@ -1,5 +1,8 @@
 using System.ComponentModel.Composition;
+using System.Globalization;
 using System.Net;
+using System.Resources;
+using Lokad.Cqrs.Properties;
 
 namespace Lokad.Cqrs.Feature.Http.Handlers
 {
@@ -19,7 +22,7 @@ namespace Lokad.Cqrs.Feature.Http.Handlers
         public override void Handle(IHttpContext context)
         {
             var stream = context.Response.OutputStream;
-            Properties.Resources.favicon.Save(stream);
+            Resources.favicon.Save(stream);
             stream.Flush();
             context.SetStatusTo(HttpStatusCode.OK);
         }

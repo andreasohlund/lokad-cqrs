@@ -23,11 +23,11 @@ namespace Lokad.Cqrs.Feature.Http
 
         readonly IHttpEnvironment _environment;
         readonly ISystemObserver _observer;
-        IEnumerable<AbstractHttpRequestHandler> _handlers;
+        IEnumerable<IHttpRequestHandler> _handlers;
         readonly SemaphoreSlim _requestSemaphore = new SemaphoreSlim(128);
 
         public Listener(IHttpEnvironment environment, ISystemObserver observer,
-            IEnumerable<AbstractHttpRequestHandler> handlers)
+            IEnumerable<IHttpRequestHandler> handlers)
         {
             _environment = environment;
             _observer = observer;

@@ -10,7 +10,12 @@ using System.Text.RegularExpressions;
 
 namespace Lokad.Cqrs.Feature.Http.Handlers
 {
-    public abstract class AbstractHttpRequestHandler
+    public interface IHttpRequestHandler
+    {
+        bool WillHandle(IHttpContext context);
+        void Handle(IHttpContext context);
+    }
+    public abstract class AbstractHttpRequestHandler : IHttpRequestHandler
     {
         protected readonly Regex UrlMatcher;
 

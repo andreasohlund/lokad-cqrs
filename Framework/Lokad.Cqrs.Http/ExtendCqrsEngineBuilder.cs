@@ -7,8 +7,6 @@
 #endregion
 
 using System;
-using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Core;
@@ -20,7 +18,7 @@ namespace Lokad.Cqrs
     public static class ExtendCqrsEngineBuilderWithHttp
     {
         public static void HttpServer(this CqrsEngineBuilder builder, IHttpEnvironment environment,
-            params Func<Container, AbstractHttpRequestHandler>[] handlers)
+            params Func<Container, IHttpRequestHandler>[] handlers)
         {
             builder.Advanced.ConfigureContainer(c =>
                 {
