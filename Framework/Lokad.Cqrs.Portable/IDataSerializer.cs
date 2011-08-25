@@ -31,17 +31,25 @@ namespace Lokad.Cqrs
         object Deserialize(Stream sourceStream, Type type);
 
         /// <summary>
-        /// Gets the contract name by the type
+        /// Gets the contract name by the type. This name could be used for 
+        /// sending data across the wire or persisting it.
         /// </summary>
         /// <param name="messageType">Type of the message.</param>
-        /// <returns>contract name (if found)</returns>
+        /// <param name="contractName">Name of the contract (if found).</param>
+        /// <returns>
+        /// <em>True</em> if contract name is found; <em>false</em> otherwise.
+        /// </returns>
         bool TryGetContractNameByType(Type messageType, out string contractName);
 
         /// <summary>
-        /// Gets the type by contract name.
+        /// Gets the type by contract name. This type could be used for 
+        /// serialization/deserialization of the stream.
         /// </summary>
         /// <param name="contractName">Name of the contract.</param>
-        /// <returns>type that could be used for contract deserialization (if found)</returns>
+        /// <param name="contractType">Type of the contract (if found).</param>
+        /// <returns>
+        /// <em>True</em> if contract type is found; <em>false</em> otherwise.
+        /// </returns>
         bool TryGetContractTypeByName(string contractName, out Type contractType);
     }
 }
