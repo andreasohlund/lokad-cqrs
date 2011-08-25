@@ -17,7 +17,7 @@ namespace Lokad.Cqrs.Core.Serialization
     /// </summary>
     public abstract class AbstractDataSerializer : IDataSerializer
     {
-        public abstract void Serialize(object instance, Stream destinationStream);
+        public abstract void Serialize(object instance, Type type, Stream destinationStream);
         public abstract object Deserialize(Stream sourceStream, Type type);
 
         readonly IDictionary<string, Type> _contract2Type = new Dictionary<string, Type>();

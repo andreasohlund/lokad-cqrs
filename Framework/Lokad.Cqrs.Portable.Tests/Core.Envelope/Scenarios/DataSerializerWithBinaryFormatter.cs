@@ -8,7 +8,7 @@ namespace Lokad.Cqrs.Core.Envelope.Scenarios
     {
         static readonly BinaryFormatter Formatter = new BinaryFormatter();
 
-        public void Serialize(object instance, Stream destinationStream)
+        public void Serialize(object instance, Type type, Stream destinationStream)
         {
             Formatter.Serialize(destinationStream, instance);
         }

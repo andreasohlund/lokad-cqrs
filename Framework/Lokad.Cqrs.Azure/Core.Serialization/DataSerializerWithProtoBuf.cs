@@ -35,10 +35,10 @@ namespace Lokad.Cqrs.Core.Serialization
             }
         }
 
-        public override void Serialize(object instance, Stream destination)
+        public override void Serialize(object instance, Type type, Stream destination)
         {
             IFormatter formatter;
-            if (!_type2Formatter.TryGetValue(instance.GetType(), out formatter))
+            if (!_type2Formatter.TryGetValue(type, out formatter))
             {
                 var s =
                     string.Format(

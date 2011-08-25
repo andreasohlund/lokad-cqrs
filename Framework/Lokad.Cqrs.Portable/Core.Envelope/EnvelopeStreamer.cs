@@ -62,7 +62,7 @@ namespace Lokad.Cqrs.Core.Envelope
                     // we can suppress that or use a wrapper now instead
                     using (var itemStream = new MemoryStream())
                     {
-                        _dataSerializer.Serialize(item.Content, itemStream);
+                        _dataSerializer.Serialize(item.Content, item.MappedType, itemStream);
                         var bytes = itemStream.ToArray();
                         content.Write(bytes, 0, bytes.Length);
                     }

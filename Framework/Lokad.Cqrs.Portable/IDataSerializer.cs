@@ -1,7 +1,8 @@
-﻿#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
@@ -19,8 +20,9 @@ namespace Lokad.Cqrs
         /// Serializes the object to the specified stream
         /// </summary>
         /// <param name="instance">The instance.</param>
+        /// <param name="type">The type to use as a serialization reference.</param>
         /// <param name="destinationStream">The destination stream.</param>
-        void Serialize(object instance, Stream destinationStream);
+        void Serialize(object instance, Type type, Stream destinationStream);
 
         /// <summary>
         /// Deserializes the object from specified source stream.

@@ -19,7 +19,6 @@ namespace Lokad.Cqrs.Core.Serialization
     /// </summary>
     public class DataSerializerWithDataContracts : AbstractDataSerializer
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DataSerializerWithDataContracts"/> class.
         /// </summary>
@@ -44,14 +43,16 @@ namespace Lokad.Cqrs.Core.Serialization
             }
         }
 
+
         /// <summary>
-        /// Serializes the object to the specified stream
+        /// Serializes the specified instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
-        /// <param name="destination">The destination stream.</param>
-        public override void Serialize(object instance, Stream destination)
+        /// <param name="type">The type.</param>
+        /// <param name="destination">The destination.</param>
+        public override void Serialize(object instance, Type type, Stream destination)
         {
-            var serializer = new DataContractSerializer(instance.GetType(), KnownTypes);
+            var serializer = new DataContractSerializer(type, KnownTypes);
 
             //using (var compressed = destination.Compress(true))
             using (var writer = XmlDictionaryWriter.CreateBinaryWriter(destination, null, null, false))
