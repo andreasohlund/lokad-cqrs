@@ -69,11 +69,18 @@ namespace Lokad.Cqrs.Core.Serialization
                 }
                 catch (ArgumentException ex)
                 {
-                    var format = String.Format("Failed to add contract reference '{0}'", reference);
-                    throw new InvalidOperationException(format, ex);
+                    var msg = string.Format("Duplicate contract '{0}' being added to {1}", reference, GetType().Name);
+                    throw new InvalidOperationException(msg, ex);
                 }
-
-                _type2Contract.Add(type, reference);
+                try
+                {
+                    _type2Contract.Add(type, reference);
+                }
+                catch (ArgumentException e)
+                {
+                    var msg = string.Format("Duplicate type '{0}' being added to {1}", type, GetType().Name);
+                    throw new InvalidOperationException(msg, e);
+                }
             }
         }
 
