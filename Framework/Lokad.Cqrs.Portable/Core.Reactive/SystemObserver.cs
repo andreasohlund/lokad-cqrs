@@ -11,11 +11,16 @@ namespace Lokad.Cqrs.Core.Reactive
 {
     public sealed class SystemObserver : ISystemObserver, IDisposable
     {
-        readonly IObserver<ISystemEvent>[] _observers;
+        IObserver<ISystemEvent>[] _observers;
 
-        public SystemObserver(IObserver<ISystemEvent>[] observers)
+        public SystemObserver(params IObserver<ISystemEvent>[] observers)
         {
             _observers = observers;
+        }
+
+        internal void Swap(IObserver<ISystemEvent>[] swap)
+        {
+            _observers = swap;
         }
 
         public void Notify(ISystemEvent @event)

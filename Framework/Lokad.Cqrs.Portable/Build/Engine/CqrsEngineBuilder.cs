@@ -27,12 +27,18 @@ namespace Lokad.Cqrs.Build.Engine
     public class CqrsEngineBuilder : HideObjectMembersFromIntelliSense, IAdvancedEngineBuilder
     {
         IEnvelopeSerializer _envelopeSerializer = new EnvelopeSerializerWithDataContracts();
-        Func<Type[], IDataSerializer> _dataSerializer = types => new DataSerializerWithDataContracts(types);
+        Func<Type[], IDataSerializer> _dataSerializer;
         readonly StorageModule _storage = new StorageModule();
-
+        readonly SystemObserver _observer;
         public CqrsEngineBuilder()
         {
+
+            // init time observer
+            _observer = new SystemObserver(new ImmediateTracingObserver());
+            _setup = new EngineSetup(_observer);
+
             _activators.Add(context => new MemoryQueueWriterFactory(context.Resolve<MemoryAccount>()));
+            _dataSerializer = types => new DataSerializerWithDataContracts(types);
         }
 
         /// <summary>
@@ -56,9 +62,6 @@ namespace Lokad.Cqrs.Build.Engine
         }
 
 
-        
-        
-
         /// <summary>
         /// Heavy-weight configuration that discovers and wires in both message contracts 
         /// and messages handlers in an enterprise service bus style. Use <em>Messages</em>
@@ -66,7 +69,8 @@ namespace Lokad.Cqrs.Build.Engine
         /// </summary>
         /// <param name="factory">The factory that will add in a your favorite container.</param>
         /// <param name="config">The configuration for dispatch directory module.</param>
-        public void MessagesWithHandlers(BuildsContainerForMessageHandlerClasses factory, Action<MessagesWithHandlersConfigurationSyntax> config)
+        public void MessagesWithHandlers(BuildsContainerForMessageHandlerClasses factory,
+            Action<MessagesWithHandlersConfigurationSyntax> config)
         {
             var module = new MessagesWithHandlersConfigurationSyntax(factory);
             config(module);
@@ -85,13 +89,6 @@ namespace Lokad.Cqrs.Build.Engine
         void IAdvancedEngineBuilder.CustomDataSerializer(Func<Type[], IDataSerializer> serializer)
         {
             _dataSerializer = serializer;
-        }
-
-        bool _discoverMessagesIfNotAvailable = true;
-
-        public void DisableAutoMessageDiscovery()
-        {
-            _discoverMessagesIfNotAvailable = false;
         }
 
         public EngineSetup Setup
@@ -157,7 +154,7 @@ namespace Lokad.Cqrs.Build.Engine
             configure(_storage);
         }
 
-        readonly EngineSetup _setup = new EngineSetup();
+        readonly EngineSetup _setup;
 
 
         /// <summary>
@@ -172,12 +169,13 @@ namespace Lokad.Cqrs.Build.Engine
 
             container.Register(_setup);
             container.Register(new MemoryAccount());
-            var system = new SystemObserver(_observers.ToArray());
-            container.Register<ISystemObserver>(system);
+
+            _setup.Observer.Swap(_observers.ToArray());
+            container.Register<ISystemObserver>(_observer);
             Configure(container);
             _moduleEnlistments(container);
 
-            var host = new CqrsEngineHost(container, system, _setup.GetProcesses());
+            var host = new CqrsEngineHost(container, _setup.Observer, _setup.GetProcesses());
             host.Initialize();
             return host;
         }
@@ -189,13 +187,15 @@ namespace Lokad.Cqrs.Build.Engine
             // domain should go before serialization
             _storage.Configure(reg);
 
-            if (_serializationTypes.Count == 0 && _discoverMessagesIfNotAvailable)
+            if (_serializationTypes.Count == 0)
             {
                 // default scan if nothing specified
                 Messages(m => { });
             }
-
-
+            if (_serializationTypes.Count == 0)
+            {
+                _observer.Notify(new ConfigurationWarningEncountered("No message contracts provided."));
+            }
             var dataSerializer = _dataSerializer(_serializationTypes.ToArray());
             var streamer = new EnvelopeStreamer(_envelopeSerializer, dataSerializer);
 

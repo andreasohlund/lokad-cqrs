@@ -30,10 +30,6 @@ namespace Lokad.Cqrs.Core.Serialization
         /// <param name="knownTypes">The known types.</param>
         public DataSerializerWithDataContracts(ICollection<Type> knownTypes)
         {
-            if (knownTypes.Count == 0)
-                throw new InvalidOperationException(
-                    "DataContractMessageSerializer requires some known types to serialize. Have you forgot to supply them?");
-
             _knownTypes = knownTypes;
 
             ThrowOnMessagesWithoutDataContracts(_knownTypes);

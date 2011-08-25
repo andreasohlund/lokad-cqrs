@@ -23,7 +23,5 @@ namespace Lokad.Cqrs.Build.Engine
         EngineSetup Setup { get; }
         void CustomEnvelopeSerializer(IEnvelopeSerializer serializer);
         void CustomDataSerializer(Func<Type[], IDataSerializer> serializer);
-
-        void DisableAutoMessageDiscovery();
     }
 }

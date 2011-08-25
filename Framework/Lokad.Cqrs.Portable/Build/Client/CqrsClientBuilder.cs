@@ -27,15 +27,24 @@ namespace Lokad.Cqrs.Build.Client
 
         readonly QueueWriterRegistry _registry = new QueueWriterRegistry();
 
+        public CqrsClientBuilder()
+        {
+            // init time observer
+            Observer = new SystemObserver(new ImmediateTracingObserver());
+            // runtime observers
+            _runtimeObservers = new List<IObserver<ISystemEvent>>
+                {
+                    new ImmediateTracingObserver()
+                };
+            _dataSerializer = types => new DataSerializerWithDataContracts(types);
+        }
 
-        readonly List<IObserver<ISystemEvent>> _observers = new List<IObserver<ISystemEvent>>()
-            {
-                new ImmediateTracingObserver()
-            };
+
+        readonly List<IObserver<ISystemEvent>> _runtimeObservers;
 
         IList<IObserver<ISystemEvent>> IAdvancedClientBuilder.Observers
         {
-            get { return _observers; }
+            get { return _runtimeObservers; }
         }
 
         void IAdvancedClientBuilder.RegisterModule(IFunqlet module)
@@ -45,12 +54,12 @@ namespace Lokad.Cqrs.Build.Client
 
         void IAdvancedClientBuilder.RegisterObserver(IObserver<ISystemEvent> observer)
         {
-            _observers.Add(observer);
+            _runtimeObservers.Add(observer);
         }
 
 
         IEnvelopeSerializer _envelopeSerializer = new EnvelopeSerializerWithDataContracts();
-        Func<Type[], IDataSerializer> _dataSerializer = types => new DataSerializerWithDataContracts(types);
+        Func<Type[], IDataSerializer> _dataSerializer;
 
 
         void IAdvancedClientBuilder.DataSerializer(Func<Type[], IDataSerializer> serializer)
@@ -100,15 +109,22 @@ namespace Lokad.Cqrs.Build.Client
             
         }
 
-        
+        public readonly SystemObserver Observer;
 
         void Configure(Container reg)
         {
-            var system = new SystemObserver(_observers.ToArray());
-            reg.Register<ISystemObserver>(system);
+            Observer.Swap(_runtimeObservers.ToArray());
+            reg.Register<ISystemObserver>(Observer);
+
             // domain should go before serialization
             _storageModule.Configure(reg);
             var types = _domain.LookupMessages().ToArray();
+
+            if (types.Length == 0)
+            {
+                Observer.Notify(new ConfigurationWarningEncountered("No message contracts provided."));
+            }
+
             var serializer = _dataSerializer(types);
             var streamer = new EnvelopeStreamer(_envelopeSerializer, serializer);
 
