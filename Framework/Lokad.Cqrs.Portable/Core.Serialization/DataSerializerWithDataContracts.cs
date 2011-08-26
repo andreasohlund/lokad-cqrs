@@ -43,28 +43,23 @@ namespace Lokad.Cqrs.Core.Serialization
             }
         }
 
-        protected override SerializerDelegate CreateSerializer(Type type)
+        protected override Formatter PrepareFormatter(Type type)
         {
+            var name = ContractEvil.GetContractReference(type);
             var serializer = new DataContractSerializer(type, KnownTypes);
-            return (instance, stream) =>
-                {
-                    using (var writer = XmlDictionaryWriter.CreateBinaryWriter(stream, null, null, false))
-                    {
-                        serializer.WriteObject(writer, instance);
-                    }
-                };
-        }
-
-        protected override DeserializerDelegate CreateDeserializer(Type type)
-        {
-            var serializer = new DataContractSerializer(type, KnownTypes);
-            return (stream) =>
+            return new Formatter(name, stream =>
                 {
                     using (var reader = XmlDictionaryReader.CreateBinaryReader(stream, XmlDictionaryReaderQuotas.Max))
                     {
                         return serializer.ReadObject(reader);
                     }
-                };
+                }, (o, stream) =>
+                    {
+                        using (var writer = XmlDictionaryWriter.CreateBinaryWriter(stream, null, null, false))
+                        {
+                            serializer.WriteObject(writer, o);
+                        }
+                    });
         }
     }
 }

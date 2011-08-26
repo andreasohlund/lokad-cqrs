@@ -17,15 +17,12 @@ namespace Snippets.HttpEndpoint
     {
         public MyJsonSerializer(ICollection<Type> knownTypes) : base(knownTypes) {}
 
-
-        protected override SerializerDelegate CreateSerializer(Type type)
+        protected override Formatter PrepareFormatter(Type type)
         {
-            return (instance, stream) => JsonSerializer.SerializeToStream(instance, type, stream);
-        }
-
-        protected override DeserializerDelegate CreateDeserializer(Type type)
-        {
-            return stream => JsonSerializer.DeserializeFromStream(type, stream);
+            var name = ContractEvil.GetContractReference(type);
+            return new Formatter(name, 
+                stream => JsonSerializer.DeserializeFromStream(type,stream),
+                (o, stream) => JsonSerializer.SerializeToStream(o, type, stream));
         }
     }
 }

@@ -14,68 +14,78 @@ namespace Lokad.Cqrs.Core.Serialization
 {
     public abstract class AbstractDataSerializer : IDataSerializer
     {
-        public delegate void SerializerDelegate(object instance, Stream stream);
-        public delegate object DeserializerDelegate(Stream stream);
-
         protected ICollection<Type> KnownTypes { get; private set; }
-
-        protected abstract SerializerDelegate CreateSerializer(Type type);
-        protected abstract DeserializerDelegate CreateDeserializer(Type type);
-
-        readonly IDictionary<Type, SerializerDelegate> _type2Serializer = new Dictionary<Type, SerializerDelegate>();
-
-        readonly IDictionary<Type, DeserializerDelegate> _type2Deserializer =
-            new Dictionary<Type, DeserializerDelegate>();
-
+        readonly IDictionary<Type, Formatter> _type2Contract = new Dictionary<Type, Formatter>();
         readonly IDictionary<string, Type> _contract2Type = new Dictionary<string, Type>();
-        readonly IDictionary<Type, string> _type2Contract = new Dictionary<Type, string>();
+
+        protected abstract Formatter PrepareFormatter(Type type);
+
+        protected sealed class Formatter
+        {
+            public readonly string ContractName;
+            public readonly Func<Stream, object> DeserializerDelegate;
+            public readonly Action<object, Stream> SerializeDelegate;
+
+            public Formatter(string contractName, Func<Stream, object> deserializerDelegate, Action<object, Stream> serializeDelegate)
+            {
+                ContractName = contractName;
+                DeserializerDelegate = deserializerDelegate;
+                SerializeDelegate = serializeDelegate;
+            }
+        }
 
         protected AbstractDataSerializer(ICollection<Type> knownTypes)
         {
             KnownTypes = knownTypes;
-            InitDelegate();
+            Build();
         }
 
-        void InitDelegate()
+        void Build()
         {
             foreach (var type in KnownTypes)
             {
-                var reference = GetContractReference(type);
+                var formatter = PrepareFormatter(type);
                 try
                 {
-                    _contract2Type.Add(reference, type);
+                    _contract2Type.Add(formatter.ContractName, type);
                 }
                 catch (ArgumentException ex)
                 {
-                    var msg = string.Format("Duplicate contract '{0}' being added to {1}", reference, GetType().Name);
+                    var msg = string.Format("Duplicate contract '{0}' being added to {1}", formatter.ContractName, GetType().Name);
                     throw new InvalidOperationException(msg, ex);
                 }
                 try
                 {
-                    _type2Contract.Add(type, reference);
+                    _type2Contract.Add(type, formatter);
                 }
                 catch (ArgumentException e)
                 {
                     var msg = string.Format("Duplicate type '{0}' being added to {1}", type, GetType().Name);
                     throw new InvalidOperationException(msg, e);
                 }
-                _type2Deserializer[type] = CreateDeserializer(type);
-                _type2Serializer[type] = CreateSerializer(type);
             }
         }
 
+        /// <summary>
+        /// Deserializes the object from specified source stream.
+        /// </summary>
+        /// <param name="sourceStream">The source stream.</param>
+        /// <param name="type">The type of the object to deserialize.</param>
+        /// <returns>
+        /// deserialized object
+        /// </returns>
         public object Deserialize(Stream sourceStream, Type type)
         {
-            DeserializerDelegate value;
-            if (!_type2Deserializer.TryGetValue(type, out value))
+            Formatter value;
+            if (!_type2Contract.TryGetValue(type, out value))
             {
                 var s =
                     string.Format(
-                        "Can't find serializer for unknown object type '{0}'. Have you passed all known types to the constructor?",
+                        "Can't find formatter for unknown object type '{0}'. Have you passed all known types to the constructor?",
                         type);
                 throw new InvalidOperationException(s);
             }
-            return value(sourceStream);
+            return value.DeserializerDelegate(sourceStream);
         }
 
         /// <summary>
@@ -86,8 +96,8 @@ namespace Lokad.Cqrs.Core.Serialization
         /// <param name="destinationStream">The destination stream.</param>
         public void Serialize(object instance, Type type, Stream destinationStream)
         {
-            SerializerDelegate formatter;
-            if (!_type2Serializer.TryGetValue(type, out formatter))
+            Formatter formatter;
+            if (!_type2Contract.TryGetValue(type, out formatter))
             {
                 var s =
                     string.Format(
@@ -95,7 +105,7 @@ namespace Lokad.Cqrs.Core.Serialization
                         instance.GetType());
                 throw new InvalidOperationException(s);
             }
-            formatter(instance, destinationStream);
+            formatter.SerializeDelegate(instance, destinationStream);
         }
 
         /// <summary>
@@ -109,7 +119,14 @@ namespace Lokad.Cqrs.Core.Serialization
         /// </returns>
         public bool TryGetContractNameByType(Type messageType, out string contractName)
         {
-            return _type2Contract.TryGetValue(messageType, out contractName);
+            Formatter formatter;
+            if (_type2Contract.TryGetValue(messageType, out formatter))
+            {
+                contractName = formatter.ContractName;
+                return true;
+            }
+            contractName = null;
+            return false;
         }
 
         /// <summary>
@@ -124,12 +141,6 @@ namespace Lokad.Cqrs.Core.Serialization
         public bool TryGetContractTypeByName(string contractName, out Type contractType)
         {
             return _contract2Type.TryGetValue(contractName, out contractType);
-        }
-
-
-        protected virtual string GetContractReference(Type type)
-        {
-            return ContractEvil.GetContractReference(type);
         }
     }
 }

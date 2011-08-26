@@ -21,16 +21,11 @@ namespace Lokad.Cqrs.Core.Serialization
                     "ProtoBuf requires some known types to serialize. Have you forgot to supply them?");
         }
 
-        protected override SerializerDelegate CreateSerializer(Type type)
+        protected override Formatter PrepareFormatter(Type type)
         {
+            var name = ContractEvil.GetContractReference(type);
             var formatter = RuntimeTypeModel.Default.CreateFormatter(type);
-            return (instance, stream) => formatter.Serialize(stream, instance);
-        }
-
-        protected override DeserializerDelegate CreateDeserializer(Type type)
-        {
-            var formatter = RuntimeTypeModel.Default.CreateFormatter(type);
-            return stream => formatter.Deserialize(stream);
+            return new Formatter(name, formatter.Deserialize, (o, stream) => formatter.Serialize(stream,o));
         }
     }
 }
