@@ -47,8 +47,10 @@ namespace Lokad.Cqrs
 
 
                 client.Sender.SendOne(new Message());
-                source.Token.WaitHandle.WaitOne(5000);
-                source.Cancel();
+                if (!task.Wait(5000))
+                {
+                    source.Cancel();
+                }
             }
         }
     }
