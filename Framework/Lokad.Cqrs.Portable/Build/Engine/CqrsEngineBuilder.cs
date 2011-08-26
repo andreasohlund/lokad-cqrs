@@ -74,7 +74,8 @@ namespace Lokad.Cqrs.Build.Engine
         {
             var module = new MessagesWithHandlersConfigurationSyntax(factory);
             config(module);
-            Advanced.ConfigureContainer(c => module.Configure(c, t => _serializationTypes.AddRange(t)));
+            _serializationTypes.AddRange(module.LookupMessages());
+            Advanced.ConfigureContainer(module.Configure);
         }
 
         readonly IList<Func<Container, IQueueWriterFactory>> _activators =
@@ -172,20 +173,9 @@ namespace Lokad.Cqrs.Build.Engine
 
             _setup.Observer.Swap(_observers.ToArray());
             container.Register<ISystemObserver>(_observer);
-            Configure(container);
-            _moduleEnlistments(container);
 
-            var host = new CqrsEngineHost(container, _setup.Observer, _setup.GetProcesses());
-            host.Initialize();
-            return host;
-        }
-
-        readonly List<Type> _serializationTypes = new List<Type>();
-
-        void Configure(Container reg)
-        {
             // domain should go before serialization
-            _storage.Configure(reg);
+            _storage.Configure(container);
 
             if (_serializationTypes.Count == 0)
             {
@@ -199,11 +189,18 @@ namespace Lokad.Cqrs.Build.Engine
             var dataSerializer = _dataSerializer(_serializationTypes.ToArray());
             var streamer = new EnvelopeStreamer(_envelopeSerializer, dataSerializer);
 
-            reg.Register(BuildRegistry);
-            reg.Register(dataSerializer);
-            reg.Register<IEnvelopeStreamer>(c => streamer);
-            reg.Register(new MessageDuplicationManager());
+            container.Register(BuildRegistry);
+            container.Register(dataSerializer);
+            container.Register<IEnvelopeStreamer>(c => streamer);
+            container.Register(new MessageDuplicationManager());
+            _moduleEnlistments(container);
+
+            var host = new CqrsEngineHost(container, _setup.Observer, _setup.GetProcesses());
+            host.Initialize();
+            return host;
         }
+
+        readonly List<Type> _serializationTypes = new List<Type>();
 
         QueueWriterRegistry BuildRegistry(Container c)
         {

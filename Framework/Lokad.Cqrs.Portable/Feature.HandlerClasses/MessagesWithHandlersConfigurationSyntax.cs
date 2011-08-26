@@ -13,6 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Transactions;
 using Lokad.Cqrs.Core;
+using Lokad.Cqrs.Evil;
 
 // ReSharper disable UnusedMember.Global
 
@@ -95,21 +96,21 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
             _scanner.WhereMessages(t => typeof(T).IsAssignableFrom(t));
         }
 
-        public void Configure(Container container, Action<IEnumerable<Type>> serializationVisitor)
+        public IEnumerable<Type> LookupMessages()
         {
             _scanner.Constrain(_hint);
             var mappings = _scanner.Build(_hint.ConsumerTypeDefinition);
 
-
-            var messageTypes = mappings
+            return mappings
                 .Select(m => m.Message)
                 .Where(m => !m.IsAbstract)
                 .Distinct();
+        }
 
-            serializationVisitor(messageTypes);
-
-            //types.AddRange(messageTypes);
-
+        public void Configure(Container container)
+        {
+            _scanner.Constrain(_hint);
+            var mappings = _scanner.Build(_hint.ConsumerTypeDefinition);
             var builder = new MessageDirectoryBuilder(mappings);
 
             _contextManager.RegisterContextProvider(container);
