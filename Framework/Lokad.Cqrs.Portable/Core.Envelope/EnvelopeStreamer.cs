@@ -55,7 +55,7 @@ namespace Lokad.Cqrs.Core.Envelope
                     string name;
                     if (!_dataSerializer.TryGetContractNameByType(item.MappedType, out name))
                     {
-                        var error = string.Format("Failed to find contract name for {0}", item.MappedType);
+                        var error = string.Format("Failed to find contract name to serialize '{0}'.", item.MappedType);
                         throw new InvalidOperationException(error);
                     }
                     // normal serializers have a nasty habbit of closing the stream after they are done
@@ -131,9 +131,8 @@ namespace Lokad.Cqrs.Core.Envelope
         {
             var header = EnvelopeHeaderContract.ReadHeader(buffer);
 
-
             if (header.MessageFormatVersion != EnvelopeHeaderContract.Schema2DataFormat)
-                throw new InvalidOperationException("Unexpected message format");
+                throw new InvalidOperationException("Unexpected bytes in enveloper header");
 
 
             EnvelopeContract envelope;
@@ -154,10 +153,10 @@ namespace Lokad.Cqrs.Core.Envelope
                 var itemSize = (int)itemContract.ContentSize;
                 if (_dataSerializer.TryGetContractTypeByName(itemContract.ContractName, out contractType))
                 {
+                    // we can deserialize. Convert it to a message
                     using (var stream = new MemoryStream(buffer, itemPosition, itemSize))
                     {
                         var instance = _dataSerializer.Deserialize(stream, contractType);
-
                         items[i] = new ImmutableMessage(contractType, instance, attributes, i);
                     }
                 }
