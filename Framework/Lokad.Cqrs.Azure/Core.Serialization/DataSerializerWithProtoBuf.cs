@@ -16,9 +16,6 @@ namespace Lokad.Cqrs.Core.Serialization
     {
         public DataSerializerWithProtoBuf(ICollection<Type> knownTypes) : base(knownTypes)
         {
-            if (knownTypes.Count == 0)
-                throw new InvalidOperationException(
-                    "ProtoBuf requires some known types to serialize. Have you forgot to supply them?");
         }
 
         protected override Formatter PrepareFormatter(Type type)
