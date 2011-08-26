@@ -11,7 +11,7 @@ namespace Snippets.HttpEndpoint
     public sealed class MyAnonymousCommandSender : AbstractHttpRequestHandler
     {
         readonly IQueueWriter _writer;
-        IDataSerializer _serializer;
+        readonly IDataSerializer _serializer;
         public MyAnonymousCommandSender(IQueueWriter writer, IDataSerializer serializer)
         {
             _writer = writer;

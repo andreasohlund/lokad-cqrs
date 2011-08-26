@@ -94,8 +94,9 @@ namespace Lokad.Cqrs.Feature.Http
             catch (Exception e)
             {
                 HandleException(context, e);
-
-                //logger.Warn("Error on request", e);
+                
+                context.SetStatusTo(HttpStatusCode.InternalServerError);
+                
             }
             finally
             {
