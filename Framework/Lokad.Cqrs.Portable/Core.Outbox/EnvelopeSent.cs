@@ -9,6 +9,9 @@ using System.Collections.Generic;
 
 namespace Lokad.Cqrs.Core.Outbox
 {
+    /// <summary>
+    /// Is published whenever an event is sent.
+    /// </summary>
     public sealed class EnvelopeSent : ISystemEvent
     {
         public readonly string QueueName;
