@@ -2,6 +2,7 @@
 
 namespace Lokad.Cqrs.Core.Dispatch.Events
 {
+    [Serializable]
     public sealed class EnvelopeQuarantined : ISystemEvent
     {
         public Exception LastException { get; private set; }

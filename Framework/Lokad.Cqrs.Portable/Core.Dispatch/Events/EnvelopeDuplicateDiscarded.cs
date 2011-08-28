@@ -1,5 +1,8 @@
-﻿namespace Lokad.Cqrs.Core.Dispatch.Events
+﻿using System;
+
+namespace Lokad.Cqrs.Core.Dispatch.Events
 {
+    [Serializable]
     public sealed class EnvelopeDuplicateDiscarded : ISystemEvent
     {
         public string QueueName { get; private set; }

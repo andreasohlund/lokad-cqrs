@@ -9,6 +9,7 @@ using System;
 
 namespace Lokad.Cqrs.Feature.AtomicStorage
 {
+    [Serializable]
     public sealed class AtomicStorageInitialized : ISystemEvent
     {
         public readonly string[] CreatedFolders;

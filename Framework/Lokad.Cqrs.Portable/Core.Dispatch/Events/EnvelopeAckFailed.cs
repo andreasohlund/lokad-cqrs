@@ -9,6 +9,7 @@ using System;
 
 namespace Lokad.Cqrs.Core.Dispatch.Events
 {
+    [Serializable]
     public sealed class EnvelopeAckFailed : ISystemEvent
     {
         public Exception Exception { get; private set; }

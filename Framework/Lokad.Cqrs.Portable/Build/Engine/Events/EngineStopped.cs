@@ -9,6 +9,7 @@ using System;
 
 namespace Lokad.Cqrs.Build.Engine.Events
 {
+    [Serializable]
     public sealed class EngineStopped : ISystemEvent
     {
 

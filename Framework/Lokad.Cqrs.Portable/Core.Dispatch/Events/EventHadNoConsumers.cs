@@ -2,6 +2,7 @@
 
 namespace Lokad.Cqrs.Core.Dispatch.Events
 {
+    [Serializable]
     public sealed class EventHadNoConsumers : ISystemEvent
     {
         public string EnvelopeId { get; private set; }

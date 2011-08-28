@@ -9,6 +9,7 @@ using System;
 
 namespace Lokad.Cqrs.Core.Inbox.Events
 {
+    [Serializable]
     public sealed class FailedToAccessStorage : ISystemEvent
     {
         public Exception Exception { get; private set; }

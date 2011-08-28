@@ -5,8 +5,11 @@
 
 #endregion
 
+using System;
+
 namespace Lokad.Cqrs.Build.Engine.Events
 {
+    [Serializable]
     public sealed class EngineInitialized : ISystemEvent
     {
         public override string ToString()

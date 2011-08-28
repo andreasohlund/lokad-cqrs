@@ -9,6 +9,7 @@ using System;
 
 namespace Lokad.Cqrs.Feature.Http.Events
 {
+    [Serializable]
     public sealed class FailedToStartHttpListener : ISystemEvent
     {
         public readonly Exception Exception;

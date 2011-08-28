@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Lokad.Cqrs.Core.Dispatch.Events
 {
+    [Serializable]
     public sealed class EnvelopeAcked : ISystemEvent
     {
         public string QueueName { get; private set; }

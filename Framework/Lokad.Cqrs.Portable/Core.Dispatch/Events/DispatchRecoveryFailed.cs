@@ -2,6 +2,7 @@
 
 namespace Lokad.Cqrs.Core.Dispatch.Events
 {
+    [Serializable]
     public sealed class DispatchRecoveryFailed : ISystemEvent
     {
         public Exception DispatchException { get; private set; }

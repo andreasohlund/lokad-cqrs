@@ -2,6 +2,7 @@ using System;
 
 namespace Lokad.Cqrs
 {
+    [Serializable]
     public sealed class ConfigurationWarningEncountered : ISystemEvent
     {
         public readonly string Message;
