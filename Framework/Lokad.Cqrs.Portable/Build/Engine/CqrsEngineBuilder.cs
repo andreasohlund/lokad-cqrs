@@ -30,14 +30,22 @@ namespace Lokad.Cqrs.Build.Engine
         Func<Type[], IDataSerializer> _dataSerializer;
         readonly StorageModule _storage = new StorageModule();
         readonly SystemObserver _observer;
+        readonly Container _messyWires = new Container();
+
         public CqrsEngineBuilder()
         {
-
             // init time observer
             _observer = new SystemObserver(new ImmediateTracingObserver());
             _setup = new EngineSetup(_observer);
 
-            _activators.Add(context => new MemoryQueueWriterFactory(context.Resolve<MemoryAccount>()));
+            // snap in-memory stuff
+            
+            var memoryAccount = new MemoryAccount();
+            _setup.Registry.Add(new MemoryQueueWriterFactory(memoryAccount));
+            _messyWires.Register(memoryAccount);
+
+
+
             _dataSerializer = types => new DataSerializerWithDataContracts(types);
         }
 
@@ -164,18 +172,15 @@ namespace Lokad.Cqrs.Build.Engine
         /// <returns>new instance of cloud engine host</returns>
         public CqrsEngineHost Build()
         {
-            // nonconditional registrations
-            // System presets
-            var container = new Container();
+            _messyWires.Register(_setup);
 
-            container.Register(_setup);
-            container.Register(new MemoryAccount());
-
+            // swap post-init observers into the place
             _setup.Observer.Swap(_observers.ToArray());
-            container.Register<ISystemObserver>(_observer);
+            _messyWires.Register<ISystemObserver>(_observer);
+
 
             // domain should go before serialization
-            _storage.Configure(container);
+            _storage.Configure(_messyWires);
 
             if (_serializationTypes.Count == 0)
             {
@@ -189,13 +194,13 @@ namespace Lokad.Cqrs.Build.Engine
             var dataSerializer = _dataSerializer(_serializationTypes.ToArray());
             var streamer = new EnvelopeStreamer(_envelopeSerializer, dataSerializer);
 
-            container.Register(BuildRegistry);
-            container.Register(dataSerializer);
-            container.Register<IEnvelopeStreamer>(c => streamer);
-            container.Register(new MessageDuplicationManager());
-            _moduleEnlistments(container);
+            _messyWires.Register(BuildRegistry);
+            _messyWires.Register(dataSerializer);
+            _messyWires.Register<IEnvelopeStreamer>(streamer);
+            _messyWires.Register(new MessageDuplicationManager());
+            _moduleEnlistments(_messyWires);
 
-            var host = new CqrsEngineHost(container, _setup.Observer, _setup.GetProcesses());
+            var host = new CqrsEngineHost(_messyWires, _setup.Observer, _setup.GetProcesses());
             host.Initialize();
             return host;
         }
@@ -204,14 +209,12 @@ namespace Lokad.Cqrs.Build.Engine
 
         QueueWriterRegistry BuildRegistry(Container c)
         {
-            var r = new QueueWriterRegistry();
-
             foreach (var activator in _activators)
             {
                 var factory = activator(c);
-                r.Add(factory);
+                Setup.Registry.Add(factory);
             }
-            return r;
+            return Setup.Registry;
         }
 
         public IAdvancedEngineBuilder Advanced
