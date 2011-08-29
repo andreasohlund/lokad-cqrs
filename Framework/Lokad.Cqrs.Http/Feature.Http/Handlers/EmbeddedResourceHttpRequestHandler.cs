@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -37,10 +38,25 @@ namespace Lokad.Cqrs.Feature.Http.Handlers
 
         public void Handle(IHttpContext context)
         {
-            var resource = _set[context.GetRequestUrl()];
+            var requestUrl = context.GetRequestUrl();
+            var resource = _set[requestUrl];
             using (var r = _resourceAssembly.GetManifestResourceStream(resource))
             {
+                
                 r.CopyTo(context.Response.OutputStream);
+            }
+            GuessContentType(resource).IfValue(s => context.Response.ContentType = s);
+        }
+
+        static Optional<string> GuessContentType(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return Optional<string>.Empty;
+            var path = Path.GetExtension(fileName).ToLowerInvariant();
+            switch (path)
+            {
+                default:
+                    return Optional<string>.Empty;
             }
         }
 
