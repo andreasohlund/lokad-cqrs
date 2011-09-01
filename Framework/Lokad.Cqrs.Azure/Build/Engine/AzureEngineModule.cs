@@ -24,7 +24,7 @@ namespace Lokad.Cqrs.Build.Engine
     /// </summary>
     public sealed class AzureEngineModule : HideObjectMembersFromIntelliSense, IFunqlet
     {
-        static readonly Regex QueueName = new Regex("^[A-Za-z][A-Za-z0-9]{2,62}", RegexOptions.Compiled);
+        public static readonly Regex QueueName = new Regex("^[A-Za-z][A-Za-z0-9\\-]{2,62}", RegexOptions.Compiled);
 
         Action<Container> _funqlets = registry => { };
 
