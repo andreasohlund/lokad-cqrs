@@ -38,6 +38,8 @@ a:visited {
   color: #f34f36;
 }
 
+a img {border: none;}
+
 table {
   font-size: inherit;
   font: 100%;
