@@ -28,7 +28,7 @@ namespace Lokad.Cqrs.Build.Engine
     {
         IEnvelopeSerializer _envelopeSerializer = new EnvelopeSerializerWithDataContracts();
         Func<Type[], IDataSerializer> _dataSerializer;
-        readonly StorageModule _storage = new StorageModule();
+        readonly StorageModule _storage;
         readonly SystemObserver _observer;
         readonly Container _messyWires = new Container();
 
@@ -47,6 +47,7 @@ namespace Lokad.Cqrs.Build.Engine
 
 
             _dataSerializer = types => new DataSerializerWithDataContracts(types);
+            _storage = new StorageModule(_observer);
         }
 
         /// <summary>

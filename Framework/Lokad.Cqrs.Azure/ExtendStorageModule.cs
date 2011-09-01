@@ -21,7 +21,8 @@ namespace Lokad.Cqrs
 
         public static void AtomicIsInAzure(this StorageModule self, IAzureStorageConfig storage, IAtomicStorageStrategy strategy)
         {
-            self.AtomicIs(new AzureAtomicStorageFactory(strategy, storage));
+            
+            self.AtomicIs(new AzureAtomicStorageFactory(strategy, storage, self.Observer));
         }
 
         public static void StreamingIsInAzure(this StorageModule self, IAzureStorageConfig storage)

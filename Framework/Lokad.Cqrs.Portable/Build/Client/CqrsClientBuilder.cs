@@ -21,7 +21,7 @@ namespace Lokad.Cqrs.Build.Client
     public class CqrsClientBuilder : HideObjectMembersFromIntelliSense, IAdvancedClientBuilder
     {
         readonly MessagesConfigurationSyntax _domain = new MessagesConfigurationSyntax();
-        readonly StorageModule _storageModule = new StorageModule();
+        readonly StorageModule _storageModule;
 
         Action<Container> _enlistments = container => { };
 
@@ -37,6 +37,7 @@ namespace Lokad.Cqrs.Build.Client
                     new ImmediateTracingObserver()
                 };
             _dataSerializer = types => new DataSerializerWithDataContracts(types);
+            _storageModule = new StorageModule(Observer);
         }
 
 

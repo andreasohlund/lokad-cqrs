@@ -1,5 +1,6 @@
 ﻿using System;
 using Lokad.Cqrs.Build;
+using Lokad.Cqrs.Core.Reactive;
 using Lokad.Cqrs.Feature.AtomicStorage;
 using Lokad.Cqrs.Feature.StreamingStorage;
 using Lokad.Cqrs.Feature.TapeStorage;
@@ -43,7 +44,7 @@ namespace Lokad.Cqrs
         /// <returns></returns>
         public static NuclearStorage CreateNuclear(IAzureStorageConfig storageConfig, IAtomicStorageStrategy strategy)
         {
-            var factory = new AzureAtomicStorageFactory(strategy, storageConfig);
+            var factory = new AzureAtomicStorageFactory(strategy, storageConfig, new ImmediateTracingObserver());
             factory.Initialize();
             return new NuclearStorage(factory);
         }

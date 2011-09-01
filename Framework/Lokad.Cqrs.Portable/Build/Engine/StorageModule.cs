@@ -1,4 +1,12 @@
-﻿using System;
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
+
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
+// This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
+
+#endregion
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -13,10 +21,10 @@ namespace Lokad.Cqrs.Build.Engine
     {
         IAtomicStorageFactory _atomicStorageFactory;
         IStreamingRoot _streamingRoot;
-
+        public readonly ISystemObserver Observer;
         ITapeStorageFactory _tapeStorage;
 
-        
+
         public void AtomicIs(IAtomicStorageFactory factory)
         {
             _atomicStorageFactory = factory;
@@ -42,6 +50,7 @@ namespace Lokad.Cqrs.Build.Engine
             configure(builder);
             AtomicIs(new FileAtomicStorageFactory(folder, builder.Build()));
         }
+
         public void TapeIs(ITapeStorageFactory storage)
         {
             _tapeStorage = storage;
@@ -67,6 +76,11 @@ namespace Lokad.Cqrs.Build.Engine
 
 
         Action<Container> _modules = container => { };
+
+        public StorageModule(ISystemObserver observer)
+        {
+            Observer = observer;
+        }
 
 
         public void StreamingIsInFiles(string filePath)
@@ -105,9 +119,10 @@ namespace Lokad.Cqrs.Build.Engine
             container.Register(_atomicStorageFactory);
 
             var setup = container.TryResolve<EngineSetup>();
-            if (null!=setup)
+            if (null != setup)
             {
-                var process = new AtomicStorageInitialization(new[] { _atomicStorageFactory }, container.Resolve<ISystemObserver>());
+                var process = new AtomicStorageInitialization(new[] {_atomicStorageFactory},
+                    container.Resolve<ISystemObserver>());
                 setup.AddProcess(process);
             }
 
@@ -115,9 +130,7 @@ namespace Lokad.Cqrs.Build.Engine
             container.Register(_streamingRoot);
 
             container.Register(_tapeStorage);
-            container.Register< IEngineProcess>(new TapeStorageInitilization(new[] { _tapeStorage }));
-
-            
+            container.Register<IEngineProcess>(new TapeStorageInitilization(new[] {_tapeStorage}));
         }
     }
 }
