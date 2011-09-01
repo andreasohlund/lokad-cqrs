@@ -15,20 +15,19 @@ namespace Snippets.HttpEndpoint
 {
     class MouseStatsRequestHandler: AbstractHttpRequestHandler
     {
-        private readonly GameStats _gameStats;
-        public MouseStatsRequestHandler(GameStats stats)
+        private readonly MouseStats _mouseStats;
+        public MouseStatsRequestHandler(MouseStats stats)
         {
-            _gameStats = stats;
+            _mouseStats = stats;
         }
 
         public override void Handle(IHttpContext context)
         {
-            _gameStats.ReCalculate();
+            _mouseStats.RefreshStatistics();
 
-            var data =  JsonSerializer.SerializeToString(_gameStats);
+            var data =  JsonSerializer.SerializeToString(_mouseStats);
 
             context.Response.ContentType = "application/json";
-            //context.Response.Headers.Add("Cache-Control", "no-cache");
 
             context.WriteString(data);
             context.SetStatusTo(HttpStatusCode.OK);

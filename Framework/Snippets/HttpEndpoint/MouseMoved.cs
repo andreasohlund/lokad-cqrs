@@ -6,6 +6,7 @@
 
 #endregion
 
+using System;
 using System.Runtime.Serialization;
 
 namespace Snippets.HttpEndpoint
@@ -17,6 +18,11 @@ namespace Snippets.HttpEndpoint
         public int y1 { get; set; }
         public int x2 { get; set; }
         public int y2 { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("x1: {0}, y1: {1}, x2: {2}, y2: {3}", x1, y1, x2, y2);
+        }
 
     }
 }

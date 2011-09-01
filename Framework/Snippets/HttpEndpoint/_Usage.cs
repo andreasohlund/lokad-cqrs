@@ -25,16 +25,15 @@ namespace Snippets.HttpEndpoint
         [Test]
         public void Test()
         {
-                        var builder = new CqrsEngineBuilder();
+            var builder = new CqrsEngineBuilder();
 
             var environment = new HttpEnvironment { Port = 8082 };
 
-            var stats = new GameStats();
+            var stats = new MouseStats();
 
             builder.Messages(new[] { typeof(MouseMoved) });
             builder.Advanced.CustomDataSerializer(s => new MyJsonSerializer(s));
             
-
             builder.HttpServer(environment,
                 c => new EmbeddedResourceHttpRequestHandler(typeof(MouseMoved).Assembly, "Snippets.HttpEndpoint"),
                 c => new FileResourceHttpRequestHandler(),
@@ -46,22 +45,18 @@ namespace Snippets.HttpEndpoint
             builder.Build().RunForever();
         }
 
-        private static void MouseStatHandler(ImmutableEnvelope envelope, GameStats stats)
+        private static void MouseStatHandler(ImmutableEnvelope envelope, MouseStats stats)
         {
             var mouseMovedEvent = (MouseMoved)envelope.Items[0].Content;
 
-            var now = DateTime.Now;
-            if ((now - stats.Tick).Seconds > 1)
-            {
-                stats.MessagesPerSecond = 0;
-                stats.Tick = now;
-            }
+            
 
-            stats.MessagesPerSecond++;
+            
             stats.MessagesCount++;
 
             stats.Distance += (long)Math.Sqrt(Math.Pow(mouseMovedEvent.x1 - mouseMovedEvent.x2, 2)
                                   + Math.Pow(mouseMovedEvent.y1 - mouseMovedEvent.y2, 2));
+            stats.RecordMessage();
         }
 
         private static IHttpRequestHandler ConfigureMyCommandSender(Container c)
@@ -71,7 +66,7 @@ namespace Snippets.HttpEndpoint
         }
     }
 
-    public class GameStats
+    public class MouseStats
     {        
         public DateTime Tick { get; set; }
 
@@ -79,14 +74,26 @@ namespace Snippets.HttpEndpoint
         public int MessagesPerSecond { get; set; }
         public long Distance { get; set; }
 
-        public void ReCalculate()
+        private int[] _circularBuffer = new int[60];
+
+        public void RecordMessage()
         {
-            var now = DateTime.Now;
-            if ((now - Tick).Seconds > 1)
-            {
-                MessagesPerSecond = 0;
-                Tick = now;
-            }
+            _circularBuffer[DateTime.Now.Second] += 1;
         }
+
+        public void RefreshStatistics()
+        {
+            // clears the opposite side of the message count tracking 
+            // buffer
+            var offset = DateTime.Now.Second;
+            for (int i = 0; i < 20; i++)
+            {
+                var loc = (offset + 20) % 60;
+                _circularBuffer[loc] = 0;
+            }
+
+            MessagesPerSecond = _circularBuffer[offset-1];
+        }
+        
     }
 }
