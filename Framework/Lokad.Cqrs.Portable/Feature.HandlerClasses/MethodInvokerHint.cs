@@ -51,9 +51,13 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
 
 
             var declaringGenericInterface = typeof (THandler).GetGenericTypeDefinition();
-            var infos = declaringGenericInterface.GetMethods();
+            var infos = declaringGenericInterface.
+                GetInterfaces()
+                .Concat(new [] { declaringGenericInterface})
+                .SelectMany(t => t.GetMethods())
+                .Where(mi => string.Equals(mi.Name, interfaceTypedMethod.Name));
+
             var matches = infos
-                .Where(mi => mi.Name == interfaceTypedMethod.Name)
                 .Where(mi => mi.ContainsGenericParameters)
                 .Where(mi =>
                     {
@@ -64,7 +68,8 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
 
             if (matches.Length == 0)
             {
-                throw new InvalidOperationException("Can't find generic method definition");
+                var message = string.Format("Can't find generic method '{0}' on interface '{1}'. Maybe you wanted to use it's ancestor instead?", interfaceTypedMethod.Name, declaringGenericInterface);
+                throw new InvalidOperationException(message);
             }
             var method = matches[0];
             var name = method.Name;
