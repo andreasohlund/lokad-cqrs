@@ -48,9 +48,6 @@ namespace Snippets.HttpEndpoint
         private static void MouseStatHandler(ImmutableEnvelope envelope, MouseStats stats)
         {
             var mouseMovedEvent = (MouseMoved)envelope.Items[0].Content;
-
-            
-
             
             stats.MessagesCount++;
 
@@ -74,7 +71,7 @@ namespace Snippets.HttpEndpoint
         public int MessagesPerSecond { get; set; }
         public long Distance { get; set; }
 
-        private int[] _circularBuffer = new int[60];
+        private readonly int[] _circularBuffer = new int[60];
 
         public void RecordMessage()
         {
