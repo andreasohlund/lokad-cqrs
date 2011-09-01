@@ -57,9 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpEndpoint\FileResourceHttpRequestHandler.cs" />
     <Compile Include="HttpEndpoint\MouseEventsRequestHandler.cs" />
     <Compile Include="HttpEndpoint\MouseMoved.cs" />
+    <Compile Include="HttpEndpoint\MouseStats.cs" />
     <Compile Include="HttpEndpoint\MouseStatsRequestHandler.cs" />
     <Compile Include="HttpEndpoint\MyAnonymousCommandSender.cs" />
     <Compile Include="HttpEndpoint\MyJsonSerializer.cs" />
@@ -114,18 +114,10 @@
     <None Include="SimpleEventSourcing\ReadMe.markdown" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HttpEndpoint\images\lokad-cqrs-logo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HttpEndpoint\images\lokad_cqrs_logo_header.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HttpEndpoint\index.htm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="HttpEndpoint\scripts\jquery-1.6.2.min.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="HttpEndpoint\images\lokad-cqrs-logo.png" />
+    <EmbeddedResource Include="HttpEndpoint\images\lokad_cqrs_logo_header.png" />
+    <EmbeddedResource Include="HttpEndpoint\index.htm" />
+    <EmbeddedResource Include="HttpEndpoint\scripts\jquery-1.6.2.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

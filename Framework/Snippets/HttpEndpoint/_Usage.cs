@@ -25,23 +25,39 @@ namespace Snippets.HttpEndpoint
         [Test]
         public void Test()
         {
+            // this test will start a simple web server on port 8082 (with a CQRS engine)
+            // You might need to reserve that port or run test as admin. Check out unit test
+            // output for the exact command line on port reservation (or MSDN docs)
+            //
+            // netsh http add urlacl url=http://+:8082/ user=RINAT-R5\Rinat.Abdullin
+            // after starting the test, navigate you browser to localhost:8082/index.htm
+            // and try dragging the image around
+
             var builder = new CqrsEngineBuilder();
 
-            var environment = new HttpEnvironment { Port = 8082 };
 
+            // in-memory structure to capture mouse movement
+            // statistics
             var stats = new MouseStats();
 
+            // we accept a message just of this type, using a serializer
             builder.Messages(new[] { typeof(MouseMoved) });
             builder.Advanced.CustomDataSerializer(s => new MyJsonSerializer(s));
-            
+
+            // let's configure our custom Http server to 
+            // 1. serve resources
+            // 2. serve MouseStats View
+            // 3. accept commands
+            var environment = new HttpEnvironment { Port = 8082 };
             builder.HttpServer(environment,
                 c => new EmbeddedResourceHttpRequestHandler(typeof(MouseMoved).Assembly, "Snippets.HttpEndpoint"),
-                c => new FileResourceHttpRequestHandler(),
                 c => new MouseStatsRequestHandler(stats),
                 ConfigureMyCommandSender);
 
+            // we'll use in-memory queues for faster processing
+            // you can use files or azure in real world.
             builder.Memory(x => x.AddMemoryProcess("inbox", container => (envelope => MouseStatHandler(envelope, stats))));
-
+            // this is a test, so let's block everything
             builder.Build().RunForever();
         }
 
@@ -61,36 +77,5 @@ namespace Snippets.HttpEndpoint
             var writer = c.Resolve<QueueWriterRegistry>().GetOrThrow("memory").GetWriteQueue("inbox");
             return new MouseEventsRequestHandler(writer, c.Resolve<IDataSerializer>());
         }
-    }
-
-    public class MouseStats
-    {        
-        public DateTime Tick { get; set; }
-
-        public int MessagesCount { get; set; }
-        public int MessagesPerSecond { get; set; }
-        public long Distance { get; set; }
-
-        private readonly int[] _circularBuffer = new int[60];
-
-        public void RecordMessage()
-        {
-            _circularBuffer[DateTime.Now.Second] += 1;
-        }
-
-        public void RefreshStatistics()
-        {
-            // clears the opposite side of the message count tracking 
-            // buffer
-            var offset = DateTime.Now.Second;
-            for (int i = 0; i < 20; i++)
-            {
-                var loc = (offset + 20) % 60;
-                _circularBuffer[loc] = 0;
-            }
-
-            MessagesPerSecond = _circularBuffer[offset-1];
-        }
-        
     }
 }

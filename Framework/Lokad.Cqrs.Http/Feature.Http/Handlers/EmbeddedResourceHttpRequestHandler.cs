@@ -59,6 +59,8 @@ namespace Lokad.Cqrs.Feature.Http.Handlers
             {
                 case ".htm":
                     return "text/html";
+                case ".html":
+                    return "text/html";
                 case ".js":
                     return "text/javascript";
                 default:
