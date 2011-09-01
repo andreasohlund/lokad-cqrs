@@ -1,7 +1,8 @@
-﻿#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
@@ -27,7 +28,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         readonly object _initializationLock = new object();
         bool _initialized;
-        
+
 
         /// <summary>
         /// Call this once on start-up to initialize folders
@@ -54,8 +55,10 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
             if (entityTypes.Length == 0 && singletonTypes.Length == 0)
             {
-                throw new InvalidOperationException(
-                    string.Format("AzureAtomicStorage was configured, but without any entity or singleton definitions. Check info on your strategy: {0}", _strategy.GetType()));
+                var message = string.Format(
+                    "AzureAtomicStorage was configured, but without any entity or singleton definitions. Check info on your strategy: {0}",
+                    _strategy.GetType());
+                _observer.Notify(new ConfigurationWarningEncountered(message));
             }
 
             foreach (var type in entityTypes)
@@ -97,7 +100,8 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
         readonly ISystemObserver _observer;
 
 
-        public AzureAtomicStorageFactory(IAtomicStorageStrategy strategy, IAzureStorageConfig storage, ISystemObserver observer)
+        public AzureAtomicStorageFactory(IAtomicStorageStrategy strategy, IAzureStorageConfig storage,
+            ISystemObserver observer)
         {
             _strategy = strategy;
             _storage = storage;
