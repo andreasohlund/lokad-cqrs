@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Given_Tx_Scenarios_When_Autofac_Memory.cs" />
     <Compile Include="Given_Basic_Scenarios_When_Autofac_Memory.cs" />
+    <Compile Include="BasicConfigurationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lokad.Cqrs.Autofac\Lokad.Cqrs.Autofac.csproj">
