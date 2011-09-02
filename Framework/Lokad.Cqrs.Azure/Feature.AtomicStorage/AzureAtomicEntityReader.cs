@@ -1,11 +1,12 @@
-﻿#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
-using System;
+using System.IO;
 using Microsoft.WindowsAzure.StorageClient;
 
 namespace Lokad.Cqrs.Feature.AtomicStorage
@@ -26,7 +27,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
         {
             _strategy = strategy;
             var client = storage.CreateBlobClient();
-            _entityContainer = client.GetContainerReference(strategy.GetFolderForEntity(typeof (TEntity)));
+            _entityContainer = client.GetContainerReference(strategy.GetFolderForEntity(typeof(TEntity)));
             _singletonContainer = client.GetContainerReference(strategy.GetFolderForSingleton());
         }
 
@@ -42,9 +43,11 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             try
             {
                 // blob request options are cloned from the config
-                using (var data = blob.OpenRead())
+                // atomic entities should be small, so we can use the simple method
+                var bytes = blob.DownloadByteArray();
+                using (var stream = new MemoryStream(bytes))
                 {
-                    entity = _strategy.Deserialize<TEntity>(data);
+                    entity = _strategy.Deserialize<TEntity>(stream);
                     return true;
                 }
             }

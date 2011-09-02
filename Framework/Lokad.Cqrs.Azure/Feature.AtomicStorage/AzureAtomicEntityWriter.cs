@@ -15,6 +15,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
     /// Azure implementation of the view reader/writer
     /// </summary>
     /// <typeparam name="TEntity">The type of the view.</typeparam>
+    /// <typeparam name="TKey">the type of the key</typeparam>
     public sealed class AzureAtomicEntityWriter<TKey, TEntity> :
         IAtomicEntityWriter<TKey, TEntity>
         //where TEntity : IAtomicEntity<TKey>
@@ -38,7 +39,9 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             TEntity view;
             try
             {
-                using (var stream = blob.OpenRead())
+                // atomic entities should be small, so we can use the simple method
+                var bytes = blob.DownloadByteArray();
+                using (var stream = new MemoryStream(bytes))
                 {
                     view = _strategy.Deserialize<TEntity>(stream);
                 }
@@ -68,7 +71,8 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             using (var memory = new MemoryStream())
             {
                 _strategy.Serialize(view, memory);
-                blob.UploadByteArray(memory.ToArray());
+                memory.Seek(0, SeekOrigin.Begin);
+                blob.UploadFromStream(memory);
             }
             return view;
         }
