@@ -33,8 +33,11 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         CloudBlob GetBlobReference(TKey key)
         {
-            var container = typeof(TKey) == typeof(unit) ? _singletonContainer : _entityContainer;
-            return container.GetBlobReference(_strategy.GetNameForEntity(typeof(TEntity), key));
+            if (typeof(TKey) == typeof(unit))
+            {
+                return _singletonContainer.GetBlobReference(_strategy.GetNameForSingleton(typeof(TEntity)));
+            }
+            return _entityContainer.GetBlobReference(_strategy.GetNameForEntity(typeof(TEntity), key));
         }
 
         public bool TryGet(TKey key, out TEntity entity)

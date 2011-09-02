@@ -1,7 +1,8 @@
-﻿#region (c) 2010-2011 Lokad - CQRS for Windows Azure - New BSD License 
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
 
-// Copyright (c) Lokad 2010-2011, http://www.lokad.com
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
 // This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
 
 #endregion
 
@@ -28,11 +29,12 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
         {
             _strategy = strategy;
             var client = storage.CreateBlobClient();
-            _entityContainer = client.GetContainerReference(strategy.GetFolderForEntity(typeof (TEntity)));
+            _entityContainer = client.GetContainerReference(strategy.GetFolderForEntity(typeof(TEntity)));
             _singletonContainer = client.GetContainerReference(strategy.GetFolderForSingleton());
         }
 
-        public TEntity AddOrUpdate(TKey key, Func<TEntity> addViewFactory, Func<TEntity,TEntity> updateViewFactory, AddOrUpdateHint hint)
+        public TEntity AddOrUpdate(TKey key, Func<TEntity> addViewFactory, Func<TEntity, TEntity> updateViewFactory,
+            AddOrUpdateHint hint)
         {
             // TODO: implement proper locking and order
             var blob = GetBlobReference(key);
@@ -45,17 +47,17 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                 {
                     view = _strategy.Deserialize<TEntity>(stream);
                 }
-                
+
                 view = updateViewFactory(view);
             }
             catch (StorageClientException ex)
             {
-                switch(ex.ErrorCode)
+                switch (ex.ErrorCode)
                 {
                     case StorageErrorCode.ContainerNotFound:
                         var s = string.Format(
                             "Container '{0}' does not exist. You need to initialize this atomic storage and ensure that '{1}' is known to '{2}'.",
-                            blob.Container.Name, typeof (TEntity).Name, _strategy.GetType().Name);
+                            blob.Container.Name, typeof(TEntity).Name, _strategy.GetType().Name);
                         throw new InvalidOperationException(s, ex);
                     case StorageErrorCode.BlobNotFound:
                     case StorageErrorCode.ResourceNotFound:
@@ -63,7 +65,6 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                         break;
                     default:
                         throw;
-
                 }
             }
             // atomic entities should be small, so we can use the simple method
@@ -86,8 +87,11 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         CloudBlob GetBlobReference(TKey key)
         {
-            var container = typeof(TKey) == typeof(unit) ? _singletonContainer : _entityContainer;
-            return container.GetBlobReference(_strategy.GetNameForEntity(typeof(TEntity), key));
+            if (typeof(TKey) == typeof(unit))
+            {
+                return _singletonContainer.GetBlobReference(_strategy.GetNameForSingleton(typeof(TEntity)));
+            }
+            return _entityContainer.GetBlobReference(_strategy.GetNameForEntity(typeof(TEntity), key));
         }
     }
 }
