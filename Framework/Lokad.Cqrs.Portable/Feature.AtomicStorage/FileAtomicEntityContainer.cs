@@ -6,13 +6,13 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
     public sealed class FileAtomicEntityContainer<TKey,TEntity> : IAtomicEntityReader<TKey,TEntity>, IAtomicEntityWriter<TKey,TEntity>
     {
         readonly IAtomicStorageStrategy _strategy;
-        readonly string _folderPath;
+        readonly string _entityPath;
         readonly string _singletonPath;
 
         public FileAtomicEntityContainer(string directoryPath, IAtomicStorageStrategy strategy)
         {
             _strategy = strategy;
-            _folderPath = Path.Combine(directoryPath, _strategy.GetFolderForEntity(typeof (TEntity)));
+            _entityPath = Path.Combine(directoryPath, _strategy.GetFolderForEntity(typeof (TEntity)));
             _singletonPath = Path.Combine(directoryPath, _strategy.GetFolderForSingleton());
         }
 
@@ -40,8 +40,11 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
 
         string GetName(TKey key)
         {
-            var folderPath = typeof(TKey) == typeof(unit) ? _singletonPath : _folderPath;
-            return Path.Combine(folderPath, _strategy.GetNameForEntity(typeof (TEntity), key));
+            if (typeof(TKey) == typeof(unit))
+            {
+                return Path.Combine(_singletonPath, _strategy.GetNameForSingleton(typeof(TEntity)));
+            }
+            return Path.Combine(_entityPath, _strategy.GetNameForEntity(typeof (TEntity), key));
         }
 
         public TEntity AddOrUpdate(TKey key, Func<TEntity> addFactory, Func<TEntity, TEntity> update, AddOrUpdateHint hint)
@@ -87,7 +90,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             {
                 var s = string.Format(
                             "Container '{0}' does not exist. You need to initialize this atomic storage and ensure that '{1}' is known to '{2}'.",
-                            _folderPath, typeof(TEntity).Name, _strategy.GetType().Name);
+                            _entityPath, typeof(TEntity).Name, _strategy.GetType().Name);
                 throw new InvalidOperationException(s);
             }
         }
