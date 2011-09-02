@@ -72,8 +72,8 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             using (var memory = new MemoryStream())
             {
                 _strategy.Serialize(view, memory);
-                memory.Seek(0, SeekOrigin.Begin);
-                blob.UploadFromStream(memory);
+                // note that upload from stream does weird things
+                blob.UploadByteArray(memory.ToArray());
             }
             return view;
         }
