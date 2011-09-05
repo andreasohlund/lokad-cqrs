@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using StructureMap;
 using Container = Lokad.Cqrs.Core.Container;
 
@@ -31,10 +32,20 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
         public IContainerForHandlerClasses GetChildContainer(ContainerScopeLevel level)
         {
             if (!lokadImportPerformed)
-                ImportInstancesFromLokadContainer();
+                StructureMapContainerProvider.ImportLokadTypes(_lokadContainer, _container);
 
+            //nested child containers isn't working with SM
+            if (level == ContainerScopeLevel.Item)
+                return new StructureMapContainerForHandlerClasses(_container, _lokadContainer)
+                    {
+                        SkipDispose = true
+                    };
+
+           
             return new StructureMapContainerForHandlerClasses(_container.GetNestedContainer(), _lokadContainer);
         }
+
+        public bool SkipDispose { get; set; }
 
         public object ResolveHandlerByServiceType(Type serviceType)
         {
@@ -43,7 +54,8 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
         
         public void Dispose()
         {
-            _container.Dispose();
+            if(!SkipDispose)
+                _container.Dispose();
         }
 
 
@@ -56,7 +68,9 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
                     foreach (var service in _lokadContainer.Services)
                     {
                         var type = service.Value.GetType().GetGenericArguments()[0];
-
+                        if (_container.Model.PluginTypes.Any(p => p.PluginType == type))
+                            continue;
+                       
                         c.For(type).Use((ctx) =>
                         {
                             var result = typeof(Container)

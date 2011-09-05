@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using StructureMap;
 using Container = Lokad.Cqrs.Core.Container;
 
@@ -26,34 +27,46 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
 
         public IContainerForHandlerClasses Build(Container container, Type[] handlerTypes)
         {
-            var containerHandler =new StructureMapContainerForHandlerClasses(strutureMapContainer,container);
+            var containerHandler = new StructureMapContainerForHandlerClasses(strutureMapContainer, container);
 
             strutureMapContainer.Configure(c =>
                 {
                     foreach (var handlerType in handlerTypes)
                         c.For(handlerType);
-
-                    foreach (var service in container.Services)
-                    {
-                        var type = service.Value.GetType().GetGenericArguments()[0];
-
-                        c.For(type).Use((ctx) =>
-                        {
-                            var result = typeof(Container)
-                                           .GetMethod("Resolve", new Type[0])
-                                           .MakeGenericMethod(type)
-                                           .Invoke(container, null);
-
-
-                            return result;
-                        });
-                    }
                 });
 
-          
+            ImportLokadTypes(container,strutureMapContainer);
+
             container.Register(strutureMapContainer);
 
             return containerHandler;
         }
+
+        public static void ImportLokadTypes(Container container, IContainer strutureMapContainer)
+        {
+            strutureMapContainer.Configure(c =>
+                {
+
+                    foreach (var service in container.Services)
+                    {
+                        var type = service.Value.GetType().GetGenericArguments()[0];
+                        if (strutureMapContainer.Model.PluginTypes.Any(p => p.PluginType == type))
+                            continue;
+
+                        c.For(type).Use((ctx) =>
+                            {
+                                var result = typeof(Container)
+                                    .GetMethod("Resolve", new Type[0])
+                                    .MakeGenericMethod(type)
+                                    .Invoke(container, null);
+
+
+                                return result;
+                            });
+                    }
+
+                });
+        }
+
     }
 }

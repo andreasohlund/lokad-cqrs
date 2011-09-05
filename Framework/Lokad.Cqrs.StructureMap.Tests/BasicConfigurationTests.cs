@@ -23,5 +23,32 @@ namespace Lokad.Cqrs
 
             using (builder.Build()) {}
         }
+
+
+
+        [Test,Ignore("Child containers")]
+        public void NestedNested()
+        {
+            var container = new StructureMap.Container(c => c.For<IDep>().Use<MyDep>());
+
+            using (var level1 = container.GetNestedContainer())
+            {
+                var dep1 = level1.GetInstance<IDep>();
+
+                Assert.AreSame(dep1,level1.GetInstance<IDep>());
+
+                 using (var level2 = level1.GetNestedContainer())
+                 {
+                     Assert.AreSame(dep1, level2.GetInstance<IDep>());
+      
+                 }
+            }
+        }
+
+
     }
+
+    public class MyDep:IDep {}
+
+    public interface IDep {}
 }
