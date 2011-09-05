@@ -2,7 +2,7 @@
 
 namespace Lokad.Cqrs.Core
 {
-	internal sealed class ServiceKey
+    public sealed class ServiceKey
 	{
 	    readonly int _hash;
 

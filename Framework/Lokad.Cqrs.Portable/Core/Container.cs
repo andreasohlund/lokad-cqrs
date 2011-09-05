@@ -25,6 +25,8 @@ namespace Lokad.Cqrs.Core
 				};
 		}
 
+        public IDictionary<ServiceKey, ServiceEntry> Services { get { return _services; } }
+
 	    /// <include file='Container.xdoc' path='docs/doc[@for="Container.DefaultOwner"]/*'/>
 		public Owner DefaultOwner { get; set; }
 
