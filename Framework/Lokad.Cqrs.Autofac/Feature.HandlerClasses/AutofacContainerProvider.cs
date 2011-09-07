@@ -17,18 +17,16 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
     /// </summary>
     public static class AutofacContainerProvider
     {
-        public static IContainerForHandlerClasses Build(Container container, Type[] handlerTypes)
+        public static IContainerForHandlerClasses Build(Container container, Type[] handlerTypes, ContainerBuilder builder)
         {
-            var autofacBuilder = new ContainerBuilder();
-
             foreach (var handlerType in handlerTypes)
             {
-                autofacBuilder.RegisterType(handlerType);
+                builder.RegisterType(handlerType);
             }
             // allow handlers to resolve items from the core container
-            autofacBuilder.RegisterSource(new FunqAdapterForAutofac(container));
+            builder.RegisterSource(new FunqAdapterForAutofac(container));
 
-            var autofacContainer = autofacBuilder.Build();
+            var autofacContainer = builder.Build();
             container.Register(autofacContainer);
             return new AutofacContainerForHandlerClasses(autofacContainer);
         }
