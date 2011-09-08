@@ -1,9 +1,18 @@
-﻿using System;
+﻿#region (c) 2010-2011 Lokad CQRS - New BSD License 
+
+// Copyright (c) Lokad SAS 2010-2011 (http://www.lokad.com)
+// This code is released as Open Source under the terms of the New BSD Licence
+// Homepage: http://lokad.github.com/lokad-cqrs/
+
+#endregion
+
+using System;
 using System.IO;
 
 namespace Lokad.Cqrs.Feature.AtomicStorage
 {
-    public sealed class FileAtomicEntityContainer<TKey,TEntity> : IAtomicEntityReader<TKey,TEntity>, IAtomicEntityWriter<TKey,TEntity>
+    public sealed class FileAtomicEntityContainer<TKey, TEntity> : IAtomicEntityReader<TKey, TEntity>,
+                                                                   IAtomicEntityWriter<TKey, TEntity>
     {
         readonly IAtomicStorageStrategy _strategy;
         readonly string _entityPath;
@@ -12,7 +21,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
         public FileAtomicEntityContainer(string directoryPath, IAtomicStorageStrategy strategy)
         {
             _strategy = strategy;
-            _entityPath = Path.Combine(directoryPath, _strategy.GetFolderForEntity(typeof (TEntity)));
+            _entityPath = Path.Combine(directoryPath, _strategy.GetFolderForEntity(typeof(TEntity)));
             _singletonPath = Path.Combine(directoryPath, _strategy.GetFolderForSingleton());
         }
 
@@ -44,10 +53,11 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
             {
                 return Path.Combine(_singletonPath, _strategy.GetNameForSingleton(typeof(TEntity)));
             }
-            return Path.Combine(_entityPath, _strategy.GetNameForEntity(typeof (TEntity), key));
+            return Path.Combine(_entityPath, _strategy.GetNameForEntity(typeof(TEntity), key));
         }
 
-        public TEntity AddOrUpdate(TKey key, Func<TEntity> addFactory, Func<TEntity, TEntity> update, AddOrUpdateHint hint)
+        public TEntity AddOrUpdate(TKey key, Func<TEntity> addFactory, Func<TEntity, TEntity> update,
+            AddOrUpdateHint hint)
         {
             var name = GetName(key);
             try
@@ -70,7 +80,7 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                             result = update(entity);
                         }
                     }
-                    
+
                     // some serializers have nasty habbit of closing the
                     // underling stream
                     using (var mem = new MemoryStream())
@@ -82,15 +92,15 @@ namespace Lokad.Cqrs.Feature.AtomicStorage
                         // truncate this file
                         file.SetLength(data.Length);
                     }
-                    
+
                     return result;
                 }
             }
             catch (DirectoryNotFoundException)
             {
                 var s = string.Format(
-                            "Container '{0}' does not exist. You need to initialize this atomic storage and ensure that '{1}' is known to '{2}'.",
-                            _entityPath, typeof(TEntity).Name, _strategy.GetType().Name);
+                    "Container '{0}' does not exist. You need to initialize this atomic storage and ensure that '{1}' is known to '{2}'.",
+                    _entityPath, typeof(TEntity).Name, _strategy.GetType().Name);
                 throw new InvalidOperationException(s);
             }
         }
