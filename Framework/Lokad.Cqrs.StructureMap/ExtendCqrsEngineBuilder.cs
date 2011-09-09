@@ -7,6 +7,8 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.Reactive.Subjects;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Feature.HandlerClasses;
 using StructureMap;
@@ -23,8 +25,7 @@ namespace Lokad.Cqrs
         public static void MessagesWithHandlersFromStructureMap(this CqrsEngineBuilder builder,
             Action<MessagesWithHandlersConfigurationSyntax> config)
         {
-            builder.MessagesWithHandlers(new StructureMapContainerProvider(ObjectFactory.Container)
-                .Build, config);
+            MessagesWithHandlersFromStructureMap(builder,config,ObjectFactory.Container);
         }
 
         /// <summary>
@@ -36,8 +37,26 @@ namespace Lokad.Cqrs
         public static void MessagesWithHandlersFromStructureMap(this CqrsEngineBuilder builder,
             Action<MessagesWithHandlersConfigurationSyntax> config,IContainer container)
         {
-            builder.MessagesWithHandlers(new StructureMapContainerProvider(container)
+
+            var subject = builder.Advanced.Observers
+              .Where(t => typeof(IObservable<ISystemEvent>).IsAssignableFrom(t.GetType()))
+              .Cast<IObservable<ISystemEvent>>()
+              .FirstOrDefault();
+
+            if (null == subject)
+            {
+                var s = new Subject<ISystemEvent>();
+                subject = s;
+                builder.Advanced.Observers.Add(s);
+            }
+
+
+                        var provider = new StructureMapContainerProvider(container,subject);
+
+            builder.MessagesWithHandlers(provider
                 .Build, config);
+
+
         }
     }
 }

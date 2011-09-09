@@ -8,6 +8,8 @@
 
 using System;
 using System.Linq;
+using System.Reactive.Linq;
+using Lokad.Cqrs.Build.Engine.Events;
 using StructureMap;
 using Container = Lokad.Cqrs.Core.Container;
 
@@ -18,31 +20,36 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
     /// </summary>
     public class StructureMapContainerProvider
     {
-        readonly IContainer strutureMapContainer;
+        readonly IContainer _strutureMapContainer;
+        readonly IObservable<ISystemEvent> _subject;
 
-        public StructureMapContainerProvider(IContainer strutureMapContainer)
+        public StructureMapContainerProvider(IContainer strutureMapContainer, IObservable<ISystemEvent> subject)
         {
-            this.strutureMapContainer = strutureMapContainer;
+            _strutureMapContainer = strutureMapContainer;
+            _subject = subject;
         }
 
         public IContainerForHandlerClasses Build(Container container, Type[] handlerTypes)
         {
-            var containerHandler = new StructureMapContainerForHandlerClasses(strutureMapContainer, container);
+            var containerHandler = new StructureMapContainerForHandlerClasses(_strutureMapContainer, container);
 
-            strutureMapContainer.Configure(c =>
+            _strutureMapContainer.Configure(c =>
                 {
                     foreach (var handlerType in handlerTypes)
                         c.For(handlerType);
                 });
 
-            ImportLokadTypes(container,strutureMapContainer);
 
-            container.Register(strutureMapContainer);
+
+            _subject.OfType<EngineInitialized>()
+                    .Subscribe(x => ImportLokadTypes(container, _strutureMapContainer));
+            
+            container.Register(_strutureMapContainer);
 
             return containerHandler;
         }
 
-        public static void ImportLokadTypes(Container container, IContainer strutureMapContainer)
+        public void ImportLokadTypes(Container container, IContainer strutureMapContainer)
         {
             strutureMapContainer.Configure(c =>
                 {

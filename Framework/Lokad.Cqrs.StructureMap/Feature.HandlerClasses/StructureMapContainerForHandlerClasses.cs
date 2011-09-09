@@ -7,21 +7,19 @@
 #endregion
 
 using System;
-using System.Linq;
 using StructureMap;
 using Container = Lokad.Cqrs.Core.Container;
 
 namespace Lokad.Cqrs.Feature.HandlerClasses
 {
     /// <summary>
-    /// Nested scope container adapter for Autofac used for loading handler classes
+    /// Nested scope container adapter for StructureMap used for loading handler classes
     /// and auto-wiring the dependencies.
     /// </summary>
     public sealed class StructureMapContainerForHandlerClasses : IContainerForHandlerClasses
     {
         readonly IContainer _container;
         readonly Container _lokadContainer;
-        static bool lokadImportPerformed;
 
         public StructureMapContainerForHandlerClasses(IContainer container, Container lokadContainer)
         {
@@ -31,10 +29,8 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
 
         public IContainerForHandlerClasses GetChildContainer(ContainerScopeLevel level)
         {
-            if (!lokadImportPerformed)
-                StructureMapContainerProvider.ImportLokadTypes(_lokadContainer, _container);
-
-            //nested child containers isn't working with SM
+            //nested child containers isn't working with SM 
+            //http://groups.google.com/group/structuremap-users/browse_frm/thread/5b981676ad386417
             if (level == ContainerScopeLevel.Item)
                 return new StructureMapContainerForHandlerClasses(_container, _lokadContainer)
                     {
@@ -56,37 +52,6 @@ namespace Lokad.Cqrs.Feature.HandlerClasses
         {
             if(!SkipDispose)
                 _container.Dispose();
-        }
-
-
-        public void ImportInstancesFromLokadContainer()
-        {
-            lokadImportPerformed = true;
-            _container.Configure(c=>
-                {
-
-                    foreach (var service in _lokadContainer.Services)
-                    {
-                        var type = service.Value.GetType().GetGenericArguments()[0];
-                        if (_container.Model.PluginTypes.Any(p => p.PluginType == type))
-                            continue;
-                       
-                        c.For(type).Use((ctx) =>
-                        {
-                            var result = typeof(Container)
-                                           .GetMethod("Resolve", new Type[0])
-                                           .MakeGenericMethod(type)
-                                           .Invoke(_lokadContainer, null);
-
-
-                            return result;
-                        });
-                    }
-                    
-                });
-
-            _container.AssertConfigurationIsValid();
-
         }
     }
 }
