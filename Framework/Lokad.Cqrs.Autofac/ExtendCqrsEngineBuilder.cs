@@ -7,6 +7,7 @@
 #endregion
 
 using System;
+using Autofac;
 using Lokad.Cqrs.Build.Engine;
 using Lokad.Cqrs.Feature.HandlerClasses;
 
@@ -22,7 +23,19 @@ namespace Lokad.Cqrs
         public static void MessagesWithHandlersFromAutofac(this CqrsEngineBuilder builder,
             Action<MessagesWithHandlersConfigurationSyntax> config)
         {
-            builder.MessagesWithHandlers(AutofacContainerProvider.Build, config);
+            builder.MessagesWithHandlers((funq, classes) => AutofacContainerProvider.Build(funq, classes, new ContainerBuilder()), config);
+        }
+
+        /// <summary>
+        /// Configures the message domain for the instance of <see cref="CqrsEngineHost"/>.
+        /// </summary>
+        /// <param name="builder">configuration syntax.</param>
+        /// <param name="config">The config.</param>
+        /// <param name="extraConfig">The extra config.</param>
+        public static void MessagesWithHandlersFromAutofac(this CqrsEngineBuilder builder,
+            Action<MessagesWithHandlersConfigurationSyntax> config, ContainerBuilder extraConfig)
+        {
+            builder.MessagesWithHandlers((funq, classes) => AutofacContainerProvider.Build(funq, classes, extraConfig), config);
         }
     }
 }

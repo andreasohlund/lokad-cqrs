@@ -59,6 +59,7 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Feature.AtomicStorage\Stand_alone_tests.cs" />
     <Compile Include="Feature.HandlerClasses\MessageDirectoryFixture.cs" />
     <Compile Include="Feature.HandlerClasses\Method_Invoker_tests.cs" />
     <Compile Include="Feature.HandlerClasses\When_activations_constrained_to_handler_type_with_interface.cs" />
